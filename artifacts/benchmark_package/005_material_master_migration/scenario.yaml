@@ -1,0 +1,26 @@
+scenario_id: 005_ERP_PART_MIGRATION
+
+name: ERP Part Master Migration
+
+domain: ERP Data Integration
+
+description: >
+  Part master data is migrated from a legacy ERP system to a new ERP system
+  as part of a system modernization project. The source system stores part
+  master records using the legacy data model, while the target ERP system
+  requires the data in a different schema with standardized identifiers and
+  attribute values.
+
+business_objects:
+  - Part
+
+systems:
+  source:
+    name: Legacy ERP System
+    description: >
+      Stores part master data using the legacy data model.
+
+  target:
+    name: Target ERP System
+    description: >
+      Stores part master data using the target ERP data model

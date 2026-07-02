@@ -1,0 +1,62 @@
+table: business_partner
+
+entity: BusinessPartner
+
+description: >
+  Structural schema definition for business partner master data required by
+  the target ERP system. This schema defines only the target structure and
+  does not specify migration logic.
+
+attributes:
+
+  - name: bp_no
+    type: string
+    required: true
+    unique: true
+    description: Generated Business Partner number.
+
+  - name: name
+    type: string
+    required: true
+    description: Legal business partner name.
+
+  - name: country
+    type: string
+    required: true
+    description: ISO 3166 alpha-2 country code.
+
+  - name: post_code
+    type: string
+    required: false
+    description: Postal code.
+
+  - name: city
+    type: string
+    required: false
+    description: City.
+
+  - name: street
+    type: string
+    required: false
+    description: Street name.
+
+  - name: house_num1
+    type: string
+    required: false
+    description: House number.
+
+  - name: additional_info
+    type: string
+    required: false
+    description: Original supplier identifier from the legacy ERP system.
+
+constraints:
+
+  - id: CON-TGT-001
+    description: bp_no must be unique.
+
+  - id: CON-TGT-002
+    description: name must be provided.
+
+  - id: CON-TGT-003
+    description: country must contain an ISO 3166 alpha-2 country code.

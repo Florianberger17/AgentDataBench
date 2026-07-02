@@ -1,0 +1,17 @@
+scenario_id: 004_ERP_SUPPLIER_MIGRATION
+
+task_id: 004_ERP_SUPPLIER_MIGRATION
+
+version: 1.0
+
+author: Florian Berger
+
+created: 02/07/2026
+
+difficulty: easy
+
+seed: 
+
+
+
+

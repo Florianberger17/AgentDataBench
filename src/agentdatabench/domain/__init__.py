@@ -1,5 +1,5 @@
 """Domain model for agentdatabench: Scenario, Task, Schema, Dataset, BenchmarkPackage,
-Metadata, EvaluationResult and their supporting types."""
+Metadata, EvaluationResult, ValidationResult and their supporting types."""
 
 from agentdatabench.domain.benchmark_package import BenchmarkPackage
 from agentdatabench.domain.dataset import Dataset
@@ -22,6 +22,7 @@ from agentdatabench.domain.task import (
     TaskOutput,
     TransformationSpec,
 )
+from agentdatabench.domain.validation_result import ValidationIssue, ValidationResult
 
 __all__ = [
     "BenchmarkPackage",
@@ -47,4 +48,6 @@ __all__ = [
     "TaskInput",
     "TaskOutput",
     "TransformationSpec",
+    "ValidationIssue",
+    "ValidationResult",
 ]

@@ -1,0 +1,39 @@
+seed: 123
+
+locale: de_DE
+
+columns:
+
+  - column: part no.
+    strategy: unique_sequence
+    format: "{:04d}-0000"
+    start: 9000
+
+  - column: name
+    strategy: faker
+    provider: bs
+
+  - column: unit
+    strategy: identity
+
+  - column: approval
+    strategy: identity
+
+  - column: part status
+    strategy: identity
+
+  - column: item type
+    strategy: identity
+
+  - column: spare part id
+    strategy: identity
+
+  - column: lead time
+    strategy: identity
+
+  - column: creation date
+    strategy: identity
+
+  - column: creator
+    strategy: faker
+    provider: user_name

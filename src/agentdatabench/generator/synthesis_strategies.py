@@ -3,12 +3,15 @@ DEFAULT_SYNTHESIS_STRATEGIES by their `strategy` string. Adding a new
 strategy only requires adding a new class and registering it here;
 DatasetCreator itself never needs to change.
 
-None of these strategies ever emit a real observed value for numeric/date
-columns: they fit a simple range from the real data and draw fresh values
-from it, so no original measurement survives into the synthetic output.
-Iteration over distinct categorical labels uses pandas' `.unique()` (first-
-occurrence order), never a Python `set`, for the same determinism reasons
-documented in noise_models.py.
+Aside from `identity`, none of these strategies ever emit a real observed
+value for numeric/date columns: they fit a simple range from the real data
+and draw fresh values from it, so no original measurement survives into the
+synthetic output. `identity` is an intentional, explicit opt-out of that
+guarantee for columns a benchmark package author has judged non-identifying
+(e.g. business/technical codes) - it must be chosen per column, never a
+default. Iteration over distinct categorical labels uses pandas' `.unique()`
+(first-occurrence order), never a Python `set`, for the same determinism
+reasons documented in noise_models.py.
 """
 
 from __future__ import annotations
@@ -144,10 +147,23 @@ class CategoricalResampleStrategy:
         return pd.Series(rng.choices(distinct, weights=weights, k=n))
 
 
+class IdentityStrategy:
+    def synthesize(
+        self,
+        real_series: pd.Series,
+        config: ColumnSynthesisConfig,
+        rng: random.Random,
+        faker: Faker,
+        n: int,
+    ) -> pd.Series:
+        return real_series.reset_index(drop=True)
+
+
 DEFAULT_SYNTHESIS_STRATEGIES: dict[str, SynthesisStrategy] = {
     "faker": FakerStrategy(),
     "numeric_distribution": NumericDistributionStrategy(),
     "date_distribution": DateDistributionStrategy(),
     "unique_sequence": UniqueSequenceStrategy(),
     "categorical_resample": CategoricalResampleStrategy(),
+    "identity": IdentityStrategy(),
 }

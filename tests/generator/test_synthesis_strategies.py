@@ -9,6 +9,7 @@ from agentdatabench.generator.synthesis_strategies import (
     CategoricalResampleStrategy,
     DateDistributionStrategy,
     FakerStrategy,
+    IdentityStrategy,
     NumericDistributionStrategy,
     UniqueSequenceStrategy,
 )
@@ -109,3 +110,11 @@ def test_categorical_resample_strategy_raises_over_max_cardinality():
         CategoricalResampleStrategy().synthesize(
             REAL_LIKE["company"], config, random.Random(0), _faker(), 5
         )
+
+
+def test_identity_strategy_passes_values_through_unchanged():
+    config = ColumnSynthesisConfig(column="status", strategy="identity")
+    result = IdentityStrategy().synthesize(
+        REAL_LIKE["status"], config, random.Random(0), _faker(), len(REAL_LIKE)
+    )
+    assert list(result) == list(REAL_LIKE["status"])

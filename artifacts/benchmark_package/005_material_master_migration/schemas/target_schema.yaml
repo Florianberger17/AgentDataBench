@@ -1,0 +1,50 @@
+table: part_master
+
+description: >
+  Target schema for part master data in the new ERP system.
+
+attributes:
+
+  - name: erp no
+    type: string
+    required: true
+    description: >
+      ERP material number consisting of 11 consecutive digits.
+
+  - name: description
+    type: string
+    required: true
+    description: >
+      Part description consisting of the original part number followed by
+      the source part name.
+
+  - name: unit
+    type: string
+    required: true
+    description: >
+      Base unit of measure.
+
+  - name: material type
+    type: string
+    required: true
+    allowed_values:
+      - erze
+      - bmav
+    description: >
+      Material type used in the target ERP system.
+
+  - name: status
+    type: string
+    required: true
+    allowed_values:
+      - f
+      - n
+    description: >
+      Status code used in the target ERP system.
+
+  - name: generation date
+    type: date
+    format: DD.MM.YYYY
+    required: true
+    description: >
+      Creation date converted to a four-digit year format.
