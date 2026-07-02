@@ -1,0 +1,97 @@
+task_id: 003_ERP_SUPPLIER_MIGRATION
+
+objective: >
+  Transform the provided supplier dataset from the source schema to the target
+  schema and produce a CSV file that conforms to the target schema.
+
+input:
+  source_dataset: data/dataset.csv
+  source_schema: schemas/source_schema.yaml
+  target_schema: schemas/target_schema.yaml
+
+required_operations:
+  - filtering
+  - data cleaning
+  - schema_mapping
+  - value_mapping
+  - value_transformation
+
+
+business_rules:
+  filtering:
+    description: >
+      Only customers whose last_activity is on or after 2023-01-01 shall be
+      included in the target dataset.
+    field: last_activity
+    operator: ">="
+    value: "2023-01-01"
+    field_format: "DD.MM.YYYY"
+
+  mappings:
+
+    - source_field: supplier no
+      target_field: bp_no
+      transformation:
+        type: sequential_number
+        start: 20000000
+        increment: 1
+        digits: 10
+      description: >
+        Generate consecutive Business Partner numbers beginning with
+        0020000000 for every retained record.
+
+    - source_field: name 2
+      target_field: name
+      transformation:
+        type: copy
+      description: >
+        Use the legal company name from the source system.
+
+    - source_field: country code
+      target_field: country
+      transformation:
+        type: value_mapping
+        mapping:
+          deu: de
+          aut: at
+          che: ch
+      description: >
+        Convert ISO 3166 alpha-3 country codes to ISO 3166 alpha-2 codes.
+
+    - source_field: post_code
+      target_field: post_code
+      transformation:
+        type: copy
+
+    - source_field: city
+      target_field: city
+      transformation:
+        type: copy
+
+    - source_field: street
+      target_field: street
+      transformation:
+        type: copy
+
+    - source_field: house_num1
+      target_field: house_num1
+      transformation:
+        type: copy
+
+    - source_field: supplier no
+      target_field: additional_info
+      transformation:
+        type: copy
+      description: >
+        Preserve the original supplier number as additional information in
+        the target system.
+
+output:
+  format: csv
+  schema_reference: schemas/target_schema.yaml
+
+constraints:
+  - The output dataset must follow the target schema exactly.
+  - Each output row shall represent one customer record.
+  - No additional columns may be added.
+  - The column order must match the target schema.

@@ -1,0 +1,70 @@
+table: part_master
+
+description: >
+  Source schema containing part master data exported from the legacy ERP system.
+
+attributes:
+
+  - name: part no.
+    type: string
+    required: true
+    description: >
+      Legacy part number in the format ####-####.
+
+  - name: name
+    type: string
+    required: true
+    description: >
+      Name or description of the part.
+
+  - name: unit
+    type: string
+    required: true
+    description: >
+      Base unit of measure.
+
+  - name: approval
+    type: string
+    required: true
+    description: >
+      Approval status in the legacy ERP system.
+
+  - name: part status
+    type: integer
+    required: true
+    description: >
+      Numerical lifecycle status of the part.
+
+  - name: item type
+    type: string
+    required: true
+    description: >
+      Type of engineering object.
+
+  - name: spare part id
+    type: string
+    required: true
+    allowed_values:
+      - spare part
+      - no spare part
+    description: >
+      Indicates whether the part is classified as a spare part.
+
+  - name: lead time
+    type: integer
+    required: true
+    description: >
+      Procurement lead time in days.
+
+  - name: creation date
+    type: date
+    format: DD.MM.YY
+    required: true
+    description: >
+      Date when the part master was created.
+
+  - name: creator
+    type: string
+    required: true
+    description: >
+      User who created the part master record.

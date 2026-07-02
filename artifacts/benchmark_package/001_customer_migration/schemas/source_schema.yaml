@@ -1,0 +1,63 @@
+table: customer_master
+
+entity: Customer
+
+description: >
+  Structural schema definition for customer master data in a legacy ERP system.
+  This schema defines only data structure, not data quality characteristics.
+
+attributes:
+
+  - name: CustNo
+    type: string
+    required: true
+    unique: true
+    description: Unique customer identifier
+
+  - name: CompanyName
+    type: string
+    required: true
+    description: Name of the customer organization
+
+  - name: StreetAddress
+    type: string
+    required: false
+    description: Street
+
+  - name: HouseNo
+    type: string
+    required: false
+    description: house number
+
+  - name: ZipCode
+    type: string
+    required: false
+    description: Postal code
+
+  - name: Town
+    type: string
+    required: false
+    description: City or municipality
+
+  - name: CountryCode
+    type: string
+    required: false
+    description: Country identifier
+
+  - name: LastOrderDate
+    type: date
+    required: false
+    description: Date of last recorded business transaction
+
+  - name: CustomerType
+    type: string
+    required: false
+    description: Type of customer entity
+
+constraints:
+
+  - id: CON-SRC-001
+    description: CustNo must be unique
+
+  - id: CON-SRC-002
+    description: CompanyName must be provided

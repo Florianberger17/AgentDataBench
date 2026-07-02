@@ -1,0 +1,100 @@
+part no.,name,unit,approval,part status,item type,spare part id,lead time,creation date,creator
+1000-0000,shaft,pc,approved,1,part,no spare part,40,19.04.01,test.user
+1000-0001,slide  complete,pc,approved,1,part,spare part,40,19.04.01,test.user
+1000-0002,locking pin,pc,approved,1,part,no spare part,40,19.04.01,test.user
+1000-0003,threaded pin,pc,approved,1,part,no spare part,55,19.04.01,test.user
+1000-0004,initiator holder,pc,approved,1,part,spare part,35,19.04.01,test.user
+1000-0007,push rod (d = 8 mm),pc,approved,1,part,no spare part,25,19.04.01,test.user
+1000-0008,holder latch,pc,approved,1,part,no spare part,20,19.04.01,test.user
+1000-0010,holder,pc,approved,1,part,no spare part,20,19.04.01,test.user
+1000-0011,clamping plate,pc,approved,1,part,no spare part,40,19.04.01,test.user
+1000-0013,lifting plate,pc,approved,1,part,no spare part,45,19.04.01,test.user
+1000-0015,index pins,pc,approved,1,part,no spare part,20,19.04.01,test.user
+1000-0017,bearing pins,pc,approved,1,part,no spare part,25,19.04.01,test.user
+1000-0018,nozzle holder,pc,approved,1,part,no spare part,20,19.04.01,test.user
+1000-0020,spindle,pc,approved,1,part,no spare part,40,19.04.01,test.user
+1000-0022,lower shaft,pc,approved,1,part,no spare part,25,19.04.01,test.user
+1000-0025,motor plate,pc,approved,1,part,no spare part,20,19.04.01,test.user
+1000-0026,drive pinion,pc,approved,3,part,no spare part,30,19.04.01,test.user
+1000-0027,compression spring 2,pc,approved,1,part,no spare part,40,19.04.01,test.user
+1000-0028,guide,pc,approved,1,part,no spare part,40,20.04.01,test.user
+1000-0029,locking pins,pc,approved,1,part,no spare part,55,20.04.01,test.user
+1000-0030,cylinder plate,pc,approved,1,part,no spare part,60,20.04.01,test.user
+1000-0031,reflector holder,pc,approved,1,part,no spare part,40,26.11.01,test.user
+1000-0032,sheet metal,pc,approved,1,part,no spare part,40,29.11.01,test.user
+1000-0033,embossing tool holder,pc,approved,1,part,spare part,40,07.12.01,test.user
+1000-0034,strip,pc,approved,1,part,no spare part,40,07.12.01,test.user
+1000-0035,support pin,pc,approved,1,part,spare part,40,12.12.01,test.user
+1000-0036,centering piece,pc,approved,1,part,no spare part,15,14.12.01,test.user
+1000-0037,pressure rod,pc,approved,3,part,no spare part,40,12.11.01,test.user
+1000-0038,bearing housing,pc,approved,1,part,no spare part,40,16.08.02,test.user
+1000-0039,paper housing pb 15,pc,approved,1,part,no spare part,40,21.11.02,test.user
+1000-0041,cover plate,pc,approved,1,part,spare part,40,16.06.03,test.user
+1000-0043,star coupling sleeve,pc,approved,1,part,no spare part,20,25.09.03,test.user
+1000-0044,bearing bracket,pc,approved,1,part,no spare part,40,20.03.03,test.user
+1000-0045,rod,pc,approved,1,part,spare part,40,14.02.03,test.user
+1000-0047,mounting,pc,approved,1,part,spare part,25,27.04.04,test.user
+1000-0048,complete pressure piece,pc,approved,1,part,no spare part,40,03.06.04,test.user
+1000-0049,spacer sleeve,pc,approved,8,part,spare part,40,31.03.04,test.user
+1000-0050,thrust rod head,pc,approved,1,part,spare part,40,15.03.05,test.user
+1000-0052,threaded rod,pc,approved,1,part,spare part,40,26.08.04,test.user
+1000-0053,cover plate for transformer,pc,approved,1,part,no spare part,40,30.06.05,test.user
+1000-0054,shaft,pc,approved,1,part,spare part,55,18.11.05,test.user
+1000-0055,bracket,pc,approved,1,part,spare part,40,08.12.05,test.user
+1000-0056,block  tailstock,pc,approved,1,part,spare part,20,29.04.05,test.user
+1000-0057,column-vf,pc,approved,1,part,spare part,20,13.12.06,test.user
+1000-0058,pin holder,pc,approved,7,part,no spare part,40,15.02.07,test.user
+1000-0059,pin screw,pc,approved,1,part,no spare part,40,07.04.08,test.user
+1000-0061,connection bracket,pc,approved,1,part,spare part,40,02.04.08,test.user
+1000-0062,rotary drive mounting,pc,approved,1,part,no spare part,40,06.02.09,test.user
+1000-0063,base frame  winder,pc,approved,1,part,no spare part,40,27.02.09,test.user
+1000-0064,clamp ring,pc,approved,7,part,no spare part,40,11.06.10,test.user
+1000-0066,bracket,pc,approved,1,part,no spare part,40,22.07.11,test.user
+1000-0067,cone,pc,approved,1,part,no spare part,40,06.01.11,test.user
+1000-0068,support finger 4,pc,approved,1,part,no spare part,40,03.11.11,test.user
+1000-0069,plate,pc,approved,7,part,no spare part,70,23.11.11,test.user
+1000-0073,coupling tube,pc,approved,1,part,no spare part,40,31.01.14,test.user
+1000-0075,spacer bolt,pc,approved,1,part,spare part,40,03.08.15,test.user
+1000-0076,actuating ring,pc,approved,1,part,no spare part,25,16.10.14,test.user
+1000-0077,spacer sleeve,pc,approved,8,part,spare part,40,28.07.15,test.user
+1000-0078,holder,pc,approved,4,part,no spare part,40,17.08.15,test.user
+1000-0079,protective sheet,pc,approved,1,part,no spare part,40,01.03.16,test.user
+1000-0081,adapter plate,pc,approved,1,part,no spare part,40,23.03.17,test.user
+1000-0083,rear mounting plate,pc,approved,1,part,no spare part,40,15.05.17,test.user
+1000-0084,drag support,pc,approved,1,part,no spare part,40,13.02.17,test.user
+1000-0085,stop plate 1,pc,approved,1,part,no spare part,40,31.08.16,test.user
+1000-0087,base plate,pc,approved,1,part,no spare part,40,19.05.17,test.user
+1000-0088,right-side wire guide jaw,pc,approved,6,part,no spare part,40,09.08.16,test.user
+1000-0089,gripper mounting,pc,approved,1,part,no spare part,50,04.01.17,test.user
+1000-0090,bottom jaw 1,pc,approved,1,part,no spare part,40,12.04.17,test.user
+1000-0091,top height pressure ring,pc,approved,1,part,no spare part,35,17.03.17,test.user
+1000-0092,support plate,pc,approved,8,part,no spare part,40,21.09.17,test.user
+1000-0094,valve island plate,pc,approved,8,part,no spare part,40,27.11.17,test.user
+1000-0095,wall (tool side),pc,approved,1,part,no spare part,40,08.06.17,test.user
+1000-0096,bolt,pc,approved,8,part,no spare part,13,26.09.17,test.user
+1000-0097,center rod,pc,approved,8,part,no spare part,40,26.09.17,test.user
+1000-0098,coil plate,pc,approved,8,part,no spare part,40,28.11.17,test.user
+1000-0099,housing bracket,pc,approved,8,part,no spare part,40,29.11.17,test.user
+1000-0100,translated with deepl.com (free version),pc,approved,8,part,no spare part,40,01.12.17,test.user
+1000-0101,adapter plate,pc,approved,8,part,no spare part,40,04.12.17,test.user
+1000-0103,bearing shaft,pc,approved,1,part,no spare part,40,24.11.17,test.user
+1000-0108,rear mounting plate,pc,approved,1,part,no spare part,40,27.07.17,test.user
+1000-0110,drag support,pc,approved,1,part,no spare part,40,09.11.17,test.user
+1000-0111,stop plate 1,pc,approved,8,part,spare part,40,22.11.17,test.user
+1000-0114,base plate,pc,approved,8,part,no spare part,40,05.12.17,test.user
+1000-0119,right-side wire guide jaw,pc,approved,1,part,no spare part,40,22.06.17,test.user
+1000-0120,gripper mount,pc,approved,8,part,no spare part,40,25.09.17,test.user
+1000-0122,base jaw 1 (bottom),pc,approved,1,part,no spare part,40,10.07.17,test.user
+1000-0123,upper height pressure ring,pc,approved,8,part,no spare part,40,25.09.17,test.user
+1000-0125,support plate,pc,approved,1,part,no spare part,40,28.09.17,test.user
+1000-0126,valve island plate,pc,approved,8,part,no spare part,40,22.09.17,test.user
+1000-0127,tool side wall,pc,approved,8,part,no spare part,40,22.09.17,test.user
+1000-0129,bolt,pc,approved,1,part,no spare part,40,20.06.17,test.user
+1000-0133,centering bolt,pc,approved,1,part,no spare part,40,27.11.17,test.user
+1000-0134,center rod,pc,approved,1,part,no spare part,40,18.09.17,test.user
+1000-0137,coil plate,pc,approved,1,part,no spare part,40,08.06.17,test.user
+1000-0148,housing bracket,pc,approved,8,part,spare part,40,19.02.18,test.user
+1000-0152,toothed pulley,pc,approved,8,part,no spare part,40,01.02.18,test.user
+1000-0153,toothed pulley,pc,approved,8,part,no spare part,40,01.02.18,test.user
+1000-0159,toothed belt  htd   425-5m-15 fle,pc,approved,8,part,no spare part,40,28.02.18,test.user
+

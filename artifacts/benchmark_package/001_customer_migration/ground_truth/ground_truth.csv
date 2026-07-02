@@ -1,0 +1,45 @@
+CustomerID;Name;Street;City;PostalCode;Country;LastBusinessActivityDate;Status
+CUST000001;Dowerg;Jolanta-Höfig-Platz 164;Backnang;21819;DEU;19032026;inactive
+CUST000002;Davids AG & Co. OHG;Alwine-Schleich-Gasse 71;Altötting;86379;DEU;28122023;active
+CUST000005;Tlustek AG;Gesche-Heidrich-Ring 9;Eberswalde;31647;DEU;11062025;active
+CUST000008;Jopich;Gerdi-Ortmann-Straße 140;Wolfratshausen;24238;AUT;09012024;active
+CUST000009;Lorch;Klotzplatz 151;Sebnitz;87101;AUT;03062026;active
+CUST000012;Hesse;Ana-Döring-Allee 24;Plauen;89325;AUT;29052025;active
+CUST000013;Ackermann;Niemeiergasse 89;Borna;54303;CHE;12072023;active
+CUST000017;Holsten OHG mbH;Hamannstr. 50;Erkelenz;99737;CHE;18092025;active
+CUST000018;Dietz OHG mbH;Klappstraße 170;Bützow;70106;DEU;01042023;active
+CUST000021;Adler Krebs GbR;Hörlestraße 95;Wolfratshausen;23430;AUT;22022024;inactive
+CUST000024;Trubin;Henckring 137;Miltenberg;24751;CHE;01102023;active
+CUST000025;Rose;Claus-Dieter-Renner-Platz 119;Ebermannstadt;25135;AUT;20062023;inactive
+CUST000026;Ring Tlustek GmbH;Gloria-Röhrdanz-Ring 177;Guben;24118;CHE;12012024;inactive
+CUST000027;Schleich Häring Stiftung & Co. KG;Haaseweg 84;Göppingen;87401;DEU;04122023;active
+CUST000028;Adler GmbH;Fadime-Hesse-Platz 81;Tübingen;86801;AUT;29062023;active
+CUST000031;Walter GmbH;Staudeallee 118;Gadebusch;42160;DEU;11072023;active
+CUST000036;Tschentscher GmbH;Stahrstraße 194;Stollberg;64823;DEU;06042025;active
+CUST000043;Butte;Gerard-Heinrich-Straße 76;Lübeck;31665;AUT;20092024;active
+CUST000044;Haering GmbH & Co. KG;Winklerstr. 1;Worbis;96705;CHE;17072023;inactive
+CUST000047;Junken Hahn GmbH & Co. KG;Kallertallee 156;Wolgast;46417;DEU;11102024;active
+CUST000051;Stolze Schinke e.V.;Louise-Rosemann-Gasse 62;Anklam;86518;DEU;17102023;inactive
+CUST000053;Wagenknecht Scheel GbR;Henschelallee 195;Husum;47379;CHE;30012025;active
+CUST000059;Schweitzer e.G.;Dobesallee 116;Erbisdorf;94777;DEU;18092023;active
+CUST000060;Herrmann GmbH & Co. KGaA;Marie-Bolzmann-Straße 17;Borna;19022;AUT;04042026;inactive
+CUST000063;Franke AG;Mendeweg 16;Bernburg;40344;DEU;26092025;active
+CUST000068;Schuster Noack AG;Keudelstraße 49;Hagenow;51256;DEU;28052025;inactive
+CUST000070;Graf GmbH & Co. OHG;Scholtzallee 120;Hagenow;70348;CHE;20112025;inactive
+CUST000071;Thanel Neureuther AG;Yasemin-Schuchhardt-Weg 168;Bremervörde;24808;CHE;22052025;active
+CUST000073;Fiebig;Grein Grothstr. 64;Ahaus;14658;DEU;11052024;inactive
+CUST000075;Thanel GbR;Heintzeallee 72;Norden;05766;AUT;10092023;active
+CUST000076;Eberth GmbH & Co. OHG;Ditschlerinallee 114;Starnberg;18702;CHE;24052025;active
+CUST000077;Bruder GmbH & Co. KGaA;Kambsstr. 167;Potsdam;15865;CHE;30042026;active
+CUST000078;Schönland AG;Eva-Stolze-Ring 193;Uelzen;16117;DEU;17082024;active
+CUST000079;Baum Bien GmbH;Klaus-Michael-Klemt-Ring 125;Eilenburg;23869;AUT;05022024;active
+CUST000083;Kroker;Andersstr. 184;Füssen;97439;AUT;03102024;active
+CUST000084;Grein Groth;Stiebitzallee 76;Wiedenbrück;10470;DEU;02112025;inactive
+CUST000085;Conradi GmbH;Weinholdstraße 189;Eckernförde;32858;CHE;23102025;inactive
+CUST000086;Nerger Hübel Stiftung & Co. KGaA;Drewesstraße 81;Lemgo;23685;DEU;06122025;inactive
+CUST000088;Rörricht;Schmidtplatz 15;Bad Kissingen;74612;CHE;05082025;active
+CUST000089;Nohlmans Drub AG;Reni-Renner-Platz 18;Lübeck;75869;CHE;24092025;inactive
+CUST000090;Dippel;Schmiedtstraße 61;Karlsruhe;05377;AUT;23022025;inactive
+CUST000095;Hartung;Iwona-Ziegert-Allee 81;Torgau;70076;DEU;08072023;active
+CUST000097;Radisch;Metzstr. 118;Geithain;11836;AUT;05092025;active
+CUST000099;Caspar AG;Dietzweg 19;Stuttgart;28098;CHE;07022024;inactive

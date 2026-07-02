@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
+.pytest_cache/
+.coverage
+build/
+dist/
+
+# Real/raw company data must never be committed or published.
+artifacts/benchmark_package/*/source_data/

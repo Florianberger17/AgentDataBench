@@ -1,0 +1,41 @@
+seed: 123
+
+locale: de_DE
+
+columns:
+
+  - column: supplier no
+    strategy: unique_sequence
+    format: "{:07d}"
+    start: 1000000
+
+  - column: name 1
+    strategy: faker
+    provider: company
+
+  - column: name 2
+    strategy: faker
+    provider: company
+
+  - column: country code
+    strategy: categorical_resample
+
+  - column: post_code
+    strategy: faker
+    provider: postcode
+
+  - column: city
+    strategy: faker
+    provider: city
+
+  - column: street
+    strategy: faker
+    provider: street_name
+
+  - column: house_num1
+    strategy: faker
+    provider: building_number
+
+  - column: last_activity
+    strategy: date_distribution
+    field_format: "DD.MM.YYYY"

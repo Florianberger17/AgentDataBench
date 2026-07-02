@@ -1,0 +1,16 @@
+seed: 42
+
+excluded_columns:
+  - supplier no
+  - name 1
+
+noise_types:
+
+  - type: typo
+    probability: 0.05
+
+  - type: duplicate
+    probability: 0.10
+
+  - type: missing_value
+    probability: 0.03

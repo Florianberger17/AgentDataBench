@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "migratebench"
+version = "0.1.0"
+description = "Framework for creating and evaluating reproducible data migration/integration benchmarks for agent-based systems."
+requires-python = ">=3.12"
+dependencies = [
+    "pydantic>=2.6",
+    "PyYAML>=6.0",
+    "pandas>=2.2",
+    "Faker>=40.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[tool.setuptools.packages.find]
+where = ["src"]

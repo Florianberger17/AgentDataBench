@@ -1,0 +1,67 @@
+table: supplier_master
+
+entity: Supplier
+
+description: >
+  Structural schema definition for supplier master data in a legacy ERP
+  system. This schema defines only the data structure and does not describe
+  data quality characteristics or migration rules.
+
+attributes:
+
+  - name: supplier no
+    type: string
+    required: true
+    unique: true
+    description: Unique supplier identifier in the legacy ERP system.
+
+  - name: name 1
+    type: string
+    required: true
+    description: Short supplier name.
+
+  - name: name 2
+    type: string
+    required: false
+    description: Legal supplier name.
+
+  - name: country code
+    type: string
+    required: true
+    description: ISO 3166 alpha-3 country code.
+
+  - name: post_code
+    type: string
+    required: false
+    description: Postal code.
+
+  - name: city
+    type: string
+    required: false
+    description: City.
+
+  - name: street
+    type: string
+    required: false
+    description: Street name.
+
+  - name: house_num1
+    type: string
+    required: false
+    description: House number.
+
+  - name: last_activity
+    type: date
+    required: true
+    description: Date of the last recorded business activity.
+
+constraints:
+
+  - id: CON-SRC-001
+    description: supplier no must be unique.
+
+  - id: CON-SRC-002
+    description: name 1 must be provided.
+
+  - id: CON-SRC-003
+    description: last_activity must contain a valid date.

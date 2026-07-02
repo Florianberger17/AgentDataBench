@@ -1,0 +1,99 @@
+task_id: 002_ERP_PART_MIGRATION
+
+objective: >
+  Transform the provided part master dataset from the source schema to the
+  target schema and produce a CSV file that conforms exactly to the target schema.
+
+input:
+  source_dataset: data/dataset.csv
+  source_schema: schemas/source_schema.yaml
+  target_schema: schemas/target_schema.yaml
+
+required_operations:
+  - filtering
+  - schema_mapping
+  - value_mapping
+  - value_transformation
+  - field_concatenation
+  - sequential_identifier_generation
+
+business_rules:
+
+  filtering:
+    description: >
+      Exclude all parts whose part status is greater than 1.
+
+    rules:
+      - field: part status
+        operator: "<="
+        value: 1
+
+  mappings:
+
+    - source_field: part no.
+      target_field: erp no
+      transformation:
+        type: sequential_number
+        start: 30000000000
+        increment: 1
+        digits: 11
+      description: >
+        Replace the legacy part number with a consecutive 11-digit ERP number.
+        The first output record shall receive ERP number 30000000000.
+        Subsequent records shall receive consecutive numbers in the order of
+        the filtered dataset.
+
+    - source_fields:
+        - part no.
+        - name
+      target_field: description
+      transformation:
+        type: concatenate
+        separator: " "
+      description: >
+        Concatenate the legacy part number and the part name separated by
+        a single blank character.
+
+    - source_field: unit
+      target_field: unit
+      transformation:
+        type: copy
+
+    - source_field: spare part id
+      target_field: material type
+      transformation:
+        type: value_mapping
+        mapping:
+          "spare part": "erze"
+          "no spare part": "bmav"
+
+    - source_field: part status
+      target_field: status
+      transformation:
+        type: value_mapping
+        mapping:
+          "1": "f"
+
+    - source_field: creation date
+      target_field: generation date
+      transformation:
+        type: date_format
+        input_format: DD.MM.YY
+        output_format: DD.MM.YYYY
+
+ignored_source_fields:
+  - approval
+  - item type
+  - lead time
+  - creator
+
+output:
+  format: csv
+  schema_reference: schemas/target_schema.yaml
+
+constraints:
+  - The output dataset must follow the target schema exactly.
+  - The output column order must match the target schema.
+  - No additional columns may be added.
+  - Each output row shall represent one valid part record after filtering.
+  - The generated ERP numbers shall be unique.
