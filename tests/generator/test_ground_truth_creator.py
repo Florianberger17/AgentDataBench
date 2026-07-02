@@ -1,9 +1,9 @@
 import pandas as pd
 import pytest
 
-from migratebench.domain.schema import Schema
-from migratebench.domain.task import Task
-from migratebench.generator.ground_truth_creator import GroundTruthCreator
+from agentdatabench.domain.schema import Schema
+from agentdatabench.domain.task import Task
+from agentdatabench.generator.ground_truth_creator import GroundTruthCreator
 
 
 def _task(**business_rules_overrides):

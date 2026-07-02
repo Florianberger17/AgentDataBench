@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from migratebench.domain.dataset import Dataset
+from agentdatabench.domain.dataset import Dataset
 
 
 def test_dataset_sniffs_comma_delimiter(pkg1_root):

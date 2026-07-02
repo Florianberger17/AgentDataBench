@@ -10,10 +10,10 @@ from __future__ import annotations
 
 import pandas as pd
 
-from migratebench.domain.schema import Schema
-from migratebench.domain.task import Task
-from migratebench.generator.filtering import apply_filtering
-from migratebench.generator.transformations import (
+from agentdatabench.domain.schema import Schema
+from agentdatabench.domain.task import Task
+from agentdatabench.generator.filtering import apply_filtering
+from agentdatabench.generator.transformations import (
     DEFAULT_TRANSFORMATION_HANDLERS,
     TransformationHandler,
 )

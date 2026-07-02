@@ -21,8 +21,8 @@ from typing import Protocol
 import pandas as pd
 from faker import Faker
 
-from migratebench.domain.synthesis_configuration import ColumnSynthesisConfig
-from migratebench.generator.date_formats import translate_date_format
+from agentdatabench.domain.synthesis_configuration import ColumnSynthesisConfig
+from agentdatabench.generator.date_formats import translate_date_format
 
 
 class SynthesisStrategy(Protocol):

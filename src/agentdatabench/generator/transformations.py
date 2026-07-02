@@ -12,8 +12,8 @@ from typing import Protocol
 
 import pandas as pd
 
-from migratebench.domain.task import MappingRule
-from migratebench.generator.date_formats import translate_date_format
+from agentdatabench.domain.task import MappingRule
+from agentdatabench.generator.date_formats import translate_date_format
 
 
 class TransformationHandler(Protocol):

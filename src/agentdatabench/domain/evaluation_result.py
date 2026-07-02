@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from datetime import datetime
 
-from migratebench.domain.common import StrictBaseModel
+from agentdatabench.domain.common import StrictBaseModel
 
 
 class MetricResult(StrictBaseModel):

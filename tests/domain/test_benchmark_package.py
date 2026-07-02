@@ -1,4 +1,4 @@
-from migratebench.domain.benchmark_package import BenchmarkPackage
+from agentdatabench.domain.benchmark_package import BenchmarkPackage
 
 
 def test_load_pkg1_customer_migration(pkg1_root):

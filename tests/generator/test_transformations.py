@@ -1,8 +1,8 @@
 import pandas as pd
 import pytest
 
-from migratebench.domain.task import MappingRule
-from migratebench.generator.transformations import (
+from agentdatabench.domain.task import MappingRule
+from agentdatabench.generator.transformations import (
     ConcatenateHandler,
     CopyHandler,
     DateFormatHandler,

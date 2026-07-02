@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict
 
-from migratebench.domain.common import StrictBaseModel
+from agentdatabench.domain.common import StrictBaseModel
 
 
 class NoiseTypeConfig(BaseModel):

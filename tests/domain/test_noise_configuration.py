@@ -1,4 +1,4 @@
-from migratebench.domain.noise_configuration import NoiseConfiguration
+from agentdatabench.domain.noise_configuration import NoiseConfiguration
 
 VALID = {
     "seed": 42,

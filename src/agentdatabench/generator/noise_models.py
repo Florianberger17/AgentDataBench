@@ -16,7 +16,7 @@ from typing import Protocol
 
 import pandas as pd
 
-from migratebench.domain.noise_configuration import NoiseTypeConfig
+from agentdatabench.domain.noise_configuration import NoiseTypeConfig
 
 
 class NoiseModel(Protocol):

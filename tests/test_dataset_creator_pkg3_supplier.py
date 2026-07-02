@@ -7,10 +7,10 @@ raw file isn't present locally (it's deliberately never committed).
 
 import pytest
 
-from migratebench.domain.common import load_yaml
-from migratebench.domain.dataset import Dataset
-from migratebench.domain.synthesis_configuration import SynthesisConfiguration
-from migratebench.generator.dataset_creator import DatasetCreator
+from agentdatabench.domain.common import load_yaml
+from agentdatabench.domain.dataset import Dataset
+from agentdatabench.domain.synthesis_configuration import SynthesisConfiguration
+from agentdatabench.generator.dataset_creator import DatasetCreator
 
 
 def test_dataset_creator_does_not_leak_real_values_on_pkg3(pkg3_root):

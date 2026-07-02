@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from migratebench.domain.evaluation_result import EvaluationResult, MetricResult
+from agentdatabench.domain.evaluation_result import EvaluationResult, MetricResult
 
 
 def test_evaluation_result_happy_path():

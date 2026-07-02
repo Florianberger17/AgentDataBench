@@ -1,8 +1,8 @@
 import pandas as pd
 import pytest
 
-from migratebench.domain.synthesis_configuration import SynthesisConfiguration
-from migratebench.generator.dataset_creator import DatasetCreator
+from agentdatabench.domain.synthesis_configuration import SynthesisConfiguration
+from agentdatabench.generator.dataset_creator import DatasetCreator
 
 # Fabricated placeholder data, not real company data.
 SOURCE_DF = pd.DataFrame(

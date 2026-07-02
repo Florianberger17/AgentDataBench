@@ -1,8 +1,8 @@
 import pandas as pd
 import pytest
 
-from migratebench.domain.noise_configuration import NoiseConfiguration
-from migratebench.generator.noise_engine import NoiseEngine
+from agentdatabench.domain.noise_configuration import NoiseConfiguration
+from agentdatabench.generator.noise_engine import NoiseEngine
 
 
 def test_same_seed_gives_identical_output():

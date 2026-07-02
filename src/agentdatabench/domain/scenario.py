@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from migratebench.domain.common import StrictBaseModel
+from agentdatabench.domain.common import StrictBaseModel
 
 
 class SystemInfo(StrictBaseModel):

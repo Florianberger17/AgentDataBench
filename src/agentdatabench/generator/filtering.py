@@ -18,8 +18,8 @@ from typing import Any, Callable
 
 import pandas as pd
 
-from migratebench.domain.task import FilterRule, FilteringRules
-from migratebench.generator.date_formats import translate_date_format
+from agentdatabench.domain.task import FilterRule, FilteringRules
+from agentdatabench.generator.date_formats import translate_date_format
 
 OPERATORS: dict[str, Callable[..., pd.Series]] = {
     ">=": operator.ge,

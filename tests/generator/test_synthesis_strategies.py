@@ -4,8 +4,8 @@ import pandas as pd
 import pytest
 from faker import Faker
 
-from migratebench.domain.synthesis_configuration import ColumnSynthesisConfig
-from migratebench.generator.synthesis_strategies import (
+from agentdatabench.domain.synthesis_configuration import ColumnSynthesisConfig
+from agentdatabench.generator.synthesis_strategies import (
     CategoricalResampleStrategy,
     DateDistributionStrategy,
     FakerStrategy,

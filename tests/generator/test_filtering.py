@@ -1,7 +1,7 @@
 import pandas as pd
 
-from migratebench.domain.task import FilteringRules
-from migratebench.generator.filtering import apply_filtering
+from agentdatabench.domain.task import FilteringRules
+from agentdatabench.generator.filtering import apply_filtering
 
 
 def test_apply_filtering_none_returns_df_unchanged():

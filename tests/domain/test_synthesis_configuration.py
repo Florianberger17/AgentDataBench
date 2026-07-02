@@ -1,4 +1,4 @@
-from migratebench.domain.synthesis_configuration import SynthesisConfiguration
+from agentdatabench.domain.synthesis_configuration import SynthesisConfiguration
 
 VALID = {
     "seed": 123,

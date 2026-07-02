@@ -7,7 +7,7 @@ fixture dicts in the unit tests.
 
 import pytest
 
-from migratebench.domain.benchmark_package import BenchmarkPackage
+from agentdatabench.domain.benchmark_package import BenchmarkPackage
 
 PACKAGE_DIRS = ["001_customer_migration", "002_material_master_migration"]
 

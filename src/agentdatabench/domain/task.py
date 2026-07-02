@@ -14,7 +14,7 @@ from typing import Any
 
 from pydantic import BaseModel, ConfigDict, model_validator
 
-from migratebench.domain.common import StrictBaseModel
+from agentdatabench.domain.common import StrictBaseModel
 
 
 class FilterRule(StrictBaseModel):

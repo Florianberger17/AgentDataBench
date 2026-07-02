@@ -1,4 +1,4 @@
-"""Shared building blocks for the migratebench domain model."""
+"""Shared building blocks for the agentdatabench domain model."""
 
 from __future__ import annotations
 

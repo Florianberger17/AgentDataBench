@@ -1,18 +1,18 @@
-"""Domain model for migratebench: Scenario, Task, Schema, Dataset, BenchmarkPackage,
+"""Domain model for agentdatabench: Scenario, Task, Schema, Dataset, BenchmarkPackage,
 Metadata, EvaluationResult and their supporting types."""
 
-from migratebench.domain.benchmark_package import BenchmarkPackage
-from migratebench.domain.dataset import Dataset
-from migratebench.domain.evaluation_result import EvaluationResult, MetricResult
-from migratebench.domain.metadata import Metadata
-from migratebench.domain.noise_configuration import NoiseConfiguration, NoiseTypeConfig
-from migratebench.domain.scenario import Scenario, SystemInfo, Systems
-from migratebench.domain.synthesis_configuration import (
+from agentdatabench.domain.benchmark_package import BenchmarkPackage
+from agentdatabench.domain.dataset import Dataset
+from agentdatabench.domain.evaluation_result import EvaluationResult, MetricResult
+from agentdatabench.domain.metadata import Metadata
+from agentdatabench.domain.noise_configuration import NoiseConfiguration, NoiseTypeConfig
+from agentdatabench.domain.scenario import Scenario, SystemInfo, Systems
+from agentdatabench.domain.synthesis_configuration import (
     ColumnSynthesisConfig,
     SynthesisConfiguration,
 )
-from migratebench.domain.schema import Attribute, Schema, SchemaConstraint
-from migratebench.domain.task import (
+from agentdatabench.domain.schema import Attribute, Schema, SchemaConstraint
+from agentdatabench.domain.task import (
     BusinessRules,
     FilterRule,
     FilteringRules,

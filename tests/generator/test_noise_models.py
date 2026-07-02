@@ -3,8 +3,8 @@ from collections import Counter
 
 import pandas as pd
 
-from migratebench.domain.noise_configuration import NoiseTypeConfig
-from migratebench.generator.noise_models import (
+from agentdatabench.domain.noise_configuration import NoiseTypeConfig
+from agentdatabench.generator.noise_models import (
     DuplicateNoiseModel,
     MissingValueNoiseModel,
     TypoNoiseModel,

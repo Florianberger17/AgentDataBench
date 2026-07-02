@@ -5,8 +5,8 @@ files exactly, starting from each package's clean_dataset.csv and task.yaml.
 import pandas as pd
 import pytest
 
-from migratebench.domain.benchmark_package import BenchmarkPackage
-from migratebench.generator.ground_truth_creator import GroundTruthCreator
+from agentdatabench.domain.benchmark_package import BenchmarkPackage
+from agentdatabench.generator.ground_truth_creator import GroundTruthCreator
 
 PACKAGE_DIRS = ["001_customer_migration", "002_material_master_migration"]
 

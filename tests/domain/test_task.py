@@ -1,7 +1,7 @@
 import pytest
 from pydantic import ValidationError
 
-from migratebench.domain.task import FilteringRules, MappingRule, TransformationSpec
+from agentdatabench.domain.task import FilteringRules, MappingRule, TransformationSpec
 
 INLINE_FILTER = {
     "description": "Only recent customers.",

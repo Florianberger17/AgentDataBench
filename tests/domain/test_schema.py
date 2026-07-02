@@ -1,7 +1,7 @@
 import pytest
 from pydantic import ValidationError
 
-from migratebench.domain.schema import Schema
+from agentdatabench.domain.schema import Schema
 
 VALID = {
     "table": "customer_master",

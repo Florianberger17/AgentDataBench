@@ -12,12 +12,12 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from migratebench.domain.common import load_yaml
-from migratebench.domain.dataset import Dataset
-from migratebench.domain.metadata import Metadata
-from migratebench.domain.scenario import Scenario
-from migratebench.domain.schema import Schema
-from migratebench.domain.task import Task
+from agentdatabench.domain.common import load_yaml
+from agentdatabench.domain.dataset import Dataset
+from agentdatabench.domain.metadata import Metadata
+from agentdatabench.domain.scenario import Scenario
+from agentdatabench.domain.schema import Schema
+from agentdatabench.domain.task import Task
 
 
 class BenchmarkPackage:

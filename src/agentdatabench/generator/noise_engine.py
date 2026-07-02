@@ -7,8 +7,8 @@ import random
 
 import pandas as pd
 
-from migratebench.domain.noise_configuration import NoiseConfiguration
-from migratebench.generator.noise_models import DEFAULT_NOISE_MODELS, NoiseModel
+from agentdatabench.domain.noise_configuration import NoiseConfiguration
+from agentdatabench.generator.noise_models import DEFAULT_NOISE_MODELS, NoiseModel
 
 
 class NoiseEngine:

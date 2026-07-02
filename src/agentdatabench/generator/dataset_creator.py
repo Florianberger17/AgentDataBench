@@ -8,8 +8,8 @@ import random
 import pandas as pd
 from faker import Faker
 
-from migratebench.domain.synthesis_configuration import SynthesisConfiguration
-from migratebench.generator.synthesis_strategies import (
+from agentdatabench.domain.synthesis_configuration import SynthesisConfiguration
+from agentdatabench.generator.synthesis_strategies import (
     DEFAULT_SYNTHESIS_STRATEGIES,
     SynthesisStrategy,
 )

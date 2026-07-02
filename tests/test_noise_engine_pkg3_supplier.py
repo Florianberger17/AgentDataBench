@@ -9,10 +9,10 @@ this component), so this asserts structural invariants instead.
 
 import pandas as pd
 
-from migratebench.domain.common import load_yaml
-from migratebench.domain.dataset import Dataset
-from migratebench.domain.noise_configuration import NoiseConfiguration
-from migratebench.generator.noise_engine import NoiseEngine
+from agentdatabench.domain.common import load_yaml
+from agentdatabench.domain.dataset import Dataset
+from agentdatabench.domain.noise_configuration import NoiseConfiguration
+from agentdatabench.generator.noise_engine import NoiseEngine
 
 
 def test_noise_engine_reproduces_deterministically_on_pkg3(pkg3_root):

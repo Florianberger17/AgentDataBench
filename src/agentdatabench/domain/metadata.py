@@ -6,7 +6,7 @@ from typing import Literal
 
 from pydantic import field_validator
 
-from migratebench.domain.common import StrictBaseModel
+from agentdatabench.domain.common import StrictBaseModel
 
 
 class Metadata(StrictBaseModel):

@@ -1,7 +1,7 @@
 import pytest
 from pydantic import ValidationError
 
-from migratebench.domain.metadata import Metadata
+from agentdatabench.domain.metadata import Metadata
 
 VALID = {
     "scenario_id": "001_TEST",

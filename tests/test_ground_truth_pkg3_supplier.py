@@ -10,11 +10,11 @@ numbering, value mapping) before being committed as the golden reference.
 
 import pandas as pd
 
-from migratebench.domain.common import load_yaml
-from migratebench.domain.dataset import Dataset
-from migratebench.domain.schema import Schema
-from migratebench.domain.task import Task
-from migratebench.generator.ground_truth_creator import GroundTruthCreator
+from agentdatabench.domain.common import load_yaml
+from agentdatabench.domain.dataset import Dataset
+from agentdatabench.domain.schema import Schema
+from agentdatabench.domain.task import Task
+from agentdatabench.generator.ground_truth_creator import GroundTruthCreator
 
 
 def _load_task_and_target_schema(root):
