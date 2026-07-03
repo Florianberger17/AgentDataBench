@@ -1,9 +1,5 @@
-"""EvaluationResult domain object.
-
-Provisional/skeletal: this shape exists so the domain model is complete per the
-overall architecture, but it will be extended once the Evaluation Framework
-(metrics computation, report generation) is actually implemented.
-"""
+"""EvaluationResult domain object: the outcome of running EvaluationRunner
+for one (BenchmarkPackage, AgentAdapter) pair."""
 
 from __future__ import annotations
 
@@ -24,3 +20,7 @@ class EvaluationResult(StrictBaseModel):
     metrics: list[MetricResult]
     passed: bool
     timestamp: datetime
+    # Set when the agent itself failed (timeout/crash/no output) before any
+    # metric could be computed - distinct from a metric legitimately scoring
+    # low on a produced-but-incorrect output. `metrics` is empty in that case.
+    error: str | None = None

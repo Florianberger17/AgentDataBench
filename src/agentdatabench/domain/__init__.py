@@ -1,8 +1,10 @@
 """Domain model for agentdatabench: Scenario, Task, Schema, Dataset, BenchmarkPackage,
-Metadata, EvaluationResult, ValidationResult and their supporting types."""
+Metadata, EvaluationResult, ValidationResult, AgentRunResult and their supporting types."""
 
+from agentdatabench.domain.agent_run_result import AgentRunResult
 from agentdatabench.domain.benchmark_package import BenchmarkPackage
 from agentdatabench.domain.dataset import Dataset
+from agentdatabench.domain.evaluation_report import AgentSummary, EvaluationReport
 from agentdatabench.domain.evaluation_result import EvaluationResult, MetricResult
 from agentdatabench.domain.metadata import Metadata
 from agentdatabench.domain.noise_configuration import NoiseConfiguration, NoiseTypeConfig
@@ -25,8 +27,11 @@ from agentdatabench.domain.task import (
 from agentdatabench.domain.validation_result import ValidationIssue, ValidationResult
 
 __all__ = [
+    "AgentRunResult",
+    "AgentSummary",
     "BenchmarkPackage",
     "Dataset",
+    "EvaluationReport",
     "EvaluationResult",
     "MetricResult",
     "Metadata",

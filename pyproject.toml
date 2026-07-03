@@ -16,6 +16,10 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0"]
+# metagpt only supports Python <3.12 as of this writing, incompatible with
+# this project's own >=3.12 requirement - install into a separate Python
+# <=3.11 environment to actually run DataInterpreterAdapter live.
+data-interpreter = ["metagpt"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
