@@ -89,6 +89,11 @@ class TaskInput(StrictBaseModel):
     source_dataset: str
     source_schema: str
     target_schema: str
+    # Paths (relative to the package root) to supplementary files an agent
+    # may need to consult for information missing from source_dataset (e.g.
+    # a PDF order confirmation carrying an address the CSV lacks). Optional
+    # since most tasks are self-contained within the CSV/schemas alone.
+    additional_documents: list[str] | None = None
 
 
 class TaskOutput(StrictBaseModel):

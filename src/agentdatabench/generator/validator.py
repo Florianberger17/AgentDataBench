@@ -83,6 +83,16 @@ class CompletenessCheck:
                     )
                 )
 
+        for document in task.input.additional_documents or []:
+            if not (root / document).is_file():
+                issues.append(
+                    ValidationIssue(
+                        severity="error",
+                        code="missing_file",
+                        message=f"task.input.additional_documents entry is missing: {document}",
+                    )
+                )
+
         return issues
 
 

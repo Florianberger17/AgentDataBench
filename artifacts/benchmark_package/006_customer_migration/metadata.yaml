@@ -1,0 +1,17 @@
+scenario_id: 006_ERP_CUSTOMER_MIGRATION
+
+task_id: 006_ERP_CUSTOMER_MIGRATION
+
+version: 1.0
+
+author: Florian Berger
+
+created: 01/07/2026
+
+difficulty: easy
+
+seed: 
+
+
+
+

@@ -5,9 +5,11 @@ failure handling around whatever `_invoke` does.
 """
 
 import asyncio
+import shutil
 from pathlib import Path
 
 import pandas as pd
+import yaml
 
 from agentdatabench.domain.benchmark_package import BenchmarkPackage
 from agentdatabench.evaluation.agent_adapter import OUTPUT_FILENAME, AgentAdapter
@@ -144,3 +146,48 @@ def test_prompt_includes_data_quality_note_when_cleaning_required(pkg3_root):
     prompt = adapter.captured_prompt
     assert "data cleaning" in prompt
     assert "data quality issues" in prompt
+
+
+def _package_with_additional_document(pkg1_root, tmp_path, document_name="extra.pdf"):
+    package_root = tmp_path / "pkg"
+    shutil.copytree(pkg1_root, package_root)
+    (package_root / document_name).write_bytes(b"%PDF-1.4 fake pdf content")
+
+    task_path = package_root / "task.yaml"
+    task_data = yaml.safe_load(task_path.read_text())
+    task_data["input"]["additional_documents"] = [document_name]
+    task_path.write_text(yaml.safe_dump(task_data))
+
+    return BenchmarkPackage.load(package_root)
+
+
+def test_prepare_workspace_copies_additional_documents(pkg1_root, tmp_path):
+    package = _package_with_additional_document(pkg1_root, tmp_path)
+    adapter = _EchoingFakeAdapter(name="echo")
+
+    result = asyncio.run(adapter.run(package))
+
+    copied = result.workspace / "extra.pdf"
+    assert copied.is_file()
+    assert copied.read_bytes() == b"%PDF-1.4 fake pdf content"
+
+
+def test_prompt_mentions_additional_documents_when_present(pkg1_root, tmp_path):
+    package = _package_with_additional_document(pkg1_root, tmp_path)
+    adapter = _PromptCapturingFakeAdapter()
+
+    asyncio.run(adapter.run(package))
+
+    prompt = adapter.captured_prompt
+    assert "Additional documents:" in prompt
+    assert "extra.pdf" in prompt
+    assert "consult them when a required field is empty" in prompt
+
+
+def test_prompt_omits_additional_documents_section_when_absent(pkg1_root):
+    package = BenchmarkPackage.load(pkg1_root)
+    adapter = _PromptCapturingFakeAdapter()
+
+    asyncio.run(adapter.run(package))
+
+    assert "Additional documents" not in adapter.captured_prompt

@@ -1,0 +1,104 @@
+task_id: 006_ERP_CUSTOMER_MIGRATION
+
+objective: >
+  Transform the provided customer dataset from the source schema to the target
+  schema and produce a CSV file that conforms to the target schema.
+
+input:
+  source_dataset: data/dataset.csv
+  source_schema: schemas/source_schema.yaml
+  target_schema: schemas/target_schema.yaml
+  additional_documents:
+    - data/OC-2026-000123.pdf
+
+required_operations:
+  - filtering
+  - schema_mapping
+  - value_mapping
+  - value_transformation
+  - field_concatenation
+  - document_lookup
+
+
+business_rules:
+  filtering:
+    description: >
+      Only customers with business activity on or after 2023-01-01 shall be
+      included in the output dataset.
+    field: LastOrderDate
+    operator: ">="
+    value: "2023-01-01"
+
+  mappings:
+
+    - source_field: CustNo
+      target_field: CustomerID
+      transformation:
+        type: copy
+
+    - source_field: CompanyName
+      target_field: Name
+      transformation:
+        type: copy
+
+    - source_fields:
+        - StreetAddress
+        - HouseNo
+      target_field: Street
+      transformation:
+        type: concatenate
+        separator: " "
+      description: >
+        Concatenate the street name and house number separated by a single
+        blank character.
+
+    - source_field: Town
+      target_field: City
+      transformation:
+        type: copy
+
+    - source_field: ZipCode
+      target_field: PostalCode
+      transformation:
+        type: copy
+
+    - source_field: CountryCode
+      target_field: Country
+      transformation:
+        type: value_mapping
+        mapping:
+          "DE": "DEU"
+          "AT": "AUT"
+          "CH": "CHE"
+      description: >
+        Convert the ISO 3166 alpha-2 country code to the ISO 3166 alpha-3
+        country code required by the target ERP system.
+
+    - source_field: LastOrderDate
+      target_field: LastBusinessActivityDate
+      transformation:
+        type: date_format
+        input_format: YYYY-MM-DD
+        output_format: DDMMYYYY
+
+    - source_field: CustomerType
+      target_field: Status
+      transformation:
+        type: value_mapping
+        mapping:
+          "Customer": "active"
+          "Prospect": "active"
+          "FormerCustomer": "inactive"
+      description: >
+        Former customers are considered inactive; current customers and
+        prospects are considered active.
+
+output:
+  format: csv
+  schema_reference: schemas/target_schema.yaml
+
+constraints:
+  - The output dataset must follow the target schema exactly.
+  - Each output row shall represent one customer record.
+  - No additional columns may be added.
+  - The column order must match the target schema.

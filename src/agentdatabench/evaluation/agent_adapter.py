@@ -102,8 +102,10 @@ class AgentAdapter(ABC):
     def _prepare_workspace(self, package: BenchmarkPackage, workspace: Path) -> None:
         """Materializes the task's input files into `workspace`. Copies
         whatever files the task references rather than assuming CSV-only, so
-        future attachments (e.g. PDFs an agent must search) need no change
-        here beyond referencing them in `_build_prompt`."""
+        additional attachments (e.g. a PDF an agent must search for
+        information missing from the CSV) need no change here beyond the
+        `additional_documents` loop below and being mentioned in
+        `_build_prompt`."""
         shutil.copy(package.dataset.path, workspace / "dataset.csv")
         shutil.copy(
             package.root / package.task.input.source_schema, workspace / "source_schema.yaml"
@@ -111,6 +113,9 @@ class AgentAdapter(ABC):
         shutil.copy(
             package.root / package.task.input.target_schema, workspace / "target_schema.yaml"
         )
+        for document in package.task.input.additional_documents or []:
+            source_path = package.root / document
+            shutil.copy(source_path, workspace / source_path.name)
 
     def _build_prompt(self, package: BenchmarkPackage, workspace: Path) -> str:
         task = package.task
@@ -124,6 +129,7 @@ class AgentAdapter(ABC):
             f"Source schema: {workspace / 'source_schema.yaml'}",
             f"Target schema: {workspace / 'target_schema.yaml'}",
             "",
+            *self._render_additional_documents(task.input.additional_documents, workspace),
             *self._render_business_rules(task.business_rules),
             "Constraints:",
             *(f"- {constraint}" for constraint in task.constraints),
@@ -151,6 +157,27 @@ class AgentAdapter(ABC):
             "expected mapping key may be a typo of a valid value rather than "
             "a genuinely different value.",
         ]
+
+    def _render_additional_documents(
+        self, additional_documents: list[str] | None, workspace: Path
+    ) -> list[str]:
+        """Points the agent at supplementary files (e.g. a PDF order
+        confirmation) and hints that they may hold information missing from
+        the dataset - without saying which record or field, so the agent
+        still has to notice the gap and go looking, not just copy a value
+        it's told about upfront."""
+        if not additional_documents:
+            return []
+        lines = ["Additional documents:"]
+        for document in additional_documents:
+            lines.append(f"  - {workspace / Path(document).name}")
+        lines.append(
+            "Note: some information required for the mappings below may be "
+            "missing from the input dataset but available in the additional "
+            "documents above - consult them when a required field is empty."
+        )
+        lines.append("")
+        return lines
 
     def _render_business_rules(self, business_rules: BusinessRules) -> list[str]:
         """Renders task.business_rules into natural language. Without this,

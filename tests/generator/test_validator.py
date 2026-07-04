@@ -31,6 +31,22 @@ def test_validate_real_packages_have_no_issues(package_dir_fixture, request):
     assert result.issues == []
 
 
+def test_validate_detects_missing_additional_document(pkg1_root, tmp_path):
+    work_root = _copy(pkg1_root, tmp_path / "pkg")
+    task_path = work_root / "task.yaml"
+    task_data = yaml.safe_load(task_path.read_text())
+    task_data["input"]["additional_documents"] = ["order_confirmation.pdf"]
+    task_path.write_text(yaml.safe_dump(task_data))
+
+    result = Validator().validate(work_root)
+
+    assert not result.is_valid
+    assert any(
+        i.code == "missing_file" and "order_confirmation.pdf" in i.message
+        for i in result.issues
+    )
+
+
 def test_validate_reports_all_missing_files_at_once(pkg3_root, tmp_path):
     work_root = _copy(pkg3_root, tmp_path / "pkg")
     (work_root / "scenario.yaml").unlink()
