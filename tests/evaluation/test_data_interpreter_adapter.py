@@ -47,7 +47,7 @@ def _launcher_recording_calls(calls, process: _FakeProcess):
     return launch
 
 
-def test_invoke_writes_prompt_file_and_launches_subprocess_with_venv_python(pkg1_root):
+def test_invoke_writes_prompt_file_and_launches_subprocess_with_venv_python(pkg1_root, tmp_path):
     package = BenchmarkPackage.load(pkg1_root)
     calls = []
     process = _FakeProcess(returncode=0, stdout=b"some log output")
@@ -65,6 +65,7 @@ def test_invoke_writes_prompt_file_and_launches_subprocess_with_venv_python(pkg1
 
     adapter = DataInterpreterAdapter(
         venv_python=Path("/fake/venv-di/bin/python"),
+        default_workspace_root=tmp_path,
         subprocess_launcher=launch,
     )
 
@@ -79,6 +80,12 @@ def test_invoke_writes_prompt_file_and_launches_subprocess_with_venv_python(pkg1
     assert (workspace / "prompt.txt").is_file()
     assert package.task.objective.strip() in (workspace / "prompt.txt").read_text()
     assert (workspace / "run.log").read_bytes() == b"some log output"
+
+
+def test_default_workspace_root_is_manual_runs_under_metagpt_project_root(tmp_path):
+    adapter = DataInterpreterAdapter(metagpt_project_root=tmp_path / "metagpt-runtime")
+
+    assert adapter._default_workspace_root == tmp_path / "metagpt-runtime" / "manual_runs"
 
 
 def test_invoke_passes_role_kwargs_as_json(tmp_path):
@@ -109,11 +116,12 @@ def test_invoke_sets_metagpt_project_root_env_var(tmp_path):
     assert env["METAGPT_PROJECT_ROOT"] == str(Path("/fake/metagpt-runtime").resolve())
 
 
-def test_run_fails_when_subprocess_exits_nonzero(pkg1_root):
+def test_run_fails_when_subprocess_exits_nonzero(pkg1_root, tmp_path):
     package = BenchmarkPackage.load(pkg1_root)
     process = _FakeProcess(returncode=1, stdout=b"traceback here")
     adapter = DataInterpreterAdapter(
-        subprocess_launcher=_launcher_recording_calls([], process)
+        default_workspace_root=tmp_path,
+        subprocess_launcher=_launcher_recording_calls([], process),
     )
 
     result = asyncio.run(adapter.run(package))
@@ -123,7 +131,7 @@ def test_run_fails_when_subprocess_exits_nonzero(pkg1_root):
     assert (result.workspace / "run.log").read_bytes() == b"traceback here"
 
 
-def test_run_kills_subprocess_on_timeout(pkg1_root):
+def test_run_kills_subprocess_on_timeout(pkg1_root, tmp_path):
     package = BenchmarkPackage.load(pkg1_root)
 
     async def hang_forever():
@@ -131,7 +139,8 @@ def test_run_kills_subprocess_on_timeout(pkg1_root):
 
     process = _FakeProcess(on_communicate=hang_forever)
     adapter = DataInterpreterAdapter(
-        subprocess_launcher=_launcher_recording_calls([], process)
+        default_workspace_root=tmp_path,
+        subprocess_launcher=_launcher_recording_calls([], process),
     )
 
     result = asyncio.run(adapter.run(package, timeout=0.05))
@@ -142,9 +151,12 @@ def test_run_kills_subprocess_on_timeout(pkg1_root):
     assert process.waited
 
 
-def test_launching_a_nonexistent_venv_python_fails_cleanly(pkg1_root):
+def test_launching_a_nonexistent_venv_python_fails_cleanly(pkg1_root, tmp_path):
     package = BenchmarkPackage.load(pkg1_root)
-    adapter = DataInterpreterAdapter(venv_python=Path("/nonexistent/venv-di/bin/python"))
+    adapter = DataInterpreterAdapter(
+        venv_python=Path("/nonexistent/venv-di/bin/python"),
+        default_workspace_root=tmp_path,
+    )
 
     result = asyncio.run(adapter.run(package))
 

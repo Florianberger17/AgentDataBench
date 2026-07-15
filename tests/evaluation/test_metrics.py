@@ -119,6 +119,43 @@ def test_field_mapping_accuracy_missing_column_scores_zero_for_that_column():
     assert result.score == pytest.approx(0.5)
 
 
+def test_field_mapping_accuracy_treats_concatenated_nan_as_unpopulated():
+    # Real AG2 output: f"{row['StreetAddress']} {row['HouseNo']}" with both
+    # source fields empty produces the literal, non-empty string "nan nan" -
+    # must not be counted as a populated field.
+    ground_truth = pd.DataFrame({"street": ["Holstenplatz 189"]})
+    output = pd.DataFrame({"street": ["nan nan"]})
+    result = FieldMappingAccuracyMetric().compute(output, ground_truth, package=None)
+    assert result.score == 0.0
+
+
+def test_field_mapping_accuracy_treats_bare_missing_tokens_as_unpopulated():
+    ground_truth = pd.DataFrame({"a": ["1"], "b": ["2"], "c": ["3"]})
+    output = pd.DataFrame({"a": ["nan"], "b": ["None"], "c": ["<NA>"]})
+    result = FieldMappingAccuracyMetric().compute(output, ground_truth, package=None)
+    assert result.score == 0.0
+
+
+def test_field_mapping_accuracy_handles_raw_nan_values_without_crashing():
+    # Dataset (dtype=str) still yields real float NaN for genuinely empty
+    # CSV cells - pandas' own astype(str) does not reliably turn every one
+    # of those into the string "nan" before Series.map() sees it, so this
+    # must not raise (regression: 'float' object has no attribute 'strip').
+    ground_truth = pd.DataFrame({"a": ["1"], "b": ["2"]})
+    output = pd.DataFrame({"a": [float("nan")], "b": ["2"]})
+    result = FieldMappingAccuracyMetric().compute(output, ground_truth, package=None)
+    assert result.score == pytest.approx(0.5)
+
+
+def test_field_mapping_accuracy_does_not_flag_real_values_containing_nan_substring():
+    # "Nano" starts with "nan" but is not the token "nan" - must not be
+    # confused with a stringified missing value.
+    ground_truth = pd.DataFrame({"name": ["Nano Systems"]})
+    output = pd.DataFrame({"name": ["Nano Systems"]})
+    result = FieldMappingAccuracyMetric().compute(output, ground_truth, package=None)
+    assert result.score == 1.0
+
+
 def test_transformation_accuracy_perfect_match():
     df = pd.DataFrame({"a": ["1", "2"], "b": ["x", "y"]})
     result = TransformationAccuracyMetric().compute(df, df, package=None)

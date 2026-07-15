@@ -10,6 +10,10 @@ input:
   target_schema: schemas/target_schema.yaml
   additional_documents:
     - data/OC-2026-000123.pdf
+    - data/OC-2026-01.pdf
+    - data/OC-2026-02.pdf
+    - data/IN-2026-01.pdf
+    - data/IN-2026-02.pdf
 
 required_operations:
   - filtering

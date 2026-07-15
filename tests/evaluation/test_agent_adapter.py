@@ -6,6 +6,9 @@ failure handling around whatever `_invoke` does.
 
 import asyncio
 import shutil
+import tempfile
+import unittest.mock
+from datetime import datetime
 from pathlib import Path
 
 import pandas as pd
@@ -63,6 +66,52 @@ def test_run_prepares_workspace_with_input_files(pkg1_root):
     assert (result.workspace / "dataset.csv").is_file()
     assert (result.workspace / "source_schema.yaml").is_file()
     assert (result.workspace / "target_schema.yaml").is_file()
+
+
+def test_run_uses_system_temp_when_no_workspace_root_given(pkg1_root):
+    package = BenchmarkPackage.load(pkg1_root)
+    adapter = _EchoingFakeAdapter(name="echo")
+
+    result = asyncio.run(adapter.run(package))
+
+    assert str(result.workspace).startswith(tempfile.gettempdir())
+
+
+def test_run_names_workspace_by_agent_and_timestamp_under_workspace_root(pkg1_root, tmp_path):
+    package = BenchmarkPackage.load(pkg1_root)
+    adapter = _EchoingFakeAdapter(name="echo")
+    workspace_root = tmp_path / "manual_runs"
+
+    before = datetime.now().strftime("%Y%m%d_%H%M%S")
+    result = asyncio.run(adapter.run(package, workspace_root=workspace_root))
+    after = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+    assert result.workspace.parent == workspace_root
+    assert result.workspace.name.startswith("echo_")
+    timestamp = result.workspace.name.removeprefix("echo_")
+    assert before <= timestamp <= after
+
+
+def test_run_falls_back_to_unique_suffix_on_workspace_name_collision(pkg1_root, tmp_path):
+    package = BenchmarkPackage.load(pkg1_root)
+    adapter = _EchoingFakeAdapter(name="echo")
+    workspace_root = tmp_path / "manual_runs"
+
+    fixed_timestamp = "20260715_185700"
+    workspace_root.mkdir(parents=True)
+    (workspace_root / f"echo_{fixed_timestamp}").mkdir()
+
+    class _FixedDatetime(datetime):
+        @classmethod
+        def now(cls, tz=None):
+            return datetime.strptime(fixed_timestamp, "%Y%m%d_%H%M%S")
+
+    with unittest.mock.patch("agentdatabench.evaluation.agent_adapter.datetime", _FixedDatetime):
+        result = asyncio.run(adapter.run(package, workspace_root=workspace_root))
+
+    assert result.workspace.parent == workspace_root
+    assert result.workspace.name != f"echo_{fixed_timestamp}"
+    assert result.workspace.name.startswith(f"echo_{fixed_timestamp}_")
 
 
 def test_run_fails_when_no_output_produced(pkg1_root):

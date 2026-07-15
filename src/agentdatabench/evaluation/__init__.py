@@ -2,7 +2,9 @@
 scores their results."""
 
 from agentdatabench.evaluation.agent_adapter import AgentAdapter
+from agentdatabench.evaluation.ag2_adapter import AG2Adapter
 from agentdatabench.evaluation.data_interpreter_adapter import DataInterpreterAdapter
+from agentdatabench.evaluation.direct_llm_adapter import DirectLLMAdapter
 from agentdatabench.evaluation.metrics import (
     DEFAULT_METRICS,
     ErrorCorrectionAccuracyMetric,
@@ -23,7 +25,9 @@ from agentdatabench.evaluation.runner import EvaluationRunner
 
 __all__ = [
     "AgentAdapter",
+    "AG2Adapter",
     "DataInterpreterAdapter",
+    "DirectLLMAdapter",
     "DEFAULT_METRICS",
     "Metric",
     "SchemaAccuracyMetric",

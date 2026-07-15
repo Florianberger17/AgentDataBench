@@ -1,0 +1,13 @@
+seed: 42
+
+excluded_columns:
+  - CustNo
+  - CompanyName
+  - CountryCode
+  - LastOrderDate
+  - CustomerType
+
+noise_types:
+
+  - type: missing_value
+    probability: 1.00

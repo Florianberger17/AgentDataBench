@@ -32,6 +32,7 @@ import asyncio
 import shutil
 import time
 from abc import ABC, abstractmethod
+from datetime import datetime
 from pathlib import Path
 from tempfile import mkdtemp
 
@@ -43,19 +44,38 @@ OUTPUT_FILENAME = "solution.csv"
 
 
 class AgentAdapter(ABC):
-    def __init__(self, name: str) -> None:
+    def __init__(self, name: str, default_workspace_root: Path | None = None) -> None:
         self.name = name
+        # A concrete adapter can set its own default (e.g. DataInterpreterAdapter
+        # points this at venv-di/metagpt-runtime/manual_runs by default) so
+        # callers get durable, easy-to-find workspaces without having to pass
+        # workspace_root on every single run() call.
+        self._default_workspace_root = default_workspace_root
 
     async def run(
-        self, package: BenchmarkPackage, *, timeout: float | None = None
+        self,
+        package: BenchmarkPackage,
+        *,
+        timeout: float | None = None,
+        workspace_root: Path | None = None,
     ) -> AgentRunResult:
         """Runs the wrapped agent on `package` in a fresh, isolated workspace
         directory and returns an AgentRunResult - on success or on failure.
         The workspace is left on disk (not cleaned up) so a failed run can be
         inspected; callers that care about disk usage are responsible for
         removing `result.workspace` themselves.
+
+        `workspace_root` (falling back to `self._default_workspace_root`, and
+        from there to the system temp directory if neither is set) is where
+        the workspace is created. A system-temp workspace is fine for quick/
+        throwaway calls, but can be cleaned up by the OS at any time and
+        isn't a reliable place to keep results. Pass an explicit
+        `workspace_root` (e.g. a project-relative directory) for runs whose
+        output you want to keep; the workspace is then named
+        `<agent_name>_<timestamp>` under it, e.g.
+        `data-interpreter_20260715_185700`.
         """
-        workspace = Path(mkdtemp(prefix=f"agentdatabench_{self.name}_"))
+        workspace = self._make_workspace(workspace_root or self._default_workspace_root)
         started = time.monotonic()
 
         try:
@@ -86,6 +106,22 @@ class AgentAdapter(ABC):
             workspace=workspace,
             output_dataset_path=output_path,
         )
+
+    def _make_workspace(self, workspace_root: Path | None) -> Path:
+        if workspace_root is None:
+            return Path(mkdtemp(prefix=f"agentdatabench_{self.name}_"))
+
+        workspace_root.mkdir(parents=True, exist_ok=True)
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        candidate = workspace_root / f"{self.name}_{timestamp}"
+        try:
+            candidate.mkdir(parents=True)
+            return candidate
+        except FileExistsError:
+            # Two runs started within the same second - fall back to a
+            # unique suffix rather than silently reusing the other run's
+            # workspace.
+            return Path(mkdtemp(prefix=f"{self.name}_{timestamp}_", dir=workspace_root))
 
     def _failure(
         self, package: BenchmarkPackage, workspace: Path, started: float, error: str

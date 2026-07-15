@@ -47,19 +47,30 @@ class DataInterpreterAdapter(AgentAdapter):
         name: str = "data-interpreter",
         venv_python: Path | None = None,
         metagpt_project_root: Path | None = None,
+        default_workspace_root: Path | None = None,
         subprocess_launcher: SubprocessLauncher | None = None,
         **role_kwargs: Any,
     ) -> None:
-        super().__init__(name)
+        # Runs land in metagpt_project_root/manual_runs by default (the same
+        # place scripts/di_smoke_test/ has always used) rather than the
+        # system temp directory AgentAdapter otherwise defaults to, so real
+        # runs stay easy to find and don't get cleaned up by the OS. Pass
+        # workspace_root=... on an individual run() call to override this
+        # per-call, or default_workspace_root=... here to change it for
+        # every run from this adapter instance.
+        metagpt_project_root = (metagpt_project_root or Path("venv-di/metagpt-runtime")).resolve()
+        super().__init__(
+            name,
+            default_workspace_root=default_workspace_root
+            or (metagpt_project_root / "manual_runs"),
+        )
         # .absolute(), never .resolve(): venv-di/bin/python is a symlink to a
         # shared base interpreter (e.g. installed by uv). Resolving it away
         # makes Python invoke the base interpreter directly, which then
         # fails to detect it's running inside the venv and loses access to
         # its site-packages (where metagpt is installed) entirely.
         self._venv_python = (venv_python or Path("venv-di/bin/python")).absolute()
-        self._metagpt_project_root = (
-            metagpt_project_root or Path("venv-di/metagpt-runtime")
-        ).resolve()
+        self._metagpt_project_root = metagpt_project_root
         self._launch_subprocess = subprocess_launcher or asyncio.create_subprocess_exec
         self._role_kwargs = role_kwargs
 

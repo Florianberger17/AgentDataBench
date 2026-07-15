@@ -89,3 +89,15 @@ def test_runner_records_agent_failure_without_computing_metrics(pkg1_root):
     assert not result.passed
     assert result.metrics == []
     assert "boom" in result.error
+
+
+def test_runner_passes_workspace_root_through_to_adapter(pkg1_root, tmp_path):
+    package = BenchmarkPackage.load(pkg1_root)
+    adapter = _PerfectFakeAdapter(ground_truth_path=package.ground_truth.path)
+    workspace_root = tmp_path / "manual_runs"
+
+    asyncio.run(EvaluationRunner().run(package, adapter, workspace_root=workspace_root))
+
+    children = list(workspace_root.iterdir())
+    assert len(children) == 1
+    assert children[0].name.startswith("perfect-fake_")

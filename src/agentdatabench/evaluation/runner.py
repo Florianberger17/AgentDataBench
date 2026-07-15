@@ -11,6 +11,7 @@ but produced output.
 from __future__ import annotations
 
 from datetime import datetime, timezone
+from pathlib import Path
 
 from agentdatabench.domain.benchmark_package import BenchmarkPackage
 from agentdatabench.domain.dataset import Dataset
@@ -29,8 +30,11 @@ class EvaluationRunner:
         adapter: AgentAdapter,
         *,
         timeout: float | None = None,
+        workspace_root: Path | None = None,
     ) -> EvaluationResult:
-        agent_result = await adapter.run(package, timeout=timeout)
+        agent_result = await adapter.run(
+            package, timeout=timeout, workspace_root=workspace_root
+        )
 
         if not agent_result.success:
             return EvaluationResult(

@@ -20,6 +20,13 @@ dev = ["pytest>=8.0"]
 # this project's own >=3.12 requirement - install into a separate Python
 # <=3.11 environment to actually run DataInterpreterAdapter live.
 data-interpreter = ["metagpt"]
+# ag2 (formerly AutoGen) is mid-rewrite toward a v1.0 that removes
+# ConversableAgent/RetrieveUserProxyAgent and the `autogen` import name
+# entirely - pinned to the last stable release built on that API.
+ag2 = ["ag2[openai,retrievechat]==0.14.0"]
+# DirectLLMAdapter: a raw LLM call plus PDF text extraction, no agent
+# framework - lightweight, no version-pinning concerns like the two above.
+direct-llm = ["openai>=1.0", "pypdf>=4.0"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

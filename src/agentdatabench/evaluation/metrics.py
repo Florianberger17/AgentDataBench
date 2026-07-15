@@ -20,6 +20,7 @@ wrong it was:
 
 from __future__ import annotations
 
+import re
 from collections import Counter, defaultdict
 from typing import Protocol
 
@@ -30,6 +31,39 @@ from agentdatabench.domain.common import load_yaml
 from agentdatabench.domain.evaluation_result import MetricResult
 from agentdatabench.domain.noise_configuration import NoiseConfiguration
 from agentdatabench.generator.filtering import apply_filtering
+
+# String forms pandas itself produces when stringifying a missing value
+# (e.g. str(float("nan")) == "nan", str(None) == "None", str(pd.NA) ==
+# "<NA>"). Matched case-insensitively, one token at a time - see
+# _is_meaningfully_populated.
+_MISSING_VALUE_TOKENS = {"nan", "none", "null", "nat", "<na>"}
+_TOKEN_SPLIT_PATTERN = re.compile(r"[\s\-_/,.]+")
+
+
+def _is_meaningfully_populated(value: object) -> bool:
+    """False for a raw NaN/None, an empty string, and also for a string that
+    consists *entirely* of missing-value tokens (e.g. "nan nan") - the real
+    result of a live AG2 run whose generated code string-concatenated two
+    empty source fields (f"{row['StreetAddress']} {row['HouseNo']}" with
+    both NaN). That output is non-empty text, so a plain non-null/non-empty
+    check silently counts it as "populated" even though it carries no real
+    information. A field containing "nan" only as part of a longer real
+    value (e.g. "Nano Systems") is unaffected: every token must match.
+
+    Takes the raw cell value (not a pre-stringified one): pandas' own
+    `Series.astype(str)` does not reliably turn every NaN into the string
+    "nan" before `Series.map()` sees it, so converting here - after an
+    explicit `pd.isna` check - is the robust order of operations.
+    """
+    if pd.isna(value):
+        return False
+    stripped = str(value).strip()
+    if not stripped:
+        return False
+    tokens = [token for token in _TOKEN_SPLIT_PATTERN.split(stripped.lower()) if token]
+    if not tokens:
+        return False
+    return not all(token in _MISSING_VALUE_TOKENS for token in tokens)
 
 
 class Metric(Protocol):
@@ -151,13 +185,16 @@ class FilteringAccuracyMetric:
 
 class FieldMappingAccuracyMetric:
     """Fraction of expected target columns that are populated with a
-    non-null, non-empty value in the output (averaged as a per-row rate,
-    then across columns) - measures whether each field was mapped from
-    *something* at all, independent of whether the mapped value is exactly
-    correct (that's Transformation Accuracy's job). Motivated by a real
-    failure mode observed in a live Data Interpreter run: an unresolved
-    value-mapping lookup (a typo'd country code with no matching key) left
-    the target column blank instead of raising or falling back."""
+    meaningful (non-null, non-empty, not-just-missing-value-tokens) value in
+    the output - measures whether each field was mapped from *something* at
+    all, independent of whether the mapped value is exactly correct (that's
+    Transformation Accuracy's job). Motivated by two real failure modes seen
+    in live agent runs: (1) Data Interpreter left a target column blank
+    after an unresolved value-mapping lookup instead of raising or falling
+    back; (2) AG2's own generated code string-concatenated two empty source
+    fields into the literal text "nan nan" - non-empty, so it would pass a
+    naive blank check, but just as uninformative as an empty cell. See
+    _is_meaningfully_populated."""
 
     name = "field_mapping_accuracy"
 
@@ -176,9 +213,8 @@ class FieldMappingAccuracyMetric:
             if column not in output_df.columns or output_df.empty:
                 populated_fraction_by_column[column] = 0.0
                 continue
-            series = output_df[column]
-            non_empty = series.notna() & (series.astype(str).str.strip() != "")
-            populated_fraction_by_column[column] = float(non_empty.mean())
+            populated = output_df[column].map(_is_meaningfully_populated)
+            populated_fraction_by_column[column] = float(populated.mean())
 
         score = sum(populated_fraction_by_column.values()) / len(expected_columns)
         return MetricResult(
