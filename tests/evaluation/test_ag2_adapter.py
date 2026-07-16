@@ -55,6 +55,82 @@ def test_invoke_calls_run_chat_with_prompt_and_writes_output(pkg1_root, tmp_path
     assert (result.workspace / "run.log").read_text() == "fake chat ran\n"
 
 
+class _FakeChatResult:
+    """Duck-typed stand-in for autogen's real ChatResult - _extract_metadata
+    only reads .chat_history and .cost, so a real ag2 install isn't needed
+    to exercise that extraction logic."""
+
+    def __init__(self, chat_history, cost):
+        self.chat_history = chat_history
+        self.cost = cost
+
+
+def test_invoke_extracts_steps_and_token_usage_from_chat_result(pkg1_root, tmp_path):
+    package = BenchmarkPackage.load(pkg1_root)
+
+    def fake_run_chat(prompt, workspace, docs_paths, llm_config, retrieve_config_extra):
+        df = pd.read_csv(workspace / "dataset.csv", dtype=str)
+        df.to_csv(workspace / OUTPUT_FILENAME, index=False)
+        return _FakeChatResult(
+            # Mirrors user_proxy's real chat_messages shape: its own
+            # messages (the initial prompt, relaying execution results) are
+            # tagged role="assistant" from its own bookkeeping perspective
+            # (see the module docstring) - only "name" reliably identifies
+            # who actually sent each message. Two of these three came from
+            # "assistant" - a real LLM call each.
+            chat_history=[
+                {"content": "here is the task", "role": "assistant", "name": "user_proxy"},
+                {"content": "```python\n...\n```", "role": "user", "name": "assistant"},
+                {"content": "execution result: ...", "role": "assistant", "name": "user_proxy"},
+                {"content": "```python\n...\n```", "role": "user", "name": "assistant"},
+            ],
+            cost={
+                "usage_excluding_cached_inference": {
+                    "total_cost": 0.0012,
+                    "gpt-4o-mini": {
+                        "cost": 0.0012,
+                        "prompt_tokens": 500,
+                        "completion_tokens": 80,
+                        "total_tokens": 580,
+                    },
+                },
+            },
+        )
+
+    adapter = AG2Adapter(default_workspace_root=tmp_path, run_chat=fake_run_chat)
+
+    result = asyncio.run(adapter.run(package))
+
+    assert result.success, result.error
+    assert result.metadata == {
+        "steps": 4,
+        "llm_calls": 2,
+        "total_cost": 0.0012,
+        "prompt_tokens": 500,
+        "completion_tokens": 80,
+        "total_tokens": 580,
+    }
+
+
+def test_invoke_leaves_metadata_empty_when_run_chat_returns_none(pkg1_root, tmp_path):
+    # The default plain-UserProxyAgent/AssistantAgent branch used to return
+    # None implicitly before _run_chat started returning initiate_chat's
+    # result - a custom injected run_chat may still do this.
+    package = BenchmarkPackage.load(pkg1_root)
+
+    def fake_run_chat(prompt, workspace, docs_paths, llm_config, retrieve_config_extra):
+        df = pd.read_csv(workspace / "dataset.csv", dtype=str)
+        df.to_csv(workspace / OUTPUT_FILENAME, index=False)
+        return None
+
+    adapter = AG2Adapter(default_workspace_root=tmp_path, run_chat=fake_run_chat)
+
+    result = asyncio.run(adapter.run(package))
+
+    assert result.success, result.error
+    assert result.metadata == {}
+
+
 def test_invoke_passes_pdf_paths_from_workspace(pkg1_root, tmp_path):
     # Package 001 itself has no additional_documents, so this exercises the
     # PDF-discovery path directly by dropping a fake PDF into the workspace

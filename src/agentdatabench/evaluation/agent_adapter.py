@@ -30,6 +30,7 @@ from __future__ import annotations
 
 import asyncio
 import shutil
+import sys
 import time
 from abc import ABC, abstractmethod
 from datetime import datetime
@@ -41,6 +42,10 @@ from agentdatabench.domain.benchmark_package import BenchmarkPackage
 from agentdatabench.domain.task import BusinessRules
 
 OUTPUT_FILENAME = "solution.csv"
+# The agent's own documentation of how it produced OUTPUT_FILENAME - re-run
+# by ReproducibilityCheck to verify the agent's result is actually
+# reproducible, not a one-off. See reproducibility.py.
+SOLUTION_SCRIPT_FILENAME = "solution.py"
 
 
 class AgentAdapter(ABC):
@@ -51,6 +56,17 @@ class AgentAdapter(ABC):
         # callers get durable, easy-to-find workspaces without having to pass
         # workspace_root on every single run() call.
         self._default_workspace_root = default_workspace_root
+
+    @property
+    def execution_python(self) -> Path:
+        """The interpreter that can run this agent's generated code (e.g.
+        SOLUTION_SCRIPT_FILENAME) - not necessarily the interpreter running
+        this process. Defaults to this process's own interpreter; overridden
+        by adapters that run the agent in a separate environment (e.g.
+        DataInterpreterAdapter's venv-di), since re-executing generated code
+        with the wrong interpreter would report false irreproducibility from
+        a missing dependency, not a genuine agent failure."""
+        return Path(sys.executable)
 
     async def run(
         self,
@@ -81,7 +97,7 @@ class AgentAdapter(ABC):
         try:
             self._prepare_workspace(package, workspace)
             prompt = self._build_prompt(package, workspace)
-            await asyncio.wait_for(self._invoke(prompt, workspace), timeout=timeout)
+            metadata = await asyncio.wait_for(self._invoke(prompt, workspace), timeout=timeout)
         except TimeoutError:
             return self._failure(
                 package, workspace, started, f"Agent did not finish within {timeout}s"
@@ -96,6 +112,7 @@ class AgentAdapter(ABC):
                 workspace,
                 started,
                 f"Agent did not produce {OUTPUT_FILENAME} in the workspace",
+                metadata=metadata,
             )
 
         return AgentRunResult(
@@ -105,6 +122,7 @@ class AgentAdapter(ABC):
             duration_seconds=time.monotonic() - started,
             workspace=workspace,
             output_dataset_path=output_path,
+            metadata=metadata or {},
         )
 
     def _make_workspace(self, workspace_root: Path | None) -> Path:
@@ -124,7 +142,12 @@ class AgentAdapter(ABC):
             return Path(mkdtemp(prefix=f"{self.name}_{timestamp}_", dir=workspace_root))
 
     def _failure(
-        self, package: BenchmarkPackage, workspace: Path, started: float, error: str
+        self,
+        package: BenchmarkPackage,
+        workspace: Path,
+        started: float,
+        error: str,
+        metadata: dict | None = None,
     ) -> AgentRunResult:
         return AgentRunResult(
             agent_name=self.name,
@@ -133,6 +156,7 @@ class AgentAdapter(ABC):
             duration_seconds=time.monotonic() - started,
             workspace=workspace,
             error=error,
+            metadata=metadata or {},
         )
 
     def _prepare_workspace(self, package: BenchmarkPackage, workspace: Path) -> None:
@@ -172,6 +196,14 @@ class AgentAdapter(ABC):
             "",
             f"Write the final result as a CSV file to exactly this path: "
             f"{workspace / OUTPUT_FILENAME}",
+            "",
+            f"Additionally, produce a self-contained, commented Python script "
+            f"at exactly this path: {workspace / SOLUTION_SCRIPT_FILENAME}. "
+            f"Running that script on its own, with no other prior state, "
+            f"must read the input dataset from {workspace / 'dataset.csv'} "
+            f"and deterministically reproduce the exact same result at "
+            f"{workspace / OUTPUT_FILENAME} - this script is how the "
+            f"reproducibility of your solution will be verified.",
         ]
         return "\n".join(lines)
 
@@ -248,9 +280,16 @@ class AgentAdapter(ABC):
         return lines
 
     @abstractmethod
-    async def _invoke(self, prompt: str, workspace: Path) -> None:
+    async def _invoke(self, prompt: str, workspace: Path) -> dict | None:
         """Runs the wrapped agent on `prompt` inside `workspace`. Must write
         the result to `workspace / OUTPUT_FILENAME` before returning. Raise
         on unrecoverable failure - `run()` turns that into a failed
-        AgentRunResult rather than propagating it."""
+        AgentRunResult rather than propagating it.
+
+        May return a dict of whatever run metadata the underlying agent
+        framework happens to expose (e.g. {"steps": 3, "prompt_tokens": 407,
+        "completion_tokens": 37}) - merged verbatim into AgentRunResult.metadata.
+        Left as an open dict rather than fixed fields since what's available
+        differs entirely per framework (e.g. Direct-LLM has no step concept
+        at all); return None/{} if nothing is available."""
         ...

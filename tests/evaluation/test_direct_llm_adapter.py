@@ -13,7 +13,11 @@ import pytest
 import yaml
 
 from agentdatabench.domain.benchmark_package import BenchmarkPackage
-from agentdatabench.evaluation.direct_llm_adapter import DirectLLMAdapter, _extract_code
+from agentdatabench.evaluation.direct_llm_adapter import (
+    DirectLLMAdapter,
+    GeneratedCode,
+    _extract_code,
+)
 
 _ECHO_SCRIPT = """
 ```python
@@ -25,8 +29,8 @@ df.to_csv(r"{output_path}", index=False)
 
 
 def _echo_code(dataset_path: Path, output_path: Path):
-    def generate_code(prompt: str, model: str) -> str:
-        return _ECHO_SCRIPT.format(dataset_path=dataset_path, output_path=output_path)
+    def generate_code(prompt: str, model: str) -> GeneratedCode:
+        return GeneratedCode(_ECHO_SCRIPT.format(dataset_path=dataset_path, output_path=output_path))
 
     return generate_code
 
@@ -86,13 +90,16 @@ def test_run_executes_generated_code_and_collects_output(pkg1_root, tmp_path):
 
     # generate_code doesn't know the real workspace path in advance, so
     # build it lazily from the prompt the adapter passes to _invoke.
-    def generate_code(prompt: str, model: str) -> str:
+    def generate_code(prompt: str, model: str) -> GeneratedCode:
         dataset_line = next(
             line for line in prompt.splitlines() if line.startswith("Input dataset:")
         )
         dataset_path = Path(dataset_line.split(": ", 1)[1])
         output_path = dataset_path.parent / "solution.csv"
-        return _ECHO_SCRIPT.format(dataset_path=dataset_path, output_path=output_path)
+        return GeneratedCode(
+            text=_ECHO_SCRIPT.format(dataset_path=dataset_path, output_path=output_path),
+            usage={"prompt_tokens": 111, "completion_tokens": 22, "total_tokens": 133},
+        )
 
     adapter = DirectLLMAdapter(default_workspace_root=workspace_root, generate_code=generate_code)
 
@@ -104,12 +111,34 @@ def test_run_executes_generated_code_and_collects_output(pkg1_root, tmp_path):
     assert (result.workspace / "response.txt").is_file()
     assert (result.workspace / "solution.py").is_file()
     assert (result.workspace / "run.log").is_file()
+    assert result.metadata == {"prompt_tokens": 111, "completion_tokens": 22, "total_tokens": 133}
+
+
+def test_run_leaves_metadata_empty_when_generate_code_reports_no_usage(pkg1_root, tmp_path):
+    package = BenchmarkPackage.load(pkg1_root)
+
+    def generate_code(prompt: str, model: str) -> GeneratedCode:
+        dataset_line = next(
+            line for line in prompt.splitlines() if line.startswith("Input dataset:")
+        )
+        dataset_path = Path(dataset_line.split(": ", 1)[1])
+        output_path = dataset_path.parent / "solution.csv"
+        return GeneratedCode(
+            text=_ECHO_SCRIPT.format(dataset_path=dataset_path, output_path=output_path)
+        )
+
+    adapter = DirectLLMAdapter(default_workspace_root=tmp_path, generate_code=generate_code)
+
+    result = asyncio.run(adapter.run(package))
+
+    assert result.success, result.error
+    assert result.metadata == {}
 
 
 def test_run_fails_cleanly_when_generate_code_raises(pkg1_root, tmp_path):
     package = BenchmarkPackage.load(pkg1_root)
 
-    def failing_generate_code(prompt: str, model: str) -> str:
+    def failing_generate_code(prompt: str, model: str) -> GeneratedCode:
         raise RuntimeError("LLM call blew up")
 
     adapter = DirectLLMAdapter(default_workspace_root=tmp_path, generate_code=failing_generate_code)
@@ -124,7 +153,7 @@ def test_run_fails_cleanly_when_response_has_no_code_block(pkg1_root, tmp_path):
     package = BenchmarkPackage.load(pkg1_root)
     adapter = DirectLLMAdapter(
         default_workspace_root=tmp_path,
-        generate_code=lambda prompt, model: "I refuse to write code.",
+        generate_code=lambda prompt, model: GeneratedCode("I refuse to write code."),
     )
 
     result = asyncio.run(adapter.run(package))
@@ -137,7 +166,9 @@ def test_run_fails_cleanly_when_generated_script_errors(pkg1_root, tmp_path):
     package = BenchmarkPackage.load(pkg1_root)
     adapter = DirectLLMAdapter(
         default_workspace_root=tmp_path,
-        generate_code=lambda prompt, model: "```python\nraise RuntimeError('bad script')\n```",
+        generate_code=lambda prompt, model: GeneratedCode(
+            "```python\nraise RuntimeError('bad script')\n```"
+        ),
     )
 
     result = asyncio.run(adapter.run(package))

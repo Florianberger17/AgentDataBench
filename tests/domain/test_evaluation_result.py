@@ -10,6 +10,9 @@ def test_evaluation_result_happy_path():
         metrics=[MetricResult(name="schema_accuracy", score=0.95)],
         passed=True,
         timestamp=datetime(2026, 7, 2, 12, 0, 0),
+        duration_seconds=12.5,
     )
     assert result.metrics[0].score == 0.95
     assert result.passed is True
+    assert result.duration_seconds == 12.5
+    assert result.metadata == {}

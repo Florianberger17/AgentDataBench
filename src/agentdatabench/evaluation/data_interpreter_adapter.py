@@ -74,7 +74,16 @@ class DataInterpreterAdapter(AgentAdapter):
         self._launch_subprocess = subprocess_launcher or asyncio.create_subprocess_exec
         self._role_kwargs = role_kwargs
 
-    async def _invoke(self, prompt: str, workspace: Path) -> None:
+    @property
+    def execution_python(self) -> Path:
+        # Generated code may depend on packages only installed in venv-di
+        # (e.g. pandas pinned to whatever version metagpt itself needs) -
+        # re-running it with the main project's interpreter would risk a
+        # false "not reproducible" from a missing dependency, not a genuine
+        # agent failure.
+        return self._venv_python
+
+    async def _invoke(self, prompt: str, workspace: Path) -> dict | None:
         (workspace / "prompt.txt").write_text(prompt)
 
         env = os.environ.copy()
@@ -104,3 +113,8 @@ class DataInterpreterAdapter(AgentAdapter):
                 f"Data Interpreter subprocess exited with code {process.returncode} "
                 f"- see {workspace / 'run.log'}"
             )
+
+        metadata_path = workspace / "di_metadata.json"
+        if metadata_path.is_file():
+            return json.loads(metadata_path.read_text())
+        return None

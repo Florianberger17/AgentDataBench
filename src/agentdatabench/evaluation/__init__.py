@@ -21,6 +21,7 @@ from agentdatabench.evaluation.report_generator import (
     load_evaluation_results,
     render_markdown,
 )
+from agentdatabench.evaluation.reproducibility import ReproducibilityCheck
 from agentdatabench.evaluation.runner import EvaluationRunner
 
 __all__ = [
@@ -40,5 +41,6 @@ __all__ = [
     "ReportGenerator",
     "load_evaluation_results",
     "render_markdown",
+    "ReproducibilityCheck",
     "EvaluationRunner",
 ]

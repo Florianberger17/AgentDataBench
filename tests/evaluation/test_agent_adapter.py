@@ -6,6 +6,7 @@ failure handling around whatever `_invoke` does.
 
 import asyncio
 import shutil
+import sys
 import tempfile
 import unittest.mock
 from datetime import datetime
@@ -15,7 +16,11 @@ import pandas as pd
 import yaml
 
 from agentdatabench.domain.benchmark_package import BenchmarkPackage
-from agentdatabench.evaluation.agent_adapter import OUTPUT_FILENAME, AgentAdapter
+from agentdatabench.evaluation.agent_adapter import (
+    OUTPUT_FILENAME,
+    SOLUTION_SCRIPT_FILENAME,
+    AgentAdapter,
+)
 
 
 class _EchoingFakeAdapter(AgentAdapter):
@@ -30,6 +35,24 @@ class _EchoingFakeAdapter(AgentAdapter):
 class _NoOutputFakeAdapter(AgentAdapter):
     async def _invoke(self, prompt: str, workspace: Path) -> None:
         pass
+
+
+class _NoOutputButReportsMetadataFakeAdapter(AgentAdapter):
+    """Reproduces a real Data Interpreter failure mode seen live against
+    package 004: the agent runs its full plan (spending real steps/tokens)
+    but never actually writes solution.csv - a genuine failure, but one
+    where _invoke() still returns metadata that must not be silently
+    dropped just because the run overall failed."""
+
+    async def _invoke(self, prompt: str, workspace: Path) -> dict:
+        return {"steps": 3, "prompt_tokens": 5322, "completion_tokens": 486}
+
+
+class _MetadataReportingFakeAdapter(AgentAdapter):
+    async def _invoke(self, prompt: str, workspace: Path) -> dict:
+        df = pd.read_csv(workspace / "dataset.csv", dtype=str)
+        df.to_csv(workspace / OUTPUT_FILENAME, index=False)
+        return {"steps": 2, "prompt_tokens": 99}
 
 
 class _SlowFakeAdapter(AgentAdapter):
@@ -55,6 +78,17 @@ def test_run_success_collects_output_dataset(pkg1_root):
     assert result.output_dataset_path is not None
     assert result.output_dataset_path.is_file()
     assert result.duration_seconds >= 0
+    assert result.metadata == {}
+
+
+def test_run_captures_metadata_returned_by_invoke(pkg1_root):
+    package = BenchmarkPackage.load(pkg1_root)
+    adapter = _MetadataReportingFakeAdapter(name="metadata-reporting")
+
+    result = asyncio.run(adapter.run(package))
+
+    assert result.success
+    assert result.metadata == {"steps": 2, "prompt_tokens": 99}
 
 
 def test_run_prepares_workspace_with_input_files(pkg1_root):
@@ -125,6 +159,16 @@ def test_run_fails_when_no_output_produced(pkg1_root):
     assert "did not produce" in result.error
 
 
+def test_run_preserves_metadata_even_when_no_output_produced(pkg1_root):
+    package = BenchmarkPackage.load(pkg1_root)
+    adapter = _NoOutputButReportsMetadataFakeAdapter(name="no-output-with-metadata")
+
+    result = asyncio.run(adapter.run(package))
+
+    assert not result.success
+    assert result.metadata == {"steps": 3, "prompt_tokens": 5322, "completion_tokens": 486}
+
+
 def test_run_fails_on_exception_instead_of_raising(pkg1_root):
     package = BenchmarkPackage.load(pkg1_root)
     adapter = _RaisingFakeAdapter(name="raises")
@@ -152,6 +196,22 @@ class _PromptCapturingFakeAdapter(AgentAdapter):
 
     async def _invoke(self, prompt: str, workspace: Path) -> None:
         self.captured_prompt = prompt
+
+
+def test_execution_python_defaults_to_this_process_interpreter():
+    adapter = _EchoingFakeAdapter(name="echo")
+    assert adapter.execution_python == Path(sys.executable)
+
+
+def test_prompt_requires_solution_script(pkg1_root):
+    package = BenchmarkPackage.load(pkg1_root)
+    adapter = _PromptCapturingFakeAdapter()
+
+    asyncio.run(adapter.run(package))
+
+    prompt = adapter.captured_prompt
+    assert SOLUTION_SCRIPT_FILENAME in prompt
+    assert "reproduc" in prompt.lower()
 
 
 def test_prompt_includes_filtering_and_mapping_business_rules(pkg1_root):

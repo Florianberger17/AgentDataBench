@@ -11,21 +11,34 @@ import pandas as pd
 import pytest
 
 from agentdatabench.domain.benchmark_package import BenchmarkPackage
-from agentdatabench.evaluation.agent_adapter import OUTPUT_FILENAME, AgentAdapter
+from agentdatabench.evaluation.agent_adapter import (
+    OUTPUT_FILENAME,
+    SOLUTION_SCRIPT_FILENAME,
+    AgentAdapter,
+)
 from agentdatabench.evaluation.runner import EvaluationRunner
 
 
 class _PerfectFakeAdapter(AgentAdapter):
     """"Solves" the task by copying the real ground_truth.csv - proves the
     runner scores a correct solution as passed, not that any real agent
-    reasoning happened."""
+    reasoning happened. Also writes a solution.py that deterministically
+    reproduces that same output, so the runner's reproducibility check has a
+    genuine success case to score, not just the "script missing" case the
+    other fakes below exercise."""
 
     def __init__(self, ground_truth_path: Path) -> None:
         super().__init__(name="perfect-fake")
         self._ground_truth_path = ground_truth_path
 
     async def _invoke(self, prompt: str, workspace: Path) -> None:
-        shutil.copy(self._ground_truth_path, workspace / OUTPUT_FILENAME)
+        output_path = workspace / OUTPUT_FILENAME
+        shutil.copy(self._ground_truth_path, output_path)
+        script = (
+            "import shutil\n"
+            f'shutil.copy(r"{self._ground_truth_path}", r"{output_path}")\n'
+        )
+        (workspace / SOLUTION_SCRIPT_FILENAME).write_text(script)
 
 
 class _GarbageFakeAdapter(AgentAdapter):
@@ -36,6 +49,20 @@ class _GarbageFakeAdapter(AgentAdapter):
 class _FailingFakeAdapter(AgentAdapter):
     async def _invoke(self, prompt: str, workspace: Path) -> None:
         raise RuntimeError("boom")
+
+
+class _MetadataFakeAdapter(AgentAdapter):
+    """Reports framework-specific run metadata (steps/tokens) alongside its
+    output, exercising the metadata pass-through EvaluationRunner ->
+    EvaluationResult without needing a real DI/AG2 run."""
+
+    def __init__(self, ground_truth_path: Path) -> None:
+        super().__init__(name="metadata-fake")
+        self._ground_truth_path = ground_truth_path
+
+    async def _invoke(self, prompt: str, workspace: Path) -> dict:
+        shutil.copy(self._ground_truth_path, workspace / OUTPUT_FILENAME)
+        return {"steps": 4, "prompt_tokens": 250}
 
 
 @pytest.mark.parametrize(
@@ -65,6 +92,8 @@ def test_runner_passes_when_agent_reproduces_ground_truth(package_dir_fixture, r
         "record_accuracy",
         "error_correction_accuracy",
     }
+    assert result.reproducibility is not None
+    assert result.reproducibility.score == 1.0
 
 
 def test_runner_fails_when_agent_produces_garbage(pkg1_root):
@@ -78,6 +107,10 @@ def test_runner_fails_when_agent_produces_garbage(pkg1_root):
     scores = {m.name: m.score for m in result.metrics}
     assert scores["schema_accuracy"] == 0.0
     assert scores["row_accuracy"] == 0.0
+    # No solution.py was written - a low-effort agent still gets scored, just
+    # with a 0.0 reproducibility result rather than a crash.
+    assert result.reproducibility is not None
+    assert result.reproducibility.score == 0.0
 
 
 def test_runner_records_agent_failure_without_computing_metrics(pkg1_root):
@@ -88,7 +121,22 @@ def test_runner_records_agent_failure_without_computing_metrics(pkg1_root):
 
     assert not result.passed
     assert result.metrics == []
+    assert result.reproducibility is None
     assert "boom" in result.error
+    # Duration is still meaningful even for a failed run (how long it took
+    # to fail); metadata is empty since _invoke never returned normally.
+    assert result.duration_seconds >= 0.0
+    assert result.metadata == {}
+
+
+def test_runner_copies_duration_and_metadata_from_agent_result(pkg1_root):
+    package = BenchmarkPackage.load(pkg1_root)
+    adapter = _MetadataFakeAdapter(ground_truth_path=package.ground_truth.path)
+
+    result = asyncio.run(EvaluationRunner().run(package, adapter))
+
+    assert result.duration_seconds >= 0.0
+    assert result.metadata == {"steps": 4, "prompt_tokens": 250}
 
 
 def test_runner_passes_workspace_root_through_to_adapter(pkg1_root, tmp_path):

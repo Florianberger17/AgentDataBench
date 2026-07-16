@@ -18,6 +18,20 @@ OpenAI call / pypdf extraction) so tests can run without hitting a real API
 or needing an actually-parseable PDF fixture. Code execution itself is not
 mocked in tests - it's just `sys.executable script.py` in this project's own
 venv, no special environment needed (unlike metagpt/ag2's heavier deps).
+
+`generate_code` returns a GeneratedCode(text, usage) pair rather than a bare
+string so the default OpenAI-backed implementation can report token usage
+into AgentRunResult.metadata - a custom injected generator may leave `usage`
+None if it has nothing to report. No "steps" metadata here (unlike
+DataInterpreterAdapter/AG2Adapter): a single completion call has no loop to
+count.
+
+AgentAdapter's base prompt separately asks for a SOLUTION_SCRIPT_FILENAME
+documenting the steps taken (see ReproducibilityCheck) - here that's
+satisfied by construction, since the one code block the model returns *is*
+both solution.csv's producer and solution.py verbatim; re-running it will
+trivially reproduce the same result unless the generated code itself is
+non-deterministic.
 """
 
 from __future__ import annotations
@@ -27,12 +41,26 @@ import os
 import re
 import sys
 from pathlib import Path
-from typing import Callable
+from typing import Callable, NamedTuple
 
 from agentdatabench.domain.benchmark_package import BenchmarkPackage
-from agentdatabench.evaluation.agent_adapter import OUTPUT_FILENAME, AgentAdapter
+from agentdatabench.evaluation.agent_adapter import (
+    OUTPUT_FILENAME,
+    SOLUTION_SCRIPT_FILENAME,
+    AgentAdapter,
+)
 
-CodeGenerator = Callable[[str, str], str]
+
+class GeneratedCode(NamedTuple):
+    text: str
+    # Token usage if the generator can report it (the default OpenAI-backed
+    # implementation can; a custom injected generator may not) - None rather
+    # than a zeroed-out dict so "unknown" isn't confused with "used no
+    # tokens".
+    usage: dict | None = None
+
+
+CodeGenerator = Callable[[str, str], GeneratedCode]
 PdfTextExtractor = Callable[[Path], str]
 
 _CODE_BLOCK_PATTERN = re.compile(r"```(?:python)?\s*\n(.*?)```", re.DOTALL)
@@ -45,7 +73,7 @@ def _extract_code(response_text: str) -> str:
     return match.group(1).strip()
 
 
-def _default_generate_code(prompt: str, model: str) -> str:
+def _default_generate_code(prompt: str, model: str) -> GeneratedCode:
     from openai import OpenAI
 
     client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
@@ -63,7 +91,14 @@ def _default_generate_code(prompt: str, model: str) -> str:
             {"role": "user", "content": prompt},
         ],
     )
-    return response.choices[0].message.content or ""
+    usage = None
+    if response.usage is not None:
+        usage = {
+            "prompt_tokens": response.usage.prompt_tokens,
+            "completion_tokens": response.usage.completion_tokens,
+            "total_tokens": response.usage.total_tokens,
+        }
+    return GeneratedCode(text=response.choices[0].message.content or "", usage=usage)
 
 
 def _default_extract_pdf_text(pdf_path: Path) -> str:
@@ -127,13 +162,13 @@ class DirectLLMAdapter(AgentAdapter):
         ]
         return "\n".join(lines)
 
-    async def _invoke(self, prompt: str, workspace: Path) -> None:
+    async def _invoke(self, prompt: str, workspace: Path) -> dict | None:
         (workspace / "prompt.txt").write_text(prompt)
-        response_text = await asyncio.to_thread(self._generate_code, prompt, self._model)
-        (workspace / "response.txt").write_text(response_text)
+        generated = await asyncio.to_thread(self._generate_code, prompt, self._model)
+        (workspace / "response.txt").write_text(generated.text)
 
-        code = _extract_code(response_text)
-        script_path = workspace / "solution.py"
+        code = _extract_code(generated.text)
+        script_path = workspace / SOLUTION_SCRIPT_FILENAME
         script_path.write_text(code)
 
         process = await asyncio.create_subprocess_exec(
@@ -151,3 +186,5 @@ class DirectLLMAdapter(AgentAdapter):
                 f"Generated script exited with code {process.returncode} "
                 f"- see {workspace / 'run.log'}"
             )
+
+        return dict(generated.usage) if generated.usage else None

@@ -82,10 +82,65 @@ def test_invoke_writes_prompt_file_and_launches_subprocess_with_venv_python(pkg1
     assert (workspace / "run.log").read_bytes() == b"some log output"
 
 
+def test_invoke_reads_back_di_metadata_json_written_by_runner_script(pkg1_root, tmp_path):
+    package = BenchmarkPackage.load(pkg1_root)
+
+    async def fake_invoke_success(*args, **kwargs):
+        # Simulate _data_interpreter_runner.py's real effect: solution.csv
+        # plus its best-effort di_metadata.json (steps/tokens).
+        workspace = Path(args[2])
+        df = pd.read_csv(workspace / "dataset.csv", dtype=str)
+        df.to_csv(workspace / OUTPUT_FILENAME, index=False)
+        (workspace / "di_metadata.json").write_text(
+            json.dumps({"steps": 3, "prompt_tokens": 407, "completion_tokens": 37})
+        )
+
+    async def launch(*args, **kwargs):
+        await fake_invoke_success(*args, **kwargs)
+        return _FakeProcess(returncode=0)
+
+    adapter = DataInterpreterAdapter(default_workspace_root=tmp_path, subprocess_launcher=launch)
+
+    result = asyncio.run(adapter.run(package))
+
+    assert result.success, result.error
+    assert result.metadata == {"steps": 3, "prompt_tokens": 407, "completion_tokens": 37}
+
+
+def test_invoke_leaves_metadata_empty_when_di_metadata_json_missing(pkg1_root, tmp_path):
+    package = BenchmarkPackage.load(pkg1_root)
+
+    async def fake_invoke_success(*args, **kwargs):
+        workspace = Path(args[2])
+        df = pd.read_csv(workspace / "dataset.csv", dtype=str)
+        df.to_csv(workspace / OUTPUT_FILENAME, index=False)
+        # No di_metadata.json written - e.g. an older runner script version.
+
+    async def launch(*args, **kwargs):
+        await fake_invoke_success(*args, **kwargs)
+        return _FakeProcess(returncode=0)
+
+    adapter = DataInterpreterAdapter(default_workspace_root=tmp_path, subprocess_launcher=launch)
+
+    result = asyncio.run(adapter.run(package))
+
+    assert result.success, result.error
+    assert result.metadata == {}
+
+
 def test_default_workspace_root_is_manual_runs_under_metagpt_project_root(tmp_path):
     adapter = DataInterpreterAdapter(metagpt_project_root=tmp_path / "metagpt-runtime")
 
     assert adapter._default_workspace_root == tmp_path / "metagpt-runtime" / "manual_runs"
+
+
+def test_execution_python_is_the_venv_di_interpreter_not_this_process():
+    # Generated code may depend on packages only installed in venv-di, so
+    # ReproducibilityCheck must re-execute it there, not with this process's
+    # own (incompatible, Python >=3.12) interpreter.
+    adapter = DataInterpreterAdapter(venv_python=Path("/fake/venv-di/bin/python"))
+
+    assert adapter.execution_python == Path("/fake/venv-di/bin/python").absolute()
 
 
 def test_invoke_passes_role_kwargs_as_json(tmp_path):
