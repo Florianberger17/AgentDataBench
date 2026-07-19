@@ -1,0 +1,23 @@
+task_id: 002_ERP_CUSTOMER_MIGRATION
+
+objective: >
+  Transform the provided customer dataset into the structure and format shown
+  by the target example, and produce a CSV file with one row for every
+  customer whose last business activity (LastOrderDate) is on or after
+  2023-01-01. No formal source or target schema is given - infer the required
+  structure and field mapping yourself by comparing the input dataset against
+  the target example.
+
+input:
+  source_dataset: data/dataset.csv
+  target_example: data/target_example.csv
+
+business_rules: {}
+
+output:
+  format: csv
+
+constraints:
+  - Each output row shall represent one customer record.
+  - No additional columns beyond those shown in the target example may be added.
+  - The column order must match the target example.

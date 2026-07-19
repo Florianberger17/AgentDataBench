@@ -6,6 +6,11 @@ scalar data. ``load`` only checks that referenced files exist; it deliberately
 does not cross-validate CSV columns against schemas, since real example packages
 are not fully consistent in that respect (e.g. a package's "clean" dataset can
 already be in target-schema shape).
+
+``source_schema``/``target_schema`` are None for underspecified tasks (see
+``TaskInput.target_example``) - ``target_example`` is populated instead, a
+small Dataset of example target rows the agent must infer the mapping/target
+structure from itself.
 """
 
 from __future__ import annotations
@@ -27,11 +32,12 @@ class BenchmarkPackage:
         scenario: Scenario,
         task: Task,
         metadata: Metadata,
-        source_schema: Schema,
-        target_schema: Schema,
         dataset: Dataset,
         clean_dataset: Dataset,
         ground_truth: Dataset,
+        source_schema: Schema | None = None,
+        target_schema: Schema | None = None,
+        target_example: Dataset | None = None,
     ) -> None:
         self.root = root
         self.scenario = scenario
@@ -39,6 +45,7 @@ class BenchmarkPackage:
         self.metadata = metadata
         self.source_schema = source_schema
         self.target_schema = target_schema
+        self.target_example = target_example
         self.dataset = dataset
         self.clean_dataset = clean_dataset
         self.ground_truth = ground_truth
@@ -51,8 +58,15 @@ class BenchmarkPackage:
         task = Task(**load_yaml(root / "task.yaml"))
         metadata = Metadata(**load_yaml(root / "metadata.yaml"))
 
-        source_schema = Schema(**load_yaml(root / task.input.source_schema))
-        target_schema = Schema(**load_yaml(root / task.input.target_schema))
+        source_schema = None
+        target_schema = None
+        if task.input.source_schema and task.input.target_schema:
+            source_schema = Schema(**load_yaml(root / task.input.source_schema))
+            target_schema = Schema(**load_yaml(root / task.input.target_schema))
+
+        target_example = None
+        if task.input.target_example:
+            target_example = Dataset(root / task.input.target_example)
 
         dataset = Dataset(root / task.input.source_dataset)
         clean_dataset = Dataset(root / "ground_truth" / "clean_dataset.csv")
@@ -65,6 +79,7 @@ class BenchmarkPackage:
             metadata=metadata,
             source_schema=source_schema,
             target_schema=target_schema,
+            target_example=target_example,
             dataset=dataset,
             clean_dataset=clean_dataset,
             ground_truth=ground_truth,

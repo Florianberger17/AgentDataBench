@@ -8,7 +8,9 @@ author: Florian Berger
 
 created: 01/07/2026
 
-difficulty: easy
+task_complexity: basic
+specification_completeness: explicit
+data_quality: clean
 
 seed: 
 

@@ -87,25 +87,56 @@ class BusinessRules(StrictBaseModel):
 
 class TaskInput(StrictBaseModel):
     source_dataset: str
-    source_schema: str
-    target_schema: str
+    # Formal schemas, or a small (e.g. 1-2 row) target_example the agent must
+    # infer the mapping/target structure from instead - mutually exclusive,
+    # see _schema_xor_target_example. Underspecified tasks
+    # (Metadata.specification_completeness == "underspecified") use
+    # target_example; the package can still keep a real target_schema.yaml
+    # on disk for internal tooling (e.g. authoring ground_truth.csv) even
+    # when it isn't referenced here, since only this reference controls
+    # what AgentAdapter exposes to the agent.
+    source_schema: str | None = None
+    target_schema: str | None = None
+    target_example: str | None = None
     # Paths (relative to the package root) to supplementary files an agent
     # may need to consult for information missing from source_dataset (e.g.
     # a PDF order confirmation carrying an address the CSV lacks). Optional
     # since most tasks are self-contained within the CSV/schemas alone.
     additional_documents: list[str] | None = None
 
+    @model_validator(mode="after")
+    def _schema_xor_target_example(self) -> "TaskInput":
+        has_source_schema = self.source_schema is not None
+        has_target_schema = self.target_schema is not None
+        if has_source_schema != has_target_schema:
+            raise ValueError(
+                "TaskInput requires source_schema and target_schema together, or neither"
+            )
+        has_schemas = has_source_schema and has_target_schema
+        has_example = self.target_example is not None
+        if has_schemas == has_example:
+            raise ValueError(
+                "TaskInput requires exactly one of (source_schema and target_schema) "
+                "or target_example"
+            )
+        return self
+
 
 class TaskOutput(StrictBaseModel):
     format: str
-    schema_reference: str
+    # None for underspecified tasks (see TaskInput.target_example) - there
+    # is no formal schema to reference.
+    schema_reference: str | None = None
 
 
 class Task(StrictBaseModel):
     task_id: str
     objective: str
     input: TaskInput
-    required_operations: list[str]
+    # None for an underspecified task (see TaskInput.target_example): naming
+    # the operation categories (filtering, value_mapping, ...) up front would
+    # itself leak part of what the agent is supposed to infer.
+    required_operations: list[str] | None = None
     business_rules: BusinessRules
     ignored_source_fields: list[str] | None = None
     output: TaskOutput

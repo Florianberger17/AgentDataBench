@@ -183,4 +183,9 @@ class AG2Adapter(AgentAdapter):
         finally:
             (workspace / "run.log").write_text(log_buffer.getvalue())
 
-        return _extract_metadata(chat_result)
+        metadata = _extract_metadata(chat_result)
+        try:
+            metadata["model"] = self._llm_config["config_list"][0]["model"]
+        except Exception:
+            pass
+        return metadata

@@ -9,7 +9,10 @@ import pytest
 
 from agentdatabench.domain.benchmark_package import BenchmarkPackage
 
-PACKAGE_DIRS = ["001_customer_migration", "002_material_master_migration"]
+PACKAGE_DIRS = [
+    "001_customer_migration_basic_explicit",
+    "009_material_master_migration_basic_explicit",
+]
 
 
 @pytest.mark.parametrize("package_dir", PACKAGE_DIRS)

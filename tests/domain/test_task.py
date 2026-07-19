@@ -1,7 +1,7 @@
 import pytest
 from pydantic import ValidationError
 
-from agentdatabench.domain.task import FilteringRules, MappingRule, TransformationSpec
+from agentdatabench.domain.task import FilteringRules, MappingRule, TaskInput, TransformationSpec
 
 INLINE_FILTER = {
     "description": "Only recent customers.",
@@ -48,6 +48,47 @@ def test_transformation_spec_passes_through_extra_fields(spec):
         if key == "type":
             continue
         assert getattr(parsed, key) == value
+
+
+def test_task_input_accepts_explicit_schemas_without_target_example():
+    task_input = TaskInput(
+        source_dataset="data/dataset.csv",
+        source_schema="schemas/source_schema.yaml",
+        target_schema="schemas/target_schema.yaml",
+    )
+    assert task_input.target_example is None
+
+
+def test_task_input_accepts_target_example_without_schemas():
+    task_input = TaskInput(
+        source_dataset="data/dataset.csv",
+        target_example="data/target_example.csv",
+    )
+    assert task_input.source_schema is None
+    assert task_input.target_schema is None
+
+
+def test_task_input_rejects_both_schemas_and_target_example():
+    with pytest.raises(ValidationError):
+        TaskInput(
+            source_dataset="data/dataset.csv",
+            source_schema="schemas/source_schema.yaml",
+            target_schema="schemas/target_schema.yaml",
+            target_example="data/target_example.csv",
+        )
+
+
+def test_task_input_rejects_neither_schemas_nor_target_example():
+    with pytest.raises(ValidationError):
+        TaskInput(source_dataset="data/dataset.csv")
+
+
+def test_task_input_rejects_only_one_of_source_and_target_schema():
+    with pytest.raises(ValidationError):
+        TaskInput(
+            source_dataset="data/dataset.csv",
+            source_schema="schemas/source_schema.yaml",
+        )
 
 
 def test_mapping_rule_requires_exactly_one_source():

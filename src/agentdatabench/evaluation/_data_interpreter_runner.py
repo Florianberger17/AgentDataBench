@@ -55,6 +55,14 @@ def _extract_metadata(di, llm_calls: int) -> dict:
         metadata["total_cost"] = cost_manager.total_cost
     except Exception:
         pass
+    try:
+        # di.llm.model is documented "deprecated" in metagpt's own source in
+        # favor of di.llm.config.model, but every built-in provider (openai,
+        # anthropic, azure, dashscope, ...) still assigns self.model =
+        # self.config.model itself - config.model is the authoritative one.
+        metadata["model"] = di.llm.config.model
+    except Exception:
+        pass
     return metadata
 
 

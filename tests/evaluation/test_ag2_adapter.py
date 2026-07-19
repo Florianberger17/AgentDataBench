@@ -97,7 +97,11 @@ def test_invoke_extracts_steps_and_token_usage_from_chat_result(pkg1_root, tmp_p
             },
         )
 
-    adapter = AG2Adapter(default_workspace_root=tmp_path, run_chat=fake_run_chat)
+    adapter = AG2Adapter(
+        default_workspace_root=tmp_path,
+        run_chat=fake_run_chat,
+        llm_config={"config_list": [{"model": "test-model", "api_key": "fake"}]},
+    )
 
     result = asyncio.run(adapter.run(package))
 
@@ -109,10 +113,11 @@ def test_invoke_extracts_steps_and_token_usage_from_chat_result(pkg1_root, tmp_p
         "prompt_tokens": 500,
         "completion_tokens": 80,
         "total_tokens": 580,
+        "model": "test-model",
     }
 
 
-def test_invoke_leaves_metadata_empty_when_run_chat_returns_none(pkg1_root, tmp_path):
+def test_invoke_metadata_has_only_model_when_run_chat_returns_none(pkg1_root, tmp_path):
     # The default plain-UserProxyAgent/AssistantAgent branch used to return
     # None implicitly before _run_chat started returning initiate_chat's
     # result - a custom injected run_chat may still do this.
@@ -123,12 +128,16 @@ def test_invoke_leaves_metadata_empty_when_run_chat_returns_none(pkg1_root, tmp_
         df.to_csv(workspace / OUTPUT_FILENAME, index=False)
         return None
 
-    adapter = AG2Adapter(default_workspace_root=tmp_path, run_chat=fake_run_chat)
+    adapter = AG2Adapter(
+        default_workspace_root=tmp_path,
+        run_chat=fake_run_chat,
+        llm_config={"config_list": [{"model": "test-model", "api_key": "fake"}]},
+    )
 
     result = asyncio.run(adapter.run(package))
 
     assert result.success, result.error
-    assert result.metadata == {}
+    assert result.metadata == {"model": "test-model"}
 
 
 def test_invoke_passes_pdf_paths_from_workspace(pkg1_root, tmp_path):

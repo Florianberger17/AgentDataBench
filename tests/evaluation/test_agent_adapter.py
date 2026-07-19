@@ -300,3 +300,55 @@ def test_prompt_omits_additional_documents_section_when_absent(pkg1_root):
     asyncio.run(adapter.run(package))
 
     assert "Additional documents" not in adapter.captured_prompt
+
+
+def _underspecified_package(pkg1_root, tmp_path):
+    """Copies a real (explicit) package and turns it into an underspecified
+    one: drops schema references from task.yaml in favor of a small
+    target_example.csv - mirrors a hand-authored level 2/4 package."""
+    package_root = tmp_path / "pkg"
+    shutil.copytree(pkg1_root, package_root)
+
+    ground_truth_lines = (package_root / "ground_truth" / "ground_truth.csv").read_text().splitlines()
+    (package_root / "data" / "target_example.csv").write_text(
+        "\n".join(ground_truth_lines[:3]) + "\n"
+    )
+
+    task_path = package_root / "task.yaml"
+    task_data = yaml.safe_load(task_path.read_text())
+    del task_data["input"]["source_schema"]
+    del task_data["input"]["target_schema"]
+    task_data["input"]["target_example"] = "data/target_example.csv"
+    task_path.write_text(yaml.safe_dump(task_data))
+
+    meta_path = package_root / "metadata.yaml"
+    meta_data = yaml.safe_load(meta_path.read_text())
+    meta_data["specification_completeness"] = "underspecified"
+    meta_path.write_text(yaml.safe_dump(meta_data))
+
+    return BenchmarkPackage.load(package_root)
+
+
+def test_prepare_workspace_copies_target_example_instead_of_schemas(pkg1_root, tmp_path):
+    package = _underspecified_package(pkg1_root, tmp_path)
+    adapter = _EchoingFakeAdapter(name="echo")
+
+    result = asyncio.run(adapter.run(package))
+
+    assert (result.workspace / "target_example.csv").is_file()
+    assert not (result.workspace / "source_schema.yaml").exists()
+    assert not (result.workspace / "target_schema.yaml").exists()
+
+
+def test_prompt_mentions_target_example_and_infer_note_instead_of_schemas(pkg1_root, tmp_path):
+    package = _underspecified_package(pkg1_root, tmp_path)
+    adapter = _PromptCapturingFakeAdapter()
+
+    asyncio.run(adapter.run(package))
+
+    prompt = adapter.captured_prompt
+    assert "Target example:" in prompt
+    assert "target_example.csv" in prompt
+    assert "Infer the target structure and field mapping yourself" in prompt
+    assert "Source schema:" not in prompt
+    assert "Target schema:" not in prompt

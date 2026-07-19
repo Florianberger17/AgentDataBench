@@ -68,11 +68,15 @@ class CompletenessCheck:
 
         referenced_files = {
             "task.input.source_dataset": task.input.source_dataset,
-            "task.input.source_schema": task.input.source_schema,
-            "task.input.target_schema": task.input.target_schema,
             "ground_truth clean dataset": "ground_truth/clean_dataset.csv",
             "ground truth": "ground_truth/ground_truth.csv",
         }
+        if task.input.source_schema:
+            referenced_files["task.input.source_schema"] = task.input.source_schema
+        if task.input.target_schema:
+            referenced_files["task.input.target_schema"] = task.input.target_schema
+        if task.input.target_example:
+            referenced_files["task.input.target_example"] = task.input.target_example
         for label, relative_path in referenced_files.items():
             if not (root / relative_path).is_file():
                 issues.append(
@@ -101,12 +105,18 @@ class SchemaConformanceCheck:
     guarantees column order/required-field presence by construction. Source
     schema/clean-dataset mismatches are only warnings: BenchmarkPackage.load()
     already documents real packages whose clean dataset legitimately isn't
-    shaped like the source schema."""
+    shaped like the source schema.
+
+    Both checks are no-ops for an underspecified task (see
+    TaskInput.target_example): there is no formal schema to check
+    ground_truth.csv/clean_dataset.csv against."""
 
     def check(self, package: BenchmarkPackage) -> list[ValidationIssue]:
         return self._check_target_schema(package) + self._check_source_schema(package)
 
     def _check_target_schema(self, package: BenchmarkPackage) -> list[ValidationIssue]:
+        if package.target_schema is None:
+            return []
         issues: list[ValidationIssue] = []
         df = package.ground_truth.df
         attributes = package.target_schema.attributes
@@ -177,6 +187,8 @@ class SchemaConformanceCheck:
         return issues
 
     def _check_source_schema(self, package: BenchmarkPackage) -> list[ValidationIssue]:
+        if package.source_schema is None:
+            return []
         df = package.clean_dataset.df
         attribute_names = [a.name for a in package.source_schema.attributes]
 
@@ -266,13 +278,30 @@ class MetadataConsistencyCheck:
                     )
                 )
 
+        has_noise_config = noise_config_path.is_file()
+        declared_noisy = package.metadata.data_quality == "noisy"
+        if has_noise_config != declared_noisy:
+            issues.append(
+                ValidationIssue(
+                    severity="error",
+                    code="data_quality_mismatch",
+                    message=(
+                        f"metadata.data_quality is '{package.metadata.data_quality}' but "
+                        f"noise_configuration.yaml {'exists' if has_noise_config else 'is missing'}"
+                    ),
+                )
+            )
+
         return issues
 
 
 class ReproducibilityCheck:
     """Re-derives dataset.csv and ground_truth.csv from clean_dataset.csv and
     compares them to what is on disk. Deliberately does not touch source_data/
-    or synthesis_configuration.yaml (out of scope, see module docstring)."""
+    or synthesis_configuration.yaml (out of scope, see module docstring).
+    The ground_truth.csv half of this is skipped for an underspecified task
+    (package.target_schema is None, see TaskInput.target_example) - dataset.csv
+    reproducibility still applies regardless."""
 
     def __init__(
         self,
@@ -306,22 +335,27 @@ class ReproducibilityCheck:
                 )
             )
 
-        expected_ground_truth = self._ground_truth_creator.create_ground_truth(
-            package.clean_dataset.df, package.task, package.target_schema
-        )
-        if not expected_ground_truth.reset_index(drop=True).astype(str).equals(
-            package.ground_truth.df.reset_index(drop=True).astype(str)
-        ):
-            issues.append(
-                ValidationIssue(
-                    severity="error",
-                    code="ground_truth_not_reproducible",
-                    message=(
-                        "ground_truth.csv does not match re-running GroundTruthCreator "
-                        "on clean_dataset.csv"
-                    ),
-                )
+        # GroundTruthCreator needs a formal target schema to re-derive the
+        # expected output - an underspecified task (see
+        # TaskInput.target_example) has none, so ground_truth.csv's
+        # reproducibility can't be checked this way for it.
+        if package.target_schema is not None:
+            expected_ground_truth = self._ground_truth_creator.create_ground_truth(
+                package.clean_dataset.df, package.task, package.target_schema
             )
+            if not expected_ground_truth.reset_index(drop=True).astype(str).equals(
+                package.ground_truth.df.reset_index(drop=True).astype(str)
+            ):
+                issues.append(
+                    ValidationIssue(
+                        severity="error",
+                        code="ground_truth_not_reproducible",
+                        message=(
+                            "ground_truth.csv does not match re-running GroundTruthCreator "
+                            "on clean_dataset.csv"
+                        ),
+                    )
+                )
 
         return issues
 

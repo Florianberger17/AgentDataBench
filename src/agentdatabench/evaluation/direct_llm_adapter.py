@@ -135,13 +135,24 @@ class DirectLLMAdapter(AgentAdapter):
             "",
             "--- Input dataset content (dataset.csv) ---",
             (workspace / "dataset.csv").read_text(),
-            "",
-            "--- Source schema content ---",
-            (workspace / "source_schema.yaml").read_text(),
-            "",
-            "--- Target schema content ---",
-            (workspace / "target_schema.yaml").read_text(),
         ]
+
+        task_input = package.task.input
+        if task_input.source_schema and task_input.target_schema:
+            lines += [
+                "",
+                "--- Source schema content ---",
+                (workspace / "source_schema.yaml").read_text(),
+                "",
+                "--- Target schema content ---",
+                (workspace / "target_schema.yaml").read_text(),
+            ]
+        if task_input.target_example:
+            lines += [
+                "",
+                "--- Target example content (target_example.csv) ---",
+                (workspace / "target_example.csv").read_text(),
+            ]
 
         for document in package.task.input.additional_documents or []:
             doc_path = workspace / Path(document).name
@@ -187,4 +198,6 @@ class DirectLLMAdapter(AgentAdapter):
                 f"- see {workspace / 'run.log'}"
             )
 
-        return dict(generated.usage) if generated.usage else None
+        metadata = dict(generated.usage) if generated.usage else {}
+        metadata["model"] = self._model
+        return metadata

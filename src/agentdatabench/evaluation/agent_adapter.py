@@ -39,7 +39,7 @@ from tempfile import mkdtemp
 
 from agentdatabench.domain.agent_run_result import AgentRunResult
 from agentdatabench.domain.benchmark_package import BenchmarkPackage
-from agentdatabench.domain.task import BusinessRules
+from agentdatabench.domain.task import BusinessRules, TaskInput
 
 OUTPUT_FILENAME = "solution.csv"
 # The agent's own documentation of how it produced OUTPUT_FILENAME - re-run
@@ -165,15 +165,21 @@ class AgentAdapter(ABC):
         additional attachments (e.g. a PDF an agent must search for
         information missing from the CSV) need no change here beyond the
         `additional_documents` loop below and being mentioned in
-        `_build_prompt`."""
+        `_build_prompt`.
+
+        Exactly one of (source_schema + target_schema) or target_example is
+        present (TaskInput enforces this) - an underspecified task
+        (Metadata.specification_completeness == "underspecified") gives the
+        agent a small example of the target output instead of formal
+        schemas, and it must infer the mapping/structure itself."""
         shutil.copy(package.dataset.path, workspace / "dataset.csv")
-        shutil.copy(
-            package.root / package.task.input.source_schema, workspace / "source_schema.yaml"
-        )
-        shutil.copy(
-            package.root / package.task.input.target_schema, workspace / "target_schema.yaml"
-        )
-        for document in package.task.input.additional_documents or []:
+        task_input = package.task.input
+        if task_input.source_schema and task_input.target_schema:
+            shutil.copy(package.root / task_input.source_schema, workspace / "source_schema.yaml")
+            shutil.copy(package.root / task_input.target_schema, workspace / "target_schema.yaml")
+        if task_input.target_example:
+            shutil.copy(package.root / task_input.target_example, workspace / "target_example.csv")
+        for document in task_input.additional_documents or []:
             source_path = package.root / document
             shutil.copy(source_path, workspace / source_path.name)
 
@@ -182,12 +188,11 @@ class AgentAdapter(ABC):
         lines = [
             f"Objective: {task.objective.strip()}",
             "",
-            f"Required operations: {', '.join(task.required_operations)}",
+            *self._render_required_operations(task.required_operations),
             *self._render_data_quality_note(task.required_operations),
             "",
             f"Input dataset: {workspace / 'dataset.csv'}",
-            f"Source schema: {workspace / 'source_schema.yaml'}",
-            f"Target schema: {workspace / 'target_schema.yaml'}",
+            *self._render_schema_or_target_example(task.input, workspace),
             "",
             *self._render_additional_documents(task.input.additional_documents, workspace),
             *self._render_business_rules(task.business_rules),
@@ -207,7 +212,34 @@ class AgentAdapter(ABC):
         ]
         return "\n".join(lines)
 
-    def _render_data_quality_note(self, required_operations: list[str]) -> list[str]:
+    def _render_schema_or_target_example(self, task_input: TaskInput, workspace: Path) -> list[str]:
+        """Formal schemas for an explicit task, or a small target_example for
+        an underspecified one (see TaskInput) - never both, TaskInput's own
+        validator guarantees exactly one is set."""
+        if task_input.source_schema and task_input.target_schema:
+            return [
+                f"Source schema: {workspace / 'source_schema.yaml'}",
+                f"Target schema: {workspace / 'target_schema.yaml'}",
+            ]
+        return [
+            f"Target example: {workspace / 'target_example.csv'}",
+            "Note: no formal source or target schema is provided for this "
+            "task. Infer the target structure and field mapping yourself by "
+            "comparing the target example above against the input dataset - "
+            "do not assume any field names or transformations beyond what "
+            "the example and objective imply.",
+        ]
+
+    def _render_required_operations(self, required_operations: list[str] | None) -> list[str]:
+        """Omitted entirely for an underspecified task (required_operations
+        is None, see Task) - naming the operation categories up front (e.g.
+        "value_mapping", "field_concatenation") would itself be a hint the
+        agent is supposed to infer on its own from the target example."""
+        if not required_operations:
+            return []
+        return [f"Required operations: {', '.join(required_operations)}"]
+
+    def _render_data_quality_note(self, required_operations: list[str] | None) -> list[str]:
         """Warns the agent that the input may be noisy, without revealing
         what's wrong or how to fix it. Without this, a task requiring "data
         cleaning" is unwinnable: ground_truth.csv is derived from a clean
@@ -215,7 +247,7 @@ class AgentAdapter(ABC):
         mapping key (e.g. a typo'd country code) looks like a dead end
         instead of a cleaning opportunity - confirmed by a smoke test where
         DI left such fields blank instead of attempting a correction."""
-        if "data cleaning" not in required_operations:
+        if not required_operations or "data cleaning" not in required_operations:
             return []
         return [
             "",

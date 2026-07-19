@@ -60,6 +60,35 @@ def test_build_prompt_inlines_dataset_and_schema_content(pkg1_root, tmp_path):
     assert "--- Target schema content ---" in prompt
 
 
+def test_build_prompt_inlines_target_example_instead_of_schemas(pkg1_root, tmp_path):
+    package_root = tmp_path / "pkg"
+    shutil.copytree(pkg1_root, package_root)
+
+    ground_truth_lines = (package_root / "ground_truth" / "ground_truth.csv").read_text().splitlines()
+    (package_root / "data" / "target_example.csv").write_text(
+        "\n".join(ground_truth_lines[:3]) + "\n"
+    )
+    task_path = package_root / "task.yaml"
+    task_data = yaml.safe_load(task_path.read_text())
+    del task_data["input"]["source_schema"]
+    del task_data["input"]["target_schema"]
+    task_data["input"]["target_example"] = "data/target_example.csv"
+    task_path.write_text(yaml.safe_dump(task_data))
+    package = BenchmarkPackage.load(package_root)
+
+    adapter = DirectLLMAdapter(default_workspace_root=tmp_path / "runs")
+    workspace = tmp_path / "ws"
+    workspace.mkdir()
+    adapter._prepare_workspace(package, workspace)
+
+    prompt = adapter._build_prompt(package, workspace)
+
+    assert "--- Target example content (target_example.csv) ---" in prompt
+    assert ground_truth_lines[0] in prompt  # the example CSV's header row
+    assert "--- Source schema content ---" not in prompt
+    assert "--- Target schema content ---" not in prompt
+
+
 def test_build_prompt_inlines_pdf_text_via_injected_extractor(pkg1_root, tmp_path):
     package_root = tmp_path / "pkg"
     shutil.copytree(pkg1_root, package_root)
@@ -101,7 +130,9 @@ def test_run_executes_generated_code_and_collects_output(pkg1_root, tmp_path):
             usage={"prompt_tokens": 111, "completion_tokens": 22, "total_tokens": 133},
         )
 
-    adapter = DirectLLMAdapter(default_workspace_root=workspace_root, generate_code=generate_code)
+    adapter = DirectLLMAdapter(
+        default_workspace_root=workspace_root, generate_code=generate_code, model="test-model"
+    )
 
     result = asyncio.run(adapter.run(package))
 
@@ -111,10 +142,15 @@ def test_run_executes_generated_code_and_collects_output(pkg1_root, tmp_path):
     assert (result.workspace / "response.txt").is_file()
     assert (result.workspace / "solution.py").is_file()
     assert (result.workspace / "run.log").is_file()
-    assert result.metadata == {"prompt_tokens": 111, "completion_tokens": 22, "total_tokens": 133}
+    assert result.metadata == {
+        "prompt_tokens": 111,
+        "completion_tokens": 22,
+        "total_tokens": 133,
+        "model": "test-model",
+    }
 
 
-def test_run_leaves_metadata_empty_when_generate_code_reports_no_usage(pkg1_root, tmp_path):
+def test_run_metadata_has_only_model_when_generate_code_reports_no_usage(pkg1_root, tmp_path):
     package = BenchmarkPackage.load(pkg1_root)
 
     def generate_code(prompt: str, model: str) -> GeneratedCode:
@@ -127,12 +163,14 @@ def test_run_leaves_metadata_empty_when_generate_code_reports_no_usage(pkg1_root
             text=_ECHO_SCRIPT.format(dataset_path=dataset_path, output_path=output_path)
         )
 
-    adapter = DirectLLMAdapter(default_workspace_root=tmp_path, generate_code=generate_code)
+    adapter = DirectLLMAdapter(
+        default_workspace_root=tmp_path, generate_code=generate_code, model="test-model"
+    )
 
     result = asyncio.run(adapter.run(package))
 
     assert result.success, result.error
-    assert result.metadata == {}
+    assert result.metadata == {"model": "test-model"}
 
 
 def test_run_fails_cleanly_when_generate_code_raises(pkg1_root, tmp_path):

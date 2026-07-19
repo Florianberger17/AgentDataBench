@@ -72,6 +72,36 @@ def test_validate_detects_metadata_task_id_mismatch(pkg3_root, tmp_path):
     assert any(i.code == "task_id_mismatch" for i in result.issues)
 
 
+def test_validate_detects_data_quality_declared_clean_but_noise_config_present(pkg3_root, tmp_path):
+    # pkg3 genuinely has a noise_configuration.yaml - declaring "clean" is a
+    # real authoring inconsistency.
+    work_root = _copy(pkg3_root, tmp_path / "pkg")
+    meta_path = work_root / "metadata.yaml"
+    meta = yaml.safe_load(meta_path.read_text())
+    meta["data_quality"] = "clean"
+    meta_path.write_text(yaml.safe_dump(meta))
+
+    result = Validator().validate(work_root)
+
+    assert not result.is_valid
+    assert any(i.code == "data_quality_mismatch" for i in result.issues)
+
+
+def test_validate_detects_data_quality_declared_noisy_but_no_noise_config(pkg1_root, tmp_path):
+    # pkg1 genuinely has no noise_configuration.yaml - declaring "noisy" is a
+    # real authoring inconsistency.
+    work_root = _copy(pkg1_root, tmp_path / "pkg")
+    meta_path = work_root / "metadata.yaml"
+    meta = yaml.safe_load(meta_path.read_text())
+    meta["data_quality"] = "noisy"
+    meta_path.write_text(yaml.safe_dump(meta))
+
+    result = Validator().validate(work_root)
+
+    assert not result.is_valid
+    assert any(i.code == "data_quality_mismatch" for i in result.issues)
+
+
 def test_validate_detects_non_reproducible_dataset(pkg3_root, tmp_path):
     work_root = _copy(pkg3_root, tmp_path / "pkg")
     dataset_path = work_root / "data" / "dataset.csv"
@@ -124,3 +154,55 @@ def test_validate_pkg5_no_noise_configuration_is_reproducible(pkg5_root):
     result = Validator().validate(pkg5_root)
 
     assert result.is_valid
+
+
+def _underspecify(work_root):
+    """Turns a copied real package into an underspecified one: drops schema
+    references from task.yaml in favor of a small target_example.csv."""
+    ground_truth_lines = (work_root / "ground_truth" / "ground_truth.csv").read_text().splitlines()
+    (work_root / "data" / "target_example.csv").write_text(
+        "\n".join(ground_truth_lines[:3]) + "\n"
+    )
+
+    task_path = work_root / "task.yaml"
+    task_data = yaml.safe_load(task_path.read_text())
+    del task_data["input"]["source_schema"]
+    del task_data["input"]["target_schema"]
+    task_data["input"]["target_example"] = "data/target_example.csv"
+    task_path.write_text(yaml.safe_dump(task_data))
+
+    meta_path = work_root / "metadata.yaml"
+    meta_data = yaml.safe_load(meta_path.read_text())
+    meta_data["specification_completeness"] = "underspecified"
+    meta_path.write_text(yaml.safe_dump(meta_data))
+
+
+def test_validate_underspecified_package_skips_schema_dependent_checks(pkg1_root, tmp_path):
+    work_root = _copy(pkg1_root, tmp_path / "pkg")
+    _underspecify(work_root)
+
+    result = Validator().validate(work_root)
+
+    # No schema/ground_truth-reproducibility issues - those checks are
+    # no-ops without a formal target/source schema. dataset.csv
+    # reproducibility (independent of schemas) still applies and passes.
+    codes = {i.code for i in result.issues}
+    assert "column_order_mismatch" not in codes
+    assert "missing_required_column" not in codes
+    assert "unexpected_column" not in codes
+    assert "clean_dataset_schema_mismatch" not in codes
+    assert "ground_truth_not_reproducible" not in codes
+    assert result.is_valid, [i.message for i in result.issues]
+
+
+def test_validate_underspecified_package_detects_missing_target_example(pkg1_root, tmp_path):
+    work_root = _copy(pkg1_root, tmp_path / "pkg")
+    _underspecify(work_root)
+    (work_root / "data" / "target_example.csv").unlink()
+
+    result = Validator().validate(work_root)
+
+    assert not result.is_valid
+    assert any(
+        i.code == "missing_file" and "target_example" in i.message for i in result.issues
+    )
