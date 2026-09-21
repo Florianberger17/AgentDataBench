@@ -1,0 +1,41 @@
+seed: 1004
+
+locale: de_DE
+
+columns:
+
+  - column: CustomerTransaction
+    strategy: unique_sequence
+    format: "{:06d}"
+    start: 214000
+
+  - column: CustomerTransactionType
+    strategy: categorical_resample
+
+  # 41 distinct customers repeated over 100 orders; faker yields a fresh
+  # name per row, so the repetition pattern is not preserved.
+  - column: CustomerName
+    strategy: faker
+    provider: company
+
+  - column: OrderType
+    strategy: categorical_resample
+
+  - column: Order Currency
+    strategy: categorical_resample
+
+  # Excel cell format dd.mm.yy - adjust field_format if the CSV export differs.
+  - column: PurchaseOrderDate
+    strategy: date_distribution
+    field_format: "DD.MM.YY"
+
+  # 1 empty value in the source; date_distribution fills every row.
+  - column: ConfirmedDeliveryDate
+    strategy: date_distribution
+    field_format: "DD.MM.YY"
+
+  - column: Plant
+    strategy: categorical_resample
+
+  - column: Planner1
+    strategy: categorical_resample

@@ -18,7 +18,7 @@ from pathlib import Path
 
 from agentdatabench.domain.benchmark_package import BenchmarkPackage
 from agentdatabench.domain.common import load_yaml
-from agentdatabench.domain.dataset import Dataset
+from agentdatabench.domain.dataset import CSV_ENCODING, Dataset
 from agentdatabench.domain.noise_configuration import NoiseConfiguration
 from agentdatabench.domain.schema import Schema
 from agentdatabench.domain.synthesis_configuration import SynthesisConfiguration
@@ -71,12 +71,12 @@ class PackageBuilder:
 
         dataset_path = root / task.input.source_dataset
         dataset_path.parent.mkdir(parents=True, exist_ok=True)
-        dataset_df.to_csv(dataset_path, index=False)
+        dataset_df.to_csv(dataset_path, index=False, encoding=CSV_ENCODING)
 
         ground_truth_dir = root / "ground_truth"
         ground_truth_dir.mkdir(parents=True, exist_ok=True)
-        clean_df.to_csv(ground_truth_dir / "clean_dataset.csv", index=False)
-        ground_truth_df.to_csv(ground_truth_dir / "ground_truth.csv", index=False)
+        clean_df.to_csv(ground_truth_dir / "clean_dataset.csv", index=False, encoding=CSV_ENCODING)
+        ground_truth_df.to_csv(ground_truth_dir / "ground_truth.csv", index=False, encoding=CSV_ENCODING)
 
         if purge_source:
             purge_source_data(root)

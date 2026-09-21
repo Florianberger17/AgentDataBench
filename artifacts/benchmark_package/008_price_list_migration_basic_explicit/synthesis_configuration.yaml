@@ -1,0 +1,39 @@
+seed: 1008
+
+locale: de_DE
+
+columns:
+
+  - column: price list no.
+    strategy: categorical_resample
+
+  - column: item no.
+    strategy: unique_sequence
+    format: "{:05d}"
+    start: 10000
+
+  - column: part no.
+    strategy: unique_sequence
+    format: "1000-{:04d}"
+    start: 0
+
+  - column: description
+    strategy: part_name_replacement
+
+  - column: quantity base
+    strategy: categorical_resample
+
+  - column: currency
+    strategy: categorical_resample
+
+  - column: validity
+    strategy: categorical_resample
+
+  # Stored as a raw Excel serial (37681 = 2003-03-01), 63 of 100 empty.
+  # Kept as-is; convert the column to a real date in the source and switch
+  # to date_distribution if the serial is not intended.
+  - column: valid from date
+    strategy: identity
+
+  - column: price
+    strategy: numeric_distribution

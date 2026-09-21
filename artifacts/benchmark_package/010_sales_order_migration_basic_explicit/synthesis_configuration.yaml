@@ -1,0 +1,49 @@
+seed: 1010
+
+locale: de_DE
+
+columns:
+
+  # Header/line structure: 28 orders with 1..n items. Order-level fields are
+  # kept as-is so the grouping survives; sold-to no./address are looked up
+  # in mapping_list_customers.xlsx, part no. in mapping_list_material.xlsx.
+  - column: sales order no.
+    strategy: identity
+
+  - column: order type
+    strategy: categorical_resample
+
+  - column: sold-to no.
+    strategy: identity
+
+  - column: sold-to address
+    strategy: identity
+
+  - column: customer po no.
+    strategy: identity
+
+  - column: item no.
+    strategy: identity
+
+  - column: part no.
+    strategy: identity
+
+  # Paired with part no.; kept as-is so the pairing survives.
+  - column: description
+    strategy: identity
+
+  # 68 of 99 values empty, technical variant text; kept as-is.
+  - column: description 2
+    strategy: identity
+
+  - column: quantity
+    strategy: numeric_distribution
+
+  # Stored as a raw Excel serial (45526 = 2024-08-22). Drawing integers from
+  # the observed range keeps them valid serials; convert to a real date in
+  # the source and switch to date_distribution if preferred.
+  - column: requested date
+    strategy: numeric_distribution
+
+  - column: net price
+    strategy: numeric_distribution

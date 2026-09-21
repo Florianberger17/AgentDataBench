@@ -1,0 +1,41 @@
+seed: 1005
+
+locale: de_DE
+
+columns:
+
+  - column: TransactionType
+    strategy: categorical_resample
+
+  - column: TransactionNo
+    strategy: unique_sequence
+    format: "{:05d}"
+    start: 10000
+
+  - column: Status
+    strategy: categorical_resample
+
+  # 57 suppliers repeated over 100 orders, paired 1:1 with SupplierName.
+  # Kept as-is (internal code) to preserve the repetition; note that the
+  # pairing with the faker-generated SupplierName is lost.
+  - column: SupplierNo
+    strategy: identity
+
+  - column: SupplierName
+    strategy: faker
+    provider: company
+
+  - column: Planner4
+    strategy: categorical_resample
+
+  # Source contains both "FCA" and "fca"; both labels survive resampling.
+  - column: Incoterm
+    strategy: categorical_resample
+
+  # 67 of 100 values empty in the source; faker fills every row.
+  - column: IncotermLocation
+    strategy: faker
+    provider: city
+
+  - column: Preferred Language
+    strategy: categorical_resample

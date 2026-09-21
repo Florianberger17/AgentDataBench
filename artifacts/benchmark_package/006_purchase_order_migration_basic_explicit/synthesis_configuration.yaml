@@ -1,0 +1,49 @@
+seed: 1006
+
+locale: de_DE
+
+columns:
+
+  # Header/line structure: 73 orders with 1..n items. Kept as-is so the
+  # TransactionNo/ItemNo grouping survives (internal codes).
+  - column: TransactionNo
+    strategy: identity
+
+  - column: ItemNo
+    strategy: identity
+
+  # 29 empty values (service items without material); kept as-is so the
+  # empty pattern and the pairing with Description1 survive.
+  - column: MaterialNo
+    strategy: identity
+
+  - column: Description1
+    strategy: part_name_replacement
+
+  # 90 of 100 values empty, single internal code; kept as-is to preserve
+  # the empty pattern.
+  - column: CostCenter
+    strategy: identity
+
+  - column: UnitOfMeasure
+    strategy: categorical_resample
+
+  - column: PriceUnit
+    strategy: categorical_resample
+
+  - column: OpenQuantity
+    strategy: numeric_distribution
+
+  - column: OrderPrice
+    strategy: numeric_distribution
+
+  # Excel cell format yyyy-mm-dd - adjust field_format if the CSV export differs.
+  - column: ConfirmedDate
+    strategy: date_distribution
+    field_format: "YYYY-MM-DD"
+
+  # Real person names (5 buyers) - must not survive. faker yields a fresh
+  # name per row, so the low cardinality is not preserved.
+  - column: Name
+    strategy: faker
+    provider: name

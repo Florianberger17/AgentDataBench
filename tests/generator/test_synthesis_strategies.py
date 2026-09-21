@@ -11,6 +11,7 @@ from agentdatabench.generator.synthesis_strategies import (
     FakerStrategy,
     IdentityStrategy,
     NumericDistributionStrategy,
+    PartNameReplacementStrategy,
     UniqueSequenceStrategy,
 )
 
@@ -118,3 +119,87 @@ def test_identity_strategy_passes_values_through_unchanged():
         REAL_LIKE["status"], config, random.Random(0), _faker(), len(REAL_LIKE)
     )
     assert list(result) == list(REAL_LIKE["status"])
+
+
+CRLF = chr(13) + chr(10)
+
+
+def _write_library(tmp_path, names):
+    library = tmp_path / "part_name_library.csv"
+    # BOM + CRLF mirrors the Excel export shipped in artifacts/part_name_library.
+    library.write_bytes(
+        ("part name" + CRLF + CRLF.join(names) + CRLF).encode("utf-8-sig")
+    )
+    return library
+
+
+def test_part_name_replacement_strategy_never_reuses_a_library_entry(tmp_path):
+    names = [f"part {i}" for i in range(10)]
+    library = _write_library(tmp_path, names)
+    config = ColumnSynthesisConfig(
+        column="company", strategy="part_name_replacement", library_path=str(library)
+    )
+    result = PartNameReplacementStrategy().synthesize(
+        REAL_LIKE["company"], config, random.Random(0), _faker(), 10
+    )
+    assert len(result) == 10
+    assert len(set(result)) == 10
+    assert set(result) == set(names)
+    assert set(result).isdisjoint(set(REAL_LIKE["company"]))
+
+
+def test_part_name_replacement_strategy_same_seed_gives_identical_output(tmp_path):
+    library = _write_library(tmp_path, [f"part {i}" for i in range(20)])
+    config = ColumnSynthesisConfig(
+        column="company", strategy="part_name_replacement", library_path=str(library)
+    )
+    result_a = PartNameReplacementStrategy().synthesize(
+        REAL_LIKE["company"], config, random.Random(7), _faker(), 5
+    )
+    result_b = PartNameReplacementStrategy().synthesize(
+        REAL_LIKE["company"], config, random.Random(7), _faker(), 5
+    )
+    assert list(result_a) == list(result_b)
+
+
+def test_part_name_replacement_strategy_deduplicates_library_and_ignores_blanks(tmp_path):
+    library = _write_library(tmp_path, ["bolt", "bolt", " nut ", "", "washer"])
+    config = ColumnSynthesisConfig(
+        column="company", strategy="part_name_replacement", library_path=str(library)
+    )
+    result = PartNameReplacementStrategy().synthesize(
+        REAL_LIKE["company"], config, random.Random(0), _faker(), 3
+    )
+    assert sorted(result) == ["bolt", "nut", "washer"]
+
+
+def test_part_name_replacement_strategy_raises_when_library_too_small(tmp_path):
+    library = _write_library(tmp_path, ["bolt", "nut"])
+    config = ColumnSynthesisConfig(
+        column="company", strategy="part_name_replacement", library_path=str(library)
+    )
+    with pytest.raises(ValueError, match="only provides 2 distinct entries"):
+        PartNameReplacementStrategy().synthesize(
+            REAL_LIKE["company"], config, random.Random(0), _faker(), 3
+        )
+
+
+def test_part_name_replacement_strategy_raises_on_missing_library(tmp_path):
+    config = ColumnSynthesisConfig(
+        column="company",
+        strategy="part_name_replacement",
+        library_path=str(tmp_path / "does_not_exist.csv"),
+    )
+    with pytest.raises(FileNotFoundError, match="does_not_exist.csv"):
+        PartNameReplacementStrategy().synthesize(
+            REAL_LIKE["company"], config, random.Random(0), _faker(), 1
+        )
+
+
+def test_part_name_replacement_strategy_uses_shipped_library_by_default():
+    config = ColumnSynthesisConfig(column="company", strategy="part_name_replacement")
+    result = PartNameReplacementStrategy().synthesize(
+        REAL_LIKE["company"], config, random.Random(0), _faker(), 50
+    )
+    assert len(result) == 50
+    assert len(set(result)) == 50

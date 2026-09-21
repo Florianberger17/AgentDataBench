@@ -1,0 +1,46 @@
+seed: 1009
+
+locale: de_DE
+
+columns:
+
+  - column: journal no.
+    strategy: unique_sequence
+    format: "{:07d}"
+    start: 7590000
+
+  # Looked up in mapping_list_material.xlsx (8 empty values); kept as-is.
+  - column: part no.
+    strategy: identity
+
+  # Paired with part no.; kept as-is so the pairing and the empty pattern
+  # survive.
+  - column: description 1
+    strategy: identity
+
+  # Excel cell format YYYY-MM-DD HH:MM:SS - export without the time part, or
+  # set field_format to "YYYY-MM-DD 00:00:00".
+  - column: posting date
+    strategy: date_distribution
+    field_format: "YYYY-MM-DD"
+
+  - column: movement code
+    strategy: categorical_resample
+
+  - column: unit
+    strategy: categorical_resample
+
+  - column: quantity
+    strategy: numeric_distribution
+
+  - column: value
+    strategy: numeric_distribution
+
+  # 29 distinct internal codes, 35 of 100 empty; resampling fills every row.
+  - column: storage location
+    strategy: categorical_resample
+    max_cardinality: 30
+
+  # 80 of 100 values empty; kept as-is to preserve the empty pattern.
+  - column: cost center
+    strategy: identity

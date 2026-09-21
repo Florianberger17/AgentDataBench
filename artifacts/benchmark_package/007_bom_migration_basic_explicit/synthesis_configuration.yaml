@@ -1,0 +1,33 @@
+seed: 1007
+
+locale: de_DE
+
+columns:
+
+  # bom no. and component no. are looked up in mapping_list_materials.xlsx
+  # (which also carries the descriptions), and 14 BOMs span 98 lines.
+  # Everything structural is therefore kept as-is; only quantities and
+  # units are synthesized.
+  - column: bom no.
+    strategy: identity
+
+  - column: bom description
+    strategy: identity
+
+  - column: item no.
+    strategy: identity
+
+  - column: component no.
+    strategy: identity
+
+  - column: component description
+    strategy: identity
+
+  - column: component quantity
+    strategy: numeric_distribution
+
+  - column: length
+    strategy: numeric_distribution
+
+  - column: bom unit
+    strategy: categorical_resample

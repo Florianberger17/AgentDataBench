@@ -1,0 +1,44 @@
+seed: 1002
+
+locale: de_DE
+
+columns:
+
+  - column: supplier no
+    strategy: unique_sequence
+    format: "{:07d}"
+    start: 2100000
+
+  # name 1 is the short form of name 2 in the source; the two faker draws
+  # below are independent, so that relationship is not preserved.
+  - column: name 1
+    strategy: faker
+    provider: company
+
+  - column: name 2
+    strategy: faker
+    provider: company
+
+  - column: country code
+    strategy: categorical_resample
+
+  - column: post_code
+    strategy: faker
+    provider: postcode
+
+  - column: city
+    strategy: faker
+    provider: city
+
+  - column: street
+    strategy: faker
+    provider: street_name
+
+  # 2 empty values in the source; faker fills every row.
+  - column: house_num1
+    strategy: faker
+    provider: building_number
+
+  - column: last_activity
+    strategy: date_distribution
+    field_format: "DD.MM.YYYY"

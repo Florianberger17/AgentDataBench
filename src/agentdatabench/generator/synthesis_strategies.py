@@ -19,6 +19,7 @@ from __future__ import annotations
 import random
 import re
 from datetime import datetime, timedelta
+from pathlib import Path
 from typing import Protocol
 
 import pandas as pd
@@ -159,6 +160,66 @@ class IdentityStrategy:
         return real_series.reset_index(drop=True)
 
 
+# Curated library of realistic, non-identifying part names shipped with the
+# repo. Resolved relative to this file so the default works from any CWD.
+DEFAULT_PART_NAME_LIBRARY_PATH = (
+    Path(__file__).resolve().parents[3]
+    / "artifacts"
+    / "part_name_library"
+    / "part_name_library.csv"
+)
+
+
+class PartNameReplacementStrategy:
+    """Replaces every value with a part name drawn from a CSV library.
+
+    Names are sampled *without replacement*, so within one synthesize() call
+    each library entry is used at most once and the output contains no
+    duplicates. The library must therefore hold at least `n` distinct
+    entries. The first column of the CSV is used; an optional `library_path`
+    on the column config overrides DEFAULT_PART_NAME_LIBRARY_PATH.
+    """
+
+    def synthesize(
+        self,
+        real_series: pd.Series,
+        config: ColumnSynthesisConfig,
+        rng: random.Random,
+        faker: Faker,
+        n: int,
+    ) -> pd.Series:
+        library_path = Path(
+            getattr(config, "library_path", DEFAULT_PART_NAME_LIBRARY_PATH)
+        )
+        if not library_path.is_file():
+            raise FileNotFoundError(
+                f"PartNameReplacementStrategy: part name library not found at "
+                f"'{library_path}' (column '{config.column}')"
+            )
+
+        # utf-8-sig transparently strips the BOM Excel writes into CSV exports.
+        library = pd.read_csv(library_path, encoding="utf-8-sig", dtype=str)
+        if library.shape[1] == 0:
+            raise ValueError(
+                f"PartNameReplacementStrategy: library '{library_path}' has no columns"
+            )
+        names = library.iloc[:, 0].dropna().str.strip()
+        names = names[names != ""]
+        # .unique() keeps first-occurrence order (see module docstring), so
+        # the same seed always maps to the same sample.
+        distinct = names.unique().tolist()
+
+        if n > len(distinct):
+            raise ValueError(
+                f"PartNameReplacementStrategy: column '{config.column}' needs "
+                f"{n} part names but library '{library_path}' only provides "
+                f"{len(distinct)} distinct entries. Extend the library or use "
+                f"fewer source rows - entries are never reused."
+            )
+
+        return pd.Series(rng.sample(distinct, n))
+
+
 DEFAULT_SYNTHESIS_STRATEGIES: dict[str, SynthesisStrategy] = {
     "faker": FakerStrategy(),
     "numeric_distribution": NumericDistributionStrategy(),
@@ -166,4 +227,5 @@ DEFAULT_SYNTHESIS_STRATEGIES: dict[str, SynthesisStrategy] = {
     "unique_sequence": UniqueSequenceStrategy(),
     "categorical_resample": CategoricalResampleStrategy(),
     "identity": IdentityStrategy(),
+    "part_name_replacement": PartNameReplacementStrategy(),
 }
