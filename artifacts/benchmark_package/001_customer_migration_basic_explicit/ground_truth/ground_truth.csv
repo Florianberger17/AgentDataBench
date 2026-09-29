@@ -1,0 +1,46 @@
+﻿CustomerID,Name,Street,City,PostalCode,Country,LastBusinessActivityDate,Status
+CUST000001,Wesack e.G.,Necati-Gutknecht-Weg 5,Ribnitz-Damgarten,02809,DEU,26102024,inactive
+CUST000003,Zimmer Fritsch GmbH & Co. KG,Antonio-Schuchhardt-Platz 681,Büsingen am Hochrhein,55437,DEU,14072024,active
+CUST000004,Köster,Marianne-Davids-Straße 88/90,Cottbus,15062,DEU,04052025,inactive
+CUST000006,Zahn Rudolph AG & Co. OHG,Hübelstr. 6,Groß-Gerau,29481,CHE,26082025,inactive
+CUST000007,Binner,Roselinde-Nerger-Allee 8253,Havelberg,77497,DEU,25092024,active
+CUST000010,Tintzmann,Ester-Becker-Platz 3-1,Euskirchen,03049,AUT,29082023,inactive
+CUST000012,Graf,Melissa-Dobes-Allee 9/8,Eggenfelden,81442,AUT,20012023,active
+CUST000013,Wagner,Roggeallee 1/9,Lemgo,93462,CHE,03052023,active
+CUST000015,Rose AG,Cornelius-Stoll-Allee 6/8,Bremen,11079,DEU,08052024,active
+CUST000016,Ladeck,Mike-Zänker-Gasse 49/79,Bad Brückenau,96210,CHE,16022024,active
+CUST000017,Ehlert,Mariola-Sager-Straße 13/13,Tirschenreuth,59511,CHE,22102025,inactive
+CUST000018,Herrmann GmbH & Co. KG,Adelinde-Scholl-Ring 483,Nordhausen,64295,DEU,06032024,inactive
+CUST000019,Bruder,Austermühleplatz 91,Greiz,39158,DEU,18092023,active
+CUST000020,Röhricht,Tatiana-Gumprich-Weg 7,Kulmbach,00170,CHE,08052024,active
+CUST000023,Dehmel KG,Annelore-Heydrich-Platz 23-14,Zeulenroda,11421,CHE,05082025,inactive
+CUST000024,Adolph GmbH & Co. KG,Reza-Renner-Weg 5/1,Beilngries,97926,CHE,03112025,inactive
+CUST000026,Gute Wohlgemut AG & Co. KG,Hübelring 30,Ueckermünde,45905,CHE,16062025,active
+CUST000027,Martin,Hans-Hettner-Straße 8540,Auerbach,10425,DEU,24072023,active
+CUST000030,Drewes Stiftung & Co. KG,Ullrichstraße 4-2,Eggenfelden,69461,AUT,04052025,inactive
+CUST000032,Cichorius,Jasmina-Siering-Allee 25/48,Rostock,32574,CHE,21032023,active
+CUST000039,Becker GbR,Riehlgasse 57,Illertissen,50354,AUT,04062025,active
+CUST000040,Neureuther AG & Co. OHG,Matthäistr. 2392,Jülich,71152,DEU,03052023,inactive
+CUST000042,Dörr Börner KG,Cäcilia-Weiß-Platz 45-39,Bad Liebenwerda,29691,CHE,10022023,active
+CUST000043,Rädel Johann GmbH & Co. KGaA,Curt-Süßebier-Platz 557,Deggendorf,27582,AUT,01082024,active
+CUST000045,Kabus Niemeier GmbH,Rörrichtweg 695,Kamenz,78799,DEU,11112025,active
+CUST000046,Paffrath Riehl GmbH,Magrit-Weller-Straße 91,Altötting,61120,AUT,06032025,active
+CUST000048,Jessel AG & Co. KG,Klemmweg 0,Delitzsch,31972,DEU,30042026,active
+CUST000053,Ullrich GbR,Marianne-Heser-Ring 8-9,Kulmbach,72130,CHE,30122025,active
+CUST000056,Radisch Ruppert AG,Fliegnerstraße 669,Halberstadt,74893,CHE,05052025,inactive
+CUST000062,Seifert,Siegmar-Dörschner-Weg 778,Forst,49655,DEU,30102023,active
+CUST000063,Margraf,Janett-Schweitzer-Straße 92-53,Querfurt,78264,DEU,04032025,active
+CUST000068,Drubin Hertrampf GmbH,Hertha-Möchlichen-Straße 4,Hünfeld,17992,DEU,01092023,active
+CUST000070,Mälzer AG & Co. KG,Patbergstraße 2/7,Marktheidenfeld,74381,CHE,25012025,inactive
+CUST000072,Dietz KGaA,Pärtzeltgasse 197,Vilsbiburg,55012,CHE,20082025,active
+CUST000077,Riehl AG & Co. KG,Schomberring 9/2,Mühlhausen,44862,CHE,06082025,active
+CUST000079,Adler,Handering 5/6,Neunburg vorm Wald,66124,AUT,12052023,active
+CUST000082,Schleich Herrmann GmbH,Frank-Flantz-Weg 4/5,Hoyerswerda,33708,CHE,22092024,inactive
+CUST000084,Pärtzelt Wagenknecht Stiftung & Co. KG,Theobald-Beyer-Weg 5/3,Siegen,28134,DEU,23082025,active
+CUST000089,Mosemann Ebert KG,Kruschwitzweg 4/6,Eisenhüttenstadt,57903,CHE,09022024,active
+CUST000090,Scholl GmbH & Co. KG,Engelbert-Zänker-Straße 9/5,Heinsberg,98209,AUT,23122024,active
+CUST000091,Löchel AG & Co. OHG,Wohlgemutallee 0,Pinneberg,52156,CHE,13092025,active
+CUST000094,Kusch GmbH & Co. OHG,Cemil-Heinz-Platz 2/2,Grimma,14134,DEU,06082024,inactive
+CUST000095,Sager,Stolzestr. 1,Ansbach,22938,DEU,20092024,inactive
+CUST000097,Dobes,Beckerstr. 3235,Ochsenfurt,65434,AUT,01072025,active
+CUST000098,Davids Schmiedt AG & Co. KGaA,Henschelstr. 4/1,Euskirchen,70011,CHE,21052025,active

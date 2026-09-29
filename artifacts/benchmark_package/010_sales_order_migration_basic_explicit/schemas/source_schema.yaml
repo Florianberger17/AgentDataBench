@@ -1,0 +1,89 @@
+table: sales_order_item
+
+entity: SalesOrderItem
+
+description: >
+  Source schema containing sales order data exported from the legacy ERP
+  system. Each record represents one item of a sales order, identified by the
+  combination of sales order no. and item no.
+
+attributes:
+
+  - name: sales order no.
+    type: integer
+    required: true
+    description: >
+      Identifier of the sales order in the legacy ERP system.
+
+  - name: order type
+    type: string
+    required: true
+    description: >
+      Order type of the legacy ERP system.
+
+  - name: sold-to no.
+    type: integer
+    required: true
+    description: >
+      Customer number of the sold-to party.
+
+  - name: sold-to address
+    type: integer
+    required: true
+    description: >
+      Address number of the sold-to party.
+
+  - name: customer po no.
+    type: string
+    required: false
+    description: >
+      Purchase order number of the customer.
+
+  - name: item no.
+    type: integer
+    required: true
+    description: >
+      Position number of the item within the sales order.
+
+  - name: part no.
+    type: string
+    required: true
+    description: >
+      Part number of the ordered object.
+
+  - name: description
+    type: string
+    required: true
+    description: >
+      Designation of the ordered object.
+
+  - name: description 2
+    type: string
+    required: false
+    description: >
+      Additional designation of the ordered object.
+
+  - name: quantity
+    type: decimal
+    required: true
+    description: >
+      Ordered quantity.
+
+  - name: requested date
+    type: integer
+    required: true
+    description: >
+      Delivery date requested by the customer, stored as a serial day number
+      counted from 30.12.1899.
+
+  - name: net price
+    type: decimal
+    required: true
+    description: >
+      Net price of the item.
+
+constraints:
+
+  - id: CON-SRC-001
+    description: >
+      The combination of sales order no. and item no. must be unique

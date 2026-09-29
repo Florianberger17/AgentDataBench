@@ -1,0 +1,67 @@
+table: customer_master
+
+entity: Customer
+
+description: >
+  Structural schema definition for customer master data in a target ERP system.
+  This schema defines only data structure, not data quality characteristics.
+
+attributes:
+
+  - name: CustomerID
+    type: string
+    required: true
+    unique: true
+
+  - name: Name
+    type: string
+    required: true
+
+  - name: Street
+    type: string
+    required: false
+
+  - name: City
+    type: string
+    required: false
+
+  - name: PostalCode
+    type: string
+    required: false
+
+  - name: Country
+    type: string
+    required: true
+    format: ISO-3166 alpha-3
+
+  - name: Email
+    type: string
+    required: false
+
+  - name: LastBusinessActivityDate
+    type: date
+    required: true
+
+  - name: Status
+    type: string
+    required: true
+    allowed_values:
+      - active
+      - inactive
+
+constraints:
+
+  - id: CON-001
+    description: CustomerID must be unique
+
+  - id: CON-002
+    description: Name must not be empty
+
+  - id: CON-003
+    description: Country must follow ISO 3166 alpha-3 format
+
+  - id: CON-004
+    description: Status must be active or inactive
+
+  - id: CON-005
+    description: Active customers must have LastBusinessActivityDate

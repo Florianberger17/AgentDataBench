@@ -1,0 +1,29 @@
+scenario_id: 006_PURCHASE_ORDER_MIGRATION_BASIC_EXPLICIT
+
+name: ERP Purchase Order Item Migration
+
+domain: ERP Data Integration
+
+description: >
+  Purchase order items are migrated from a legacy ERP system to a new ERP
+  system as part of a system modernization project. The source system stores
+  the items of a purchase order using the legacy data model and identifies
+  materials and cost centers by their legacy numbers, while the target ERP
+  system requires the data in a different schema with renumbered documents,
+  standardized identifiers and derived values. Material and cost center
+  numbers are not carried over and must be resolved via central mapping lists
+  maintained outside the source system.
+
+business_objects:
+  - PurchaseOrderItem
+
+systems:
+  source:
+    name: Legacy ERP System
+    description: >
+      Stores purchase order items using the legacy data model.
+
+  target:
+    name: Target ERP System
+    description: >
+      Stores purchase order items using the target ERP data model.

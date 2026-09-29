@@ -1,0 +1,131 @@
+task_id: 008_PRICE_LIST_MIGRATION_BASIC_EXPLICIT
+
+objective: >
+  Transform the provided price list dataset from the source schema to the
+  target schema and produce a CSV file that conforms exactly to the target
+  schema. The material numbers of the target ERP system are not contained in
+  the source dataset and shall be resolved via the central material cross
+  reference list.
+
+input:
+  source_dataset: data/dataset.csv
+  source_schema: schemas/source_schema.yaml
+  target_schema: schemas/target_schema.yaml
+  reference_data:
+    - name: material_cross_reference
+      file: data/mapping_list_materials.csv
+      key_field: "part no. legacy system"
+      value_field: "part no. new system"
+      description: >
+        Assigns the part numbers of the legacy ERP system to the material
+        numbers of the target ERP system.
+
+required_operations:
+  - filtering
+  - schema_mapping
+  - lookup
+  - value_mapping
+  - date_conversion
+  - rounding
+  - default_value_substitution
+  - constant_assignment
+
+business_rules:
+
+  filtering:
+    description: >
+      Price records that are generally invalid shall not be migrated.
+    field: validity
+    operator: "!="
+    value: "generally invalid"
+
+  mappings:
+
+    - source_field: price list no.
+      target_field: PRICE_LIST
+      transformation:
+        type: value_mapping
+        mapping:
+          5303: "01"
+          9503: "02"
+      description: >
+        Convert the price list number of the legacy system to the price list
+        of the target ERP system.
+
+    - source_field: part no.
+      target_field: MATERIAL
+      transformation:
+        type: lookup
+        reference: material_cross_reference
+        lookup_key: "part no. legacy system"
+        return_field: "part no. new system"
+      description: >
+        Resolve the legacy part number via the central cross reference list.
+
+    - source_field: description
+      target_field: MATERIAL_DESC
+      transformation:
+        type: copy
+      description: >
+        Adopt the designation of the part.
+
+    - source_field: valid from date
+      target_field: VALID_FROM
+      transformation:
+        type: serial_date_conversion
+        epoch: "1899-12-30"
+        output_format: DD.MM.YYYY
+        default_if_empty: "01.06.2025"
+      description: >
+        Price records with a recorded start of validity keep that date, which
+        is stored as a serial day number counted from 30.12.1899 and shall be
+        converted to a calendar date. All remaining price records become valid
+        on the cutover date 01.06.2025.
+
+    - target_field: VALID_TO
+      transformation:
+        type: constant
+        value: "31.12.9999"
+      description: >
+        Condition records are migrated without a limitation of the validity
+        period.
+
+    - source_field: price
+      target_field: COND_AMOUNT
+      transformation:
+        type: round
+        decimals: 2
+
+    - source_field: currency
+      target_field: COND_CURR
+      transformation:
+        type: copy
+
+    - source_field: quantity base
+      target_field: PRICE_UNIT
+      transformation:
+        type: value_mapping
+        mapping:
+          "Per 1 UoM": 1
+      description: >
+        Convert the quantity the price refers to into the price unit of the
+        target ERP system.
+
+    - target_field: UOM
+      transformation:
+        type: constant
+        value: "ST"
+
+ignored_source_fields:
+  - item no.
+
+output:
+  format: csv
+  schema_reference: schemas/target_schema.yaml
+
+constraints:
+  - The output dataset must follow the target schema exactly.
+  - The output column order must match the target schema.
+  - No additional columns may be added.
+  - Each output row shall represent one condition record.
+  - The combination of PRICE_LIST and MATERIAL must be unique.

@@ -1,0 +1,81 @@
+table: material_document
+
+entity: MaterialDocument
+
+description: >
+  Target schema for material documents in the new ERP system. Each record
+  represents one material document, identified by MBLNR.
+
+attributes:
+
+  - name: MBLNR
+    type: string
+    required: true
+    description: >
+      Number of the material document.
+
+  - name: BUDAT
+    type: date
+    required: true
+    format: DD.MM.YYYY
+    description: >
+      Posting date of the material document.
+
+  - name: BWART
+    type: string
+    required: true
+    description: >
+      Movement type of the target ERP system, consisting of three digits.
+
+  - name: MATNR
+    type: string
+    required: true
+    description: >
+      Material number of the moved material, consisting of 13 digits.
+
+  - name: WERKS
+    type: string
+    required: true
+    description: >
+      Plant the movement is posted in.
+
+  - name: LGORT
+    type: string
+    required: false
+    description: >
+      Storage location the movement is posted to.
+
+  - name: ERFMG
+    type: decimal
+    required: true
+    description: >
+      Quantity in the unit of entry, with three decimal places.
+
+  - name: ERFME
+    type: string
+    required: true
+    description: >
+      Unit of entry.
+
+  - name: DMBTR
+    type: decimal
+    required: true
+    description: >
+      Amount in local currency, with two decimal places.
+
+  - name: KOSTL
+    type: string
+    required: false
+    description: >
+      Cost center the movement is charged to.
+
+  - name: SGTXT
+    type: string
+    required: false
+    description: >
+      Item text of the material document.
+
+constraints:
+
+  - id: CON-TGT-001
+    description: MBLNR must be unique

@@ -1,0 +1,29 @@
+scenario_id: 009_MATERIAL_MOVEMENTS_MIGRATION_BASIC_EXPLICIT
+
+name: ERP Material Movement Migration
+
+domain: ERP Data Integration
+
+description: >
+  Posted stock movements are migrated from a legacy ERP system to a new ERP
+  system as part of a system modernization project. The source system keeps
+  them in a movement journal using the legacy data model and identifies
+  materials by their legacy part numbers, while the target ERP system expects
+  one material document per movement, numbered from a document number range
+  and carrying resolved material numbers, target movement types and calendar
+  dates. Movements of materials that do not exist in the material master of
+  the target system cannot be posted and are not migrated.
+
+business_objects:
+  - MaterialDocument
+
+systems:
+  source:
+    name: Legacy ERP System
+    description: >
+      Stores posted stock movements in a material movement journal.
+
+  target:
+    name: Target ERP System
+    description: >
+      Stores posted stock movements as material documents.

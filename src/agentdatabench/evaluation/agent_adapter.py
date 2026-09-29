@@ -39,7 +39,7 @@ from tempfile import mkdtemp
 
 from agentdatabench.domain.agent_run_result import AgentRunResult
 from agentdatabench.domain.benchmark_package import BenchmarkPackage
-from agentdatabench.domain.task import BusinessRules, TaskInput
+from agentdatabench.domain.task import BusinessRules, ReferenceData, TaskInput
 
 OUTPUT_FILENAME = "solution.csv"
 # The agent's own documentation of how it produced OUTPUT_FILENAME - re-run
@@ -182,6 +182,9 @@ class AgentAdapter(ABC):
         for document in task_input.additional_documents or []:
             source_path = package.root / document
             shutil.copy(source_path, workspace / source_path.name)
+        for reference in task_input.reference_data or []:
+            source_path = package.root / reference.file
+            shutil.copy(source_path, workspace / source_path.name)
 
     def _build_prompt(self, package: BenchmarkPackage, workspace: Path) -> str:
         task = package.task
@@ -195,6 +198,7 @@ class AgentAdapter(ABC):
             *self._render_schema_or_target_example(task.input, workspace),
             "",
             *self._render_additional_documents(task.input.additional_documents, workspace),
+            *self._render_reference_data(task.input.reference_data, workspace),
             *self._render_business_rules(task.business_rules),
             "Constraints:",
             *(f"- {constraint}" for constraint in task.constraints),
@@ -279,6 +283,29 @@ class AgentAdapter(ABC):
         lines.append("")
         return lines
 
+    def _render_reference_data(
+        self, reference_data: list[ReferenceData] | None, workspace: Path
+    ) -> list[str]:
+        """Names each lookup table and its key/value columns. Unlike an
+        additional document, a reference table is not something the agent has
+        to discover it needs - a `lookup` mapping below refers to it by name,
+        so that name has to resolve to a concrete file."""
+        if not reference_data:
+            return []
+        lines = ["Reference tables (for lookup mappings below):"]
+        for reference in reference_data:
+            value_fields = reference.value_field
+            if isinstance(value_fields, str):
+                value_fields = [value_fields]
+            rendered = ", ".join(repr(field_name) for field_name in value_fields)
+            lines.append(
+                f"  - {reference.name}: {workspace / Path(reference.file).name} "
+                f"(key column {reference.key_field!r}, "
+                f"value column{'s' if len(value_fields) > 1 else ''} {rendered})"
+            )
+        lines.append("")
+        return lines
+
     def _render_business_rules(self, business_rules: BusinessRules) -> list[str]:
         """Renders task.business_rules into natural language. Without this,
         an agent only sees the schemas and has to guess exact filter cutoffs
@@ -293,18 +320,54 @@ class AgentAdapter(ABC):
             if business_rules.filtering.description:
                 lines.append(f"  {business_rules.filtering.description.strip()}")
             for rule in business_rules.filtering.rules:
-                condition = f"  - Keep rows where {rule.field} {rule.operator} {rule.value!r}"
+                if rule.operator in ("is empty", "is not empty"):
+                    condition = f"  - Keep rows where {rule.field} {rule.operator}"
+                elif rule.operator in ("in", "not in"):
+                    condition = (
+                        f"  - Keep rows where {rule.field} is {rule.operator} column "
+                        f"{rule.key_field!r} of reference table {rule.reference!r}"
+                    )
+                    if isinstance(rule.field, list):
+                        condition += " (the columns pair up in the order given)"
+                else:
+                    condition = (
+                        f"  - Keep rows where {rule.field} {rule.operator} {rule.value!r}"
+                    )
                 if rule.field_format:
                     condition += f" (source field format: {rule.field_format})"
                 lines.append(condition)
             lines.append("")
 
+        if business_rules.grouping:
+            grouping = business_rules.grouping
+            lines.append(f"Grouping key: {', '.join(grouping.key_fields)}")
+            if grouping.description:
+                lines.append(f"  {grouping.description.strip()}")
+            lines.append("")
+
+        if business_rules.record_order:
+            # Without this the agent cannot reproduce a sequential_number
+            # target field: the numbers depend on which row comes first.
+            record_order = business_rules.record_order
+            lines.append(
+                f"Record order ({record_order.direction}): "
+                f"{', '.join(record_order.fields)}"
+            )
+            if record_order.description:
+                lines.append(f"  {record_order.description.strip()}")
+            lines.append("")
+
         if business_rules.mappings:
             lines.append("Field mappings (apply exactly as specified, do not invent your own):")
             for mapping in business_rules.mappings:
+                # A source-independent rule (constant/sequence) names no
+                # source column - say so rather than rendering "-> field".
                 source = mapping.source_field or " + ".join(mapping.source_fields or [])
                 transformation = mapping.transformation.model_dump()
-                lines.append(f"  - {source} -> {mapping.target_field}: {transformation}")
+                lines.append(
+                    f"  - {source or '(no source field)'} -> "
+                    f"{mapping.target_field}: {transformation}"
+                )
                 if mapping.description:
                     lines.append(f"    ({mapping.description.strip()})")
             lines.append("")

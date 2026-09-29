@@ -10,7 +10,7 @@ future ``GroundTruthCreator`` registry without changing this core domain model.
 
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, model_validator
 
@@ -18,12 +18,26 @@ from agentdatabench.domain.common import StrictBaseModel
 
 
 class FilterRule(StrictBaseModel):
-    field: str
+    """One condition a record has to satisfy to be migrated.
+
+    ``value`` is optional because not every operator compares against one:
+    ``is empty``/``is not empty`` test the field itself, and ``in``/``not in``
+    test membership in a reference table named by ``reference``/``key_field``
+    (see ``ReferenceData``).
+    """
+
+    # A list for the `in`/`not in` operators when the reference table is keyed
+    # on more than one column; `field` and `key_field` pair up positionally.
+    field: str | list[str]
     operator: str
-    value: Any
+    value: Any = None
     # Date-token format (e.g. "DD.MM.YYYY") of `field` in the source data,
     # when it isn't in the ISO format `value` is authored in.
     field_format: str | None = None
+    # For the `in`/`not in` operators: the reference table to test against and
+    # the column of it holding the keys.
+    reference: str | None = None
+    key_field: str | list[str] | None = None
 
 
 class FilteringRules(StrictBaseModel):
@@ -38,10 +52,9 @@ class FilteringRules(StrictBaseModel):
                 "description": data.get("description"),
                 "rules": [
                     {
-                        "field": data["field"],
-                        "operator": data["operator"],
-                        "value": data["value"],
-                        "field_format": data.get("field_format"),
+                        key: value
+                        for key, value in data.items()
+                        if key != "description"
                     }
                 ],
             }
@@ -63,6 +76,16 @@ class TransformationSpec(BaseModel):
 
 
 class MappingRule(StrictBaseModel):
+    """One target field and where its value comes from.
+
+    ``source_field`` names a single source column, ``source_fields`` several
+    (e.g. ``concatenate``). Both may be omitted: a source-independent
+    transformation such as ``constant`` or ``sequence`` derives the target
+    value from the row count alone, not from any source column. Setting both
+    at once stays an error, since the transformation handlers read exactly
+    one of them.
+    """
+
     source_field: str | None = None
     source_fields: list[str] | None = None
     target_field: str
@@ -70,19 +93,73 @@ class MappingRule(StrictBaseModel):
     description: str | None = None
 
     @model_validator(mode="after")
-    def _exactly_one_source(self) -> "MappingRule":
-        has_single = self.source_field is not None
-        has_multi = self.source_fields is not None
-        if has_single == has_multi:
+    def _at_most_one_source(self) -> "MappingRule":
+        if self.source_field is not None and self.source_fields is not None:
             raise ValueError(
-                "MappingRule requires exactly one of 'source_field' or 'source_fields'"
+                "MappingRule accepts 'source_field' or 'source_fields', not both"
             )
         return self
 
 
+class RecordOrder(StrictBaseModel):
+    """The order the surviving records are processed in.
+
+    Only meaningful when the output depends on position - a
+    ``sequential_number`` target field assigns its numbers in this order, so
+    without it the expected result would not be defined for a source file in
+    arbitrary order.
+    """
+
+    description: str | None = None
+    fields: list[str]
+    direction: Literal["ascending", "descending"] = "ascending"
+
+
+class Grouping(StrictBaseModel):
+    """The records that belong together as one target document.
+
+    Several source rows can map to one document of the target system - all
+    items of one sales order become one sales order there. A target field
+    numbered ``assigned_per: group`` then draws one number per group instead
+    of one per row.
+    """
+
+    description: str | None = None
+    key_fields: list[str]
+
+
 class BusinessRules(StrictBaseModel):
     filtering: FilteringRules | None = None
+    record_order: RecordOrder | None = None
+    grouping: Grouping | None = None
     mappings: list[MappingRule] | None = None
+
+
+class ReferenceData(StrictBaseModel):
+    """A lookup table the task resolves values against (e.g. a supplier
+    mapping list assigning legacy supplier numbers to target ones).
+
+    Unlike ``TaskInput.additional_documents``, which are free-form
+    attachments an agent reads for itself, a reference table is structured:
+    ``key_field``/``value_field`` name the columns, so a ``lookup``
+    transformation can derive the expected result from it as well.
+
+    ``key_field`` is a list when the table is keyed on a combination of
+    columns - a customer cross reference resolving customer number *and*
+    address number, because one legacy customer can hold several addresses
+    that became separate customers in the target system.
+
+    ``value_field`` is a list when one table feeds several target fields (a
+    material cross reference carrying both the new number and its
+    description). Which column a given rule reads is decided by that rule's
+    ``return_field``; the declaration here is what the agent is told about.
+    """
+
+    name: str
+    file: str
+    key_field: str | list[str]
+    value_field: str | list[str]
+    description: str | None = None
 
 
 class TaskInput(StrictBaseModel):
@@ -103,6 +180,8 @@ class TaskInput(StrictBaseModel):
     # a PDF order confirmation carrying an address the CSV lacks). Optional
     # since most tasks are self-contained within the CSV/schemas alone.
     additional_documents: list[str] | None = None
+    # Lookup tables the task resolves values against - see ReferenceData.
+    reference_data: list[ReferenceData] | None = None
 
     @model_validator(mode="after")
     def _schema_xor_target_example(self) -> "TaskInput":

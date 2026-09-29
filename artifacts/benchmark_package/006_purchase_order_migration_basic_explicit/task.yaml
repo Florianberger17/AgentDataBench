@@ -1,0 +1,189 @@
+task_id: 006_PURCHASE_ORDER_MIGRATION_BASIC_EXPLICIT
+
+objective: >
+  Transform the provided purchase order item dataset from the source schema to
+  the target schema and produce a CSV file that conforms to the target schema.
+  Material and cost center numbers of the target system are not contained in
+  the source dataset and shall be resolved via the central mapping lists.
+
+input:
+  source_dataset: data/dataset.csv
+  source_schema: schemas/source_schema.yaml
+  target_schema: schemas/target_schema.yaml
+  reference_data:
+    - name: material_mapping
+      file: data/mapping_list_materials.csv
+      key_field: "part no. legacy system"
+      value_field: "part no. new system"
+      description: >
+        Assigns the material numbers of the legacy ERP system to the material
+        numbers of the target ERP system.
+
+    - name: cost_center_mapping
+      file: data/mapping_list_cost_centers.csv
+      key_field: "Cost Center Legacy System"
+      value_field: "Cost Center New"
+      description: >
+        Assigns the cost centers of the legacy ERP system to the cost centers
+        of the target ERP system.
+
+required_operations:
+  - schema_mapping
+  - value_mapping
+  - lookup
+  - value_transformation
+  - calculation
+  - conditional_assignment
+  - constant_assignment
+
+business_rules:
+
+  mappings:
+
+    - source_field: TransactionNo
+      target_field: PO_NUMBER
+      transformation:
+        type: numeric_offset
+        offset: 9700000000
+      description: >
+        The purchase order number of the target ERP system is derived from the
+        legacy transaction number by adding the number range offset
+        9700000000.
+
+    - source_field: ItemNo
+      target_field: PO_ITEM
+      transformation:
+        type: numeric_factor
+        factor: 10
+      description: >
+        The item numbers of the target ERP system are assigned in steps of ten.
+
+    - source_field: CostCenter
+      target_field: ACCTASSCAT
+      transformation:
+        type: conditional_value
+        conditions:
+          - when:
+              field: CostCenter
+              is: not_empty
+            value: "K"
+          - value: "P"
+      description: >
+        Items assigned to a cost center receive the account assignment
+        category K, all remaining items the account assignment category P.
+
+    - source_field: MaterialNo
+      target_field: MATERIAL
+      transformation:
+        type: lookup
+        reference: material_mapping
+        lookup_key: "part no. legacy system"
+        return_field: "part no. new system"
+      description: >
+        Convert the legacy material number to the material number of the
+        target ERP system using the central material mapping list. Items
+        without a material number remain without one.
+
+    - source_fields:
+        - Description1
+        - MaterialNo
+      target_field: SHORT_TEXT
+      transformation:
+        type: conditional_value
+        conditions:
+          - when:
+              field: MaterialNo
+              is: empty
+            from_field: Description1
+          - value: ""
+      description: >
+        Items without a material number are described by the short text of the
+        legacy system; all remaining items carry no short text.
+
+    - source_field: UnitOfMeasure
+      target_field: PO_UNIT
+      transformation:
+        type: value_mapping
+        mapping:
+          "STK": "PC"
+          "STD": "HR"
+          "MON": "MON"
+      description: >
+        Convert the legacy unit of measure to the unit of measure of the
+        target ERP system.
+
+    - source_field: PriceUnit
+      target_field: PRICE_UNIT
+      transformation:
+        type: value_mapping
+        mapping:
+          "Per 1 UoM": 1
+          "Per 100 UoM": 100
+          "Per 1000 UoM": 1000
+
+    - source_field: CostCenter
+      target_field: COSTCENTER
+      transformation:
+        type: lookup
+        reference: cost_center_mapping
+        lookup_key: "Cost Center Legacy System"
+        return_field: "Cost Center New"
+      description: >
+        Convert the legacy cost center to the cost center of the target ERP
+        system using the central cost center mapping list. Items without a
+        cost center remain without one.
+
+    - target_field: PLANT
+      transformation:
+        type: constant
+        value: 4170
+
+    - source_field: OpenQuantity
+      target_field: QUANTITY
+      transformation:
+        type: copy
+      description: >
+        Only the quantity not yet delivered is migrated.
+
+    - source_fields:
+        - OrderPrice
+        - OpenQuantity
+      target_field: GR_PRICE
+      transformation:
+        type: calculation
+        formula: "OrderPrice * OpenQuantity"
+        decimals: 2
+      description: >
+        The valuation price of the goods receipt is the product of the order
+        price and the quantity not yet delivered.
+
+    - source_field: ConfirmedDate
+      target_field: DELIVERY_DATE
+      transformation:
+        type: date_format
+        input_format: YYYY-MM-DD
+        output_format: DD.MM.YYYY
+
+    - source_field: Name
+      target_field: ZZNAME_TLF
+      transformation:
+        type: value_mapping
+        mapping:
+          "Ann-Kathrin Hein": "+49 6039 488 223"
+          "Ramazan Häring": "+49 6039 488 298"
+          "Magret Flantz": "+49 6039 488 317"
+          "Agatha Haering B.Eng.": "+49 6039 488 250"
+          "Hansjörg Becker": "+49 6039 488 335"
+      description: >
+        Assign the telephone number of the requisitioner.
+
+output:
+  format: csv
+  schema_reference: schemas/target_schema.yaml
+
+constraints:
+  - The output dataset must follow the target schema exactly.
+  - Each output row shall represent one purchase order item.
+  - The combination of PO_NUMBER and PO_ITEM must be unique.
+  - No additional columns may be added.
+  - The column order must match the target schema.

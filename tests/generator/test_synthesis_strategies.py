@@ -22,6 +22,8 @@ REAL_LIKE = pd.DataFrame(
         "company": ["Acme Corp", "Widget GmbH", "Fabrikat AG"],
         "lead_time_days": ["10", "40", "25"],
         "unit_price": ["10.50", "20.00", "15.75"],
+        # German-locale export: decimal comma, mixed with plain integers.
+        "open_quantity": ["4,25", "2", "42,25"],
         "created": ["01.01.2020", "15.06.2021", "30.12.2022"],
         "status": ["active", "active", "inactive"],
     }
@@ -67,6 +69,37 @@ def test_numeric_distribution_strategy_preserves_float_precision():
         assert "." in value
         assert len(value.split(".")[1]) == 2
         assert 10.50 <= float(value) <= 20.00
+
+
+def test_numeric_distribution_strategy_preserves_decimal_comma():
+    config = ColumnSynthesisConfig(column="open_quantity", strategy="numeric_distribution")
+    result = NumericDistributionStrategy().synthesize(
+        REAL_LIKE["open_quantity"], config, random.Random(0), _faker(), 50
+    )
+    for value in result:
+        assert "." not in value
+        assert len(value.split(",")[1]) == 2
+        assert 2.0 <= float(value.replace(",", ".")) <= 42.25
+
+
+def test_numeric_distribution_strategy_rejects_mixed_decimal_separators():
+    config = ColumnSynthesisConfig(column="mixed", strategy="numeric_distribution")
+    series = pd.Series(["1,5", "2.5"])
+
+    with pytest.raises(ValueError, match="mixes"):
+        NumericDistributionStrategy().synthesize(
+            series, config, random.Random(0), _faker(), 5
+        )
+
+
+def test_numeric_distribution_strategy_rejects_non_numeric_value():
+    config = ColumnSynthesisConfig(column="priced", strategy="numeric_distribution")
+    series = pd.Series(["1,50", "2,00 EUR"])
+
+    with pytest.raises(ValueError, match="non-numeric"):
+        NumericDistributionStrategy().synthesize(
+            series, config, random.Random(0), _faker(), 5
+        )
 
 
 def test_date_distribution_strategy_stays_within_observed_span():

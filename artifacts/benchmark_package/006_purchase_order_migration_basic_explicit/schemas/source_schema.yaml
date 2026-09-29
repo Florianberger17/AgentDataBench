@@ -1,0 +1,76 @@
+table: purchase_order_item
+
+entity: PurchaseOrderItem
+
+description: >
+  Structural schema definition for purchase order item data in a legacy ERP
+  system. Each record represents one purchase order item, identified by the
+  combination of TransactionNo and ItemNo. This schema defines only data
+  structure, not data quality characteristics.
+
+attributes:
+
+  - name: TransactionNo
+    type: integer
+    required: true
+    unique: false
+    description: Identifier of the purchase order the item belongs to
+
+  - name: ItemNo
+    type: integer
+    required: true
+    description: Sequential number of the item within one purchase order
+
+  - name: MaterialNo
+    type: string
+    required: false
+    description: Identifier of the ordered material
+
+  - name: Description1
+    type: string
+    required: true
+    description: Description of the ordered material or service
+
+  - name: CostCenter
+    type: string
+    required: false
+    description: Cost center the purchase order item is assigned to
+
+  - name: UnitOfMeasure
+    type: string
+    required: true
+    description: Unit of measure of the ordered quantity
+
+  - name: PriceUnit
+    type: string
+    required: true
+    description: Price unit the order price refers to
+
+  - name: OpenQuantity
+    type: decimal
+    required: true
+    description: Quantity not yet delivered
+
+  - name: OrderPrice
+    type: decimal
+    required: true
+    description: Order price of the item
+
+  - name: ConfirmedDate
+    type: date
+    required: true
+    format: YYYY-MM-DD
+    description: Delivery date confirmed by the supplier
+
+  - name: Name
+    type: string
+    required: true
+    description: Name of the requisitioner
+
+constraints:
+
+  - id: CON-SRC-001
+    description: The combination of TransactionNo and ItemNo must be unique
+
+  - id: CON-SRC-002
+    description: Description1 must be provided

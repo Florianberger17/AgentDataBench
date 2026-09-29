@@ -1,0 +1,25 @@
+scenario_id: 002_SUPPLIER_MIGRATION_BASIC_EXPLICIT
+
+name: ERP Supplier Migration
+
+domain: ERP Data Integration
+
+description: >
+  Supplier master data is migrated from a legacy ERP system to a new ERP system
+  as part of a system modernization project. The source system contains historical
+  supplier records, while the target system requires supplier data in a new schema.
+
+business_objects:
+  - Supplier
+
+systems:
+  source:
+    name: Legacy ERP System
+    description: >
+      Stores supplier master data using the legacy data model.
+
+  target:
+    name: Target ERP System
+    description: >
+      Stores supplier master data using the target data model required by the
+      new ERP platform.

@@ -1,4 +1,4 @@
-seed: 123
+seed: 1003
 
 locale: de_DE
 
@@ -6,7 +6,7 @@ columns:
 
   - column: part no.
     strategy: unique_sequence
-    format: "1000-{:04d}"
+    format: "000000-{:04d}"
     start: 0
 
   - column: name
@@ -38,4 +38,3 @@ columns:
 
   - column: creator
     strategy: categorical_resample
-    # provider: user_name

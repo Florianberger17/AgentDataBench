@@ -1,0 +1,19 @@
+scenario_id: 008_PRICE_LIST_MIGRATION_BASIC_EXPLICIT
+
+task_id: 008_PRICE_LIST_MIGRATION_BASIC_EXPLICIT
+
+version: 1.0
+
+author: Florian Berger
+
+created: 01/07/2026
+
+task_complexity: basic
+specification_completeness: explicit
+data_quality: clean
+
+seed: 
+
+
+
+

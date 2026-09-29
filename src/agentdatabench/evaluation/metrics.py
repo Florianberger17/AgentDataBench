@@ -184,9 +184,8 @@ class FilteringAccuracyMetric:
 
 
 class FieldMappingAccuracyMetric:
-    """Fraction of expected target columns that are populated with a
-    meaningful (non-null, non-empty, not-just-missing-value-tokens) value in
-    the output - measures whether each field was mapped from *something* at
+    """How much of the population ground_truth.csv shows the output
+    reproduces - measures whether each field was mapped from *something* at
     all, independent of whether the mapped value is exactly correct (that's
     Transformation Accuracy's job). Motivated by two real failure modes seen
     in live agent runs: (1) Data Interpreter left a target column blank
@@ -194,7 +193,20 @@ class FieldMappingAccuracyMetric:
     back; (2) AG2's own generated code string-concatenated two empty source
     fields into the literal text "nan nan" - non-empty, so it would pass a
     naive blank check, but just as uninformative as an empty cell. See
-    _is_meaningfully_populated."""
+    _is_meaningfully_populated.
+
+    Scored per column as the output's populated fraction relative to the one
+    ground_truth.csv shows, capped at 1.0. Scoring the raw populated fraction
+    instead punished an optional target field that is *supposed* to be empty
+    in most rows - a component text only stock items carry, a cost center
+    only some movements are charged to - and several target schemas require
+    exactly that emptiness. Measured against the perfect solution, three of
+    the ten benchmark packages lost up to 15% here purely for reproducing
+    their expected blanks, which made them unpassable for any agent.
+
+    Over-population is deliberately not punished: filling a field that should
+    be blank is a wrong *value*, which Transformation and Row Accuracy score.
+    This metric only answers whether a field was populated at all."""
 
     name = "field_mapping_accuracy"
 
@@ -209,18 +221,33 @@ class FieldMappingAccuracyMetric:
             return MetricResult(name=self.name, score=1.0, details={})
 
         populated_fraction_by_column: dict[str, float] = {}
+        expected_fraction_by_column: dict[str, float] = {}
+        score_by_column: dict[str, float] = {}
+
         for column in expected_columns:
+            expected = float(ground_truth_df[column].map(_is_meaningfully_populated).mean())
+            expected_fraction_by_column[column] = expected
+
             if column not in output_df.columns or output_df.empty:
                 populated_fraction_by_column[column] = 0.0
+                score_by_column[column] = 0.0
                 continue
-            populated = output_df[column].map(_is_meaningfully_populated)
-            populated_fraction_by_column[column] = float(populated.mean())
 
-        score = sum(populated_fraction_by_column.values()) / len(expected_columns)
+            actual = float(output_df[column].map(_is_meaningfully_populated).mean())
+            populated_fraction_by_column[column] = actual
+            # A column ground_truth.csv leaves entirely blank asks nothing of
+            # the agent, so there is nothing to score it against.
+            score_by_column[column] = 1.0 if expected == 0 else min(actual / expected, 1.0)
+
+        score = sum(score_by_column.values()) / len(expected_columns)
         return MetricResult(
             name=self.name,
             score=score,
-            details={"populated_fraction_by_column": populated_fraction_by_column},
+            details={
+                "populated_fraction_by_column": populated_fraction_by_column,
+                "expected_fraction_by_column": expected_fraction_by_column,
+                "score_by_column": score_by_column,
+            },
         )
 
 

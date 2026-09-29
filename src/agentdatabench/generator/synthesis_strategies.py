@@ -12,12 +12,20 @@ guarantee for columns a benchmark package author has judged non-identifying
 default. Iteration over distinct categorical labels uses pandas' `.unique()`
 (first-occurrence order), never a Python `set`, for the same determinism
 reasons documented in noise_models.py.
+
+Most strategies see only their own column. A strategy that has to stay
+consistent with another one (`date_offset`, which keeps a delivery date at or
+after its order date) reads the already-synthesized columns via `synthesized`,
+which DatasetCreator fills as it walks the columns in source order. A
+dependent column therefore has to come *after* the column it references.
 """
 
 from __future__ import annotations
 
 import random
 import re
+from collections import Counter
+from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Protocol
@@ -29,6 +37,23 @@ from agentdatabench.domain.synthesis_configuration import ColumnSynthesisConfig
 from agentdatabench.generator.date_formats import translate_date_format
 
 
+@dataclass(frozen=True)
+class SynthesisContext:
+    """What a strategy needs beyond its own column.
+
+    `source_df` is the real frame the column was sliced out of - the only
+    place two real columns are still aligned row by row, which a strategy
+    fitting the *relationship* between columns needs. `synthesized` holds the
+    columns already produced in this run, in source-column order.
+    """
+
+    source_df: pd.DataFrame = field(default_factory=pd.DataFrame)
+    synthesized: dict[str, pd.Series] = field(default_factory=dict)
+
+
+EMPTY_SYNTHESIS_CONTEXT = SynthesisContext()
+
+
 class SynthesisStrategy(Protocol):
     def synthesize(
         self,
@@ -37,6 +62,7 @@ class SynthesisStrategy(Protocol):
         rng: random.Random,
         faker: Faker,
         n: int,
+        context: SynthesisContext = ...,
     ) -> pd.Series: ...
 
 
@@ -48,12 +74,19 @@ class FakerStrategy:
         rng: random.Random,
         faker: Faker,
         n: int,
+        context: SynthesisContext = EMPTY_SYNTHESIS_CONTEXT,
     ) -> pd.Series:
         provider = getattr(faker, config.provider)
         return pd.Series([provider() for _ in range(n)])
 
 
-_DECIMAL_PATTERN = re.compile(r"^-?\d+\.(\d+)$")
+# Numeric columns reach the strategies as strings (Dataset reads every column
+# as text), so the decimal separator is whatever the source export wrote:
+# "12.5" from an English-locale system, "12,5" from a German one. The
+# separator is detected per column and reproduced in the output, so the
+# synthetic data keeps the locale convention an agent has to cope with.
+_DECIMAL_PATTERN = re.compile(r"^-?\d+([.,])(\d+)$")
+_INTEGER_PATTERN = re.compile(r"^-?\d+$")
 
 
 class NumericDistributionStrategy:
@@ -64,22 +97,53 @@ class NumericDistributionStrategy:
         rng: random.Random,
         faker: Faker,
         n: int,
+        context: SynthesisContext = EMPTY_SYNTHESIS_CONTEXT,
     ) -> pd.Series:
-        raw_values = real_series.dropna().astype(str)
-        decimal_lengths = [
-            len(match.group(1))
-            for value in raw_values
-            if (match := _DECIMAL_PATTERN.match(value))
-        ]
-        is_float = len(decimal_lengths) > 0
+        raw_values = real_series.dropna().astype(str).str.strip()
+        raw_values = raw_values[raw_values != ""]
+
+        separators: set[str] = set()
+        decimal_lengths: list[int] = []
+        for value in raw_values:
+            if match := _DECIMAL_PATTERN.match(value):
+                separators.add(match.group(1))
+                decimal_lengths.append(len(match.group(2)))
+            elif not _INTEGER_PATTERN.match(value):
+                raise ValueError(
+                    f"NumericDistributionStrategy: column '{config.column}' "
+                    f"contains the non-numeric value '{value}'. This strategy "
+                    f"only accepts plain integers and decimals ('1234', "
+                    f"'12.5', '12,5') - grouped numbers ('1.234,56'), units "
+                    f"and currency symbols must be cleaned from the source "
+                    f"data or handled by a different strategy."
+                )
+
+        # Both separators in one column is genuinely ambiguous ('1.234' could
+        # be a decimal or a grouped integer), so it is refused rather than
+        # guessed at.
+        if len(separators) > 1:
+            raise ValueError(
+                f"NumericDistributionStrategy: column '{config.column}' mixes "
+                f"'.' and ',' as decimal separators. Normalise the source "
+                f"column to one separator."
+            )
+
+        decimal_separator = separators.pop() if separators else "."
         precision = max(decimal_lengths, default=0)
 
-        numeric_values = raw_values.astype(float)
-        low, high = numeric_values.min(), numeric_values.max()
+        numeric_values = [
+            float(value.replace(decimal_separator, ".")) for value in raw_values
+        ]
+        low, high = min(numeric_values), max(numeric_values)
 
-        if is_float:
+        if precision > 0:
             return pd.Series(
-                [f"{rng.uniform(low, high):.{precision}f}" for _ in range(n)]
+                [
+                    f"{rng.uniform(low, high):.{precision}f}".replace(
+                        ".", decimal_separator
+                    )
+                    for _ in range(n)
+                ]
             )
         return pd.Series([str(rng.randint(int(low), int(high))) for _ in range(n)])
 
@@ -92,6 +156,7 @@ class DateDistributionStrategy:
         rng: random.Random,
         faker: Faker,
         n: int,
+        context: SynthesisContext = EMPTY_SYNTHESIS_CONTEXT,
     ) -> pd.Series:
         date_format = translate_date_format(config.field_format)
         real_dates = [
@@ -116,6 +181,7 @@ class UniqueSequenceStrategy:
         rng: random.Random,
         faker: Faker,
         n: int,
+        context: SynthesisContext = EMPTY_SYNTHESIS_CONTEXT,
     ) -> pd.Series:
         start = getattr(config, "start", 0)
         value_format = config.format
@@ -123,6 +189,21 @@ class UniqueSequenceStrategy:
 
 
 class CategoricalResampleStrategy:
+    """Redraws the column from its own real labels, weighted by how often each
+    one occurs.
+
+    A label occurring once in a hundred rows is a coin flip to survive that
+    redraw, which silently kills any business rule written against it (a
+    filter on a rare status value ends up matching nothing). Set
+    `ensure_all_values: true` to guarantee every real label appears at least
+    once: labels missing after the weighted draw replace occurrences of
+    labels that still have one to spare, so the frequency profile stays as
+    close as the guarantee allows.
+
+    Config keys: `max_cardinality` (default 20), `ensure_all_values`
+    (default false).
+    """
+
     def synthesize(
         self,
         real_series: pd.Series,
@@ -130,6 +211,7 @@ class CategoricalResampleStrategy:
         rng: random.Random,
         faker: Faker,
         n: int,
+        context: SynthesisContext = EMPTY_SYNTHESIS_CONTEXT,
     ) -> pd.Series:
         max_cardinality = getattr(config, "max_cardinality", 20)
         values = real_series.dropna().astype(str)
@@ -145,7 +227,39 @@ class CategoricalResampleStrategy:
 
         value_counts = values.value_counts()
         weights = [value_counts[label] for label in distinct]
-        return pd.Series(rng.choices(distinct, weights=weights, k=n))
+        drawn = rng.choices(distinct, weights=weights, k=n)
+
+        if getattr(config, "ensure_all_values", False):
+            drawn = self._ensure_all_values(drawn, distinct, config, rng, n)
+        return pd.Series(drawn)
+
+    def _ensure_all_values(
+        self,
+        drawn: list[str],
+        distinct: list[str],
+        config: ColumnSynthesisConfig,
+        rng: random.Random,
+        n: int,
+    ) -> list[str]:
+        if len(distinct) > n:
+            raise ValueError(
+                f"CategoricalResampleStrategy: column '{config.column}' has "
+                f"{len(distinct)} distinct values but only {n} rows to place "
+                f"them in - ensure_all_values cannot be satisfied."
+            )
+
+        counts = Counter(drawn)
+        for label in distinct:
+            if counts[label]:
+                continue
+            # Only overwrite a label that still has another occurrence left,
+            # so satisfying one missing label never drops a different one.
+            positions = [index for index, value in enumerate(drawn) if counts[value] > 1]
+            position = rng.choice(positions)
+            counts[drawn[position]] -= 1
+            drawn[position] = label
+            counts[label] += 1
+        return drawn
 
 
 class IdentityStrategy:
@@ -156,6 +270,7 @@ class IdentityStrategy:
         rng: random.Random,
         faker: Faker,
         n: int,
+        context: SynthesisContext = EMPTY_SYNTHESIS_CONTEXT,
     ) -> pd.Series:
         return real_series.reset_index(drop=True)
 
@@ -170,14 +285,76 @@ DEFAULT_PART_NAME_LIBRARY_PATH = (
 )
 
 
+def _load_part_names(config: ColumnSynthesisConfig) -> tuple[list[str], Path]:
+    """The distinct part names of the configured CSV library, in
+    first-occurrence order (see module docstring) so the same seed always
+    draws the same sample. The first column of the CSV is used; an optional
+    `library_path` on the column config overrides
+    DEFAULT_PART_NAME_LIBRARY_PATH."""
+    library_path = Path(getattr(config, "library_path", DEFAULT_PART_NAME_LIBRARY_PATH))
+    if not library_path.is_file():
+        raise FileNotFoundError(
+            f"Part name library not found at '{library_path}' "
+            f"(column '{config.column}')"
+        )
+
+    # utf-8-sig transparently strips the BOM Excel writes into CSV exports.
+    library = pd.read_csv(library_path, encoding="utf-8-sig", dtype=str)
+    if library.shape[1] == 0:
+        raise ValueError(f"Part name library '{library_path}' has no columns")
+
+    names = library.iloc[:, 0].dropna().str.strip()
+    names = names[names != ""]
+    return names.unique().tolist(), library_path
+
+
+def _draw_names(
+    available: list[str],
+    count: int,
+    config: ColumnSynthesisConfig,
+    rng: random.Random,
+) -> list[str]:
+    """`count` distinct library entries, honouring an optional guarantee that
+    some of them exceed `ensure_longer_than` characters.
+
+    Without it, a library of mostly short entries never produces a value long
+    enough to exercise a truncation rule: the target field's length limit is
+    then never reached and the rule is dead. `ensure_count` (default 1) says
+    how many drawn entries must exceed the threshold.
+    """
+    threshold = getattr(config, "ensure_longer_than", None)
+    if threshold is None:
+        return rng.sample(available, count)
+
+    required = getattr(config, "ensure_count", 1)
+    longer = [name for name in available if len(name) > threshold]
+    if len(longer) < required:
+        raise ValueError(
+            f"Column '{config.column}' requires {required} library entries "
+            f"longer than {threshold} characters, but only {len(longer)} are "
+            f"available. Extend the part name library or lower ensure_count."
+        )
+    if required > count:
+        raise ValueError(
+            f"Column '{config.column}' requires {required} entries longer than "
+            f"{threshold} characters but only draws {count} values in total."
+        )
+
+    guaranteed = rng.sample(longer, required)
+    remaining = [name for name in available if name not in set(guaranteed)]
+    names = guaranteed + rng.sample(remaining, count - required)
+    rng.shuffle(names)
+    return names
+
+
 class PartNameReplacementStrategy:
     """Replaces every value with a part name drawn from a CSV library.
 
     Names are sampled *without replacement*, so within one synthesize() call
     each library entry is used at most once and the output contains no
     duplicates. The library must therefore hold at least `n` distinct
-    entries. The first column of the CSV is used; an optional `library_path`
-    on the column config overrides DEFAULT_PART_NAME_LIBRARY_PATH.
+    entries. Use `part_name_mapping` instead when a repeated real value has
+    to stay a repeated synthetic one.
     """
 
     def synthesize(
@@ -187,27 +364,9 @@ class PartNameReplacementStrategy:
         rng: random.Random,
         faker: Faker,
         n: int,
+        context: SynthesisContext = EMPTY_SYNTHESIS_CONTEXT,
     ) -> pd.Series:
-        library_path = Path(
-            getattr(config, "library_path", DEFAULT_PART_NAME_LIBRARY_PATH)
-        )
-        if not library_path.is_file():
-            raise FileNotFoundError(
-                f"PartNameReplacementStrategy: part name library not found at "
-                f"'{library_path}' (column '{config.column}')"
-            )
-
-        # utf-8-sig transparently strips the BOM Excel writes into CSV exports.
-        library = pd.read_csv(library_path, encoding="utf-8-sig", dtype=str)
-        if library.shape[1] == 0:
-            raise ValueError(
-                f"PartNameReplacementStrategy: library '{library_path}' has no columns"
-            )
-        names = library.iloc[:, 0].dropna().str.strip()
-        names = names[names != ""]
-        # .unique() keeps first-occurrence order (see module docstring), so
-        # the same seed always maps to the same sample.
-        distinct = names.unique().tolist()
+        distinct, library_path = _load_part_names(config)
 
         if n > len(distinct):
             raise ValueError(
@@ -217,7 +376,287 @@ class PartNameReplacementStrategy:
                 f"fewer source rows - entries are never reused."
             )
 
-        return pd.Series(rng.sample(distinct, n))
+        return pd.Series(_draw_names(distinct, n, config, rng))
+
+
+class PartNameMappingStrategy:
+    """One part name per *distinct* real value, substituted consistently.
+
+    `part_name_replacement` draws a fresh name per row, which destroys any
+    repetition the column carries: a header designation occurring 19 times
+    becomes 19 different names, and its 1:1 pairing with the part number
+    beside it is lost. This strategy builds a substitution table instead -
+    every occurrence of the same real value becomes the same synthetic name -
+    so the repetition pattern and any pairing with another column survive,
+    while no real designation does.
+
+    Names are drawn without replacement, so two distinct real values never
+    collapse onto one synthetic name. The library therefore only has to cover
+    the *distinct* values, not the rows. Empty values stay empty: there is
+    nothing to substitute.
+
+    The mapping is per column. Two columns using this strategy get
+    independent tables, so a value occurring in both would be replaced
+    differently in each.
+    """
+
+    def synthesize(
+        self,
+        real_series: pd.Series,
+        config: ColumnSynthesisConfig,
+        rng: random.Random,
+        faker: Faker,
+        n: int,
+        context: SynthesisContext = EMPTY_SYNTHESIS_CONTEXT,
+    ) -> pd.Series:
+        available, library_path = _load_part_names(config)
+
+        values = real_series.head(n)
+        present = values[~_is_blank(values)].astype(str).str.strip()
+        distinct = present.unique().tolist()
+
+        if len(distinct) > len(available):
+            raise ValueError(
+                f"PartNameMappingStrategy: column '{config.column}' has "
+                f"{len(distinct)} distinct values but library '{library_path}' "
+                f"only provides {len(available)} distinct entries. Extend the "
+                f"library - two real values must not share one synthetic name."
+            )
+
+        substitution = dict(
+            zip(distinct, _draw_names(available, len(distinct), config, rng))
+        )
+        return values.map(
+            lambda value: value
+            if _is_blank_value(value)
+            else substitution[str(value).strip()]
+        ).reset_index(drop=True)
+
+
+def _is_blank_value(value: object) -> bool:
+    return pd.isna(value) or str(value).strip() == ""
+
+
+def _is_blank(column: pd.Series) -> pd.Series:
+    return column.isna() | (column.astype(str).str.strip() == "")
+
+
+class DateOffsetStrategy:
+    """A date derived from another synthesized date column, drawn from the
+    real offsets observed between the two (e.g. a confirmed delivery date as
+    its purchase order date plus a real lead time).
+
+    `date_distribution` on both columns independently would produce delivery
+    dates before their own order date - in 13% of rows, measured on the
+    package this strategy was written for - which no "clean" dataset should
+    contain. Offsets are resampled from the real pairs rather than drawn from
+    a fitted range, so the synthetic lead times keep the shape of the real
+    ones; only pairs whose real offset satisfies `min_offset_days` contribute,
+    so a contradiction in the source data is not carried over.
+
+    Config keys: `reference_column` (the already-synthesized column to offset
+    from), `field_format`, and optionally `reference_format` (defaults to
+    `field_format`) and `min_offset_days` (defaults to 0).
+    """
+
+    def synthesize(
+        self,
+        real_series: pd.Series,
+        config: ColumnSynthesisConfig,
+        rng: random.Random,
+        faker: Faker,
+        n: int,
+        context: SynthesisContext = EMPTY_SYNTHESIS_CONTEXT,
+    ) -> pd.Series:
+        reference_column = config.reference_column
+        reference = context.synthesized.get(reference_column)
+        if reference is None:
+            raise ValueError(
+                f"Column '{config.column}' offsets from '{reference_column}', "
+                f"which has not been synthesized yet - move it above "
+                f"'{config.column}' in synthesis_configuration.yaml"
+            )
+
+        date_format = translate_date_format(config.field_format)
+        reference_format = translate_date_format(
+            getattr(config, "reference_format", None) or config.field_format
+        )
+        minimum = getattr(config, "min_offset_days", 0)
+
+        offsets = self._real_offsets(
+            real_series, context.source_df, reference_column, reference_format, minimum
+        )
+        if not offsets:
+            raise ValueError(
+                f"No real offset of at least {minimum} day(s) between "
+                f"'{reference_column}' and '{config.column}' to resample from"
+            )
+
+        result = []
+        for value in reference.head(n):
+            base = datetime.strptime(str(value), reference_format)
+            result.append((base + timedelta(days=rng.choice(offsets))).strftime(date_format))
+        return pd.Series(result)
+
+    def _real_offsets(
+        self,
+        real_series: pd.Series,
+        source_df: pd.DataFrame,
+        reference_column: str,
+        reference_format: str,
+        minimum: int,
+    ) -> list[int]:
+        """The real day offsets between the two real columns, which are only
+        aligned row by row in the source frame."""
+        if reference_column not in source_df.columns:
+            raise ValueError(
+                f"Real values of '{reference_column}' are not available to fit "
+                f"offsets from"
+            )
+        real_reference = source_df[reference_column]
+
+        offsets = []
+        for own, other in zip(real_series, real_reference):
+            if pd.isna(own) or pd.isna(other):
+                continue
+            days = (
+                datetime.strptime(str(own), reference_format)
+                - datetime.strptime(str(other), reference_format)
+            ).days
+            if days >= minimum:
+                offsets.append(days)
+        return offsets
+
+
+class FakerCategoricalStrategy:
+    """One synthetic label per distinct real value, then resampled with the
+    real frequencies - `faker` and `categorical_resample` combined.
+
+    `categorical_resample` keeps the real labels, which is fine for codes but
+    not for person names; plain `faker` protects them but draws a fresh value
+    per row, destroying the low cardinality a column like "requisitioner" has
+    (5 buyers over 100 rows) and with it any mapping keyed on those labels.
+    This strategy keeps the shape - the same number of distinct values, drawn
+    with the real frequencies as weights - while no real label survives. The
+    realized counts follow the real proportions in distribution, not row for
+    row, exactly as `categorical_resample` does.
+
+    The label assignment is by descending real frequency, so the most common
+    real value maps to the first synthetic one: a stable, seed-reproducible
+    assignment that a task.yaml value_mapping can be written against.
+
+    Config keys: `provider` (required), `max_cardinality` (default 20).
+    """
+
+    def synthesize(
+        self,
+        real_series: pd.Series,
+        config: ColumnSynthesisConfig,
+        rng: random.Random,
+        faker: Faker,
+        n: int,
+        context: SynthesisContext = EMPTY_SYNTHESIS_CONTEXT,
+    ) -> pd.Series:
+        max_cardinality = getattr(config, "max_cardinality", 20)
+        values = real_series.dropna().astype(str)
+        value_counts = values.value_counts()
+
+        if len(value_counts) > max_cardinality:
+            raise ValueError(
+                f"FakerCategoricalStrategy: column '{config.column}' has "
+                f"{len(value_counts)} distinct values, exceeds max_cardinality="
+                f"{max_cardinality}. This strategy is only for low-cardinality "
+                f"columns whose labels must not survive."
+            )
+
+        provider = getattr(faker, config.provider)
+        labels = self._distinct_labels(provider, len(value_counts))
+        weights = value_counts.tolist()
+        return pd.Series(rng.choices(labels, weights=weights, k=n))
+
+    def _distinct_labels(self, provider, count: int) -> list[str]:
+        """Faker repeats itself, so draw until `count` distinct labels exist -
+        duplicates would silently lower the cardinality the strategy exists to
+        preserve."""
+        labels: list[str] = []
+        seen: set[str] = set()
+        for _ in range(count * 100):
+            if len(labels) == count:
+                return labels
+            label = str(provider())
+            if label not in seen:
+                seen.add(label)
+                labels.append(label)
+        raise ValueError(
+            f"Could not draw {count} distinct values from the configured faker "
+            f"provider - is it too low-cardinality for this column?"
+        )
+
+
+class ConditionalResampleStrategy:
+    """Resamples this column *within* the groups another column defines, so a
+    pairing between the two survives.
+
+    `categorical_resample` draws each column independently, which silently
+    breaks any agreement between them: a validity indicator saying "valid
+    from" ends up on rows carrying no date, and rows that are generally valid
+    end up carrying one - 13 of 100 rows, measured on the package this
+    strategy was written for, in source data where that never happens.
+
+    For every row the value is drawn from the real values observed *for that
+    row's reference value*. A combination absent from the real data can
+    therefore never appear in the synthetic data, empty values included: if a
+    reference group never carries a value, its synthetic rows stay empty too.
+
+    The reference column has to be configured above this one, since it must
+    already be synthesized. Config keys: `reference_column` (required).
+    """
+
+    def synthesize(
+        self,
+        real_series: pd.Series,
+        config: ColumnSynthesisConfig,
+        rng: random.Random,
+        faker: Faker,
+        n: int,
+        context: SynthesisContext = EMPTY_SYNTHESIS_CONTEXT,
+    ) -> pd.Series:
+        reference_column = config.reference_column
+        reference = context.synthesized.get(reference_column)
+        if reference is None:
+            raise ValueError(
+                f"Column '{config.column}' resamples within '{reference_column}', "
+                f"which has not been synthesized yet - move it above "
+                f"'{config.column}' in synthesis_configuration.yaml"
+            )
+        if reference_column not in context.source_df.columns:
+            raise ValueError(
+                f"Real values of '{reference_column}' are not available to group by"
+            )
+
+        pools = self._pools(real_series, context.source_df[reference_column])
+
+        result = []
+        for group in reference.head(n).astype(str):
+            pool = pools.get(group)
+            if not pool:
+                raise ValueError(
+                    f"No real values of '{config.column}' observed for "
+                    f"'{reference_column}' == {group!r} - cannot resample within "
+                    f"a group the real data does not have"
+                )
+            result.append(rng.choice(pool))
+        return pd.Series(result)
+
+    def _pools(
+        self, real_series: pd.Series, real_reference: pd.Series
+    ) -> dict[str, list[object]]:
+        """Real values per reference group, NaN included - an empty cell is an
+        observation about that group, not a missing one."""
+        pools: dict[str, list[object]] = {}
+        for group, value in zip(real_reference.astype(str), real_series):
+            pools.setdefault(group, []).append(value)
+        return pools
 
 
 DEFAULT_SYNTHESIS_STRATEGIES: dict[str, SynthesisStrategy] = {
@@ -228,4 +667,8 @@ DEFAULT_SYNTHESIS_STRATEGIES: dict[str, SynthesisStrategy] = {
     "categorical_resample": CategoricalResampleStrategy(),
     "identity": IdentityStrategy(),
     "part_name_replacement": PartNameReplacementStrategy(),
+    "date_offset": DateOffsetStrategy(),
+    "faker_categorical": FakerCategoricalStrategy(),
+    "part_name_mapping": PartNameMappingStrategy(),
+    "conditional_resample": ConditionalResampleStrategy(),
 }

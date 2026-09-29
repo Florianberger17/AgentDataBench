@@ -1,0 +1,30 @@
+scenario_id: 007_BOM_MIGRATION_BASIC_EXPLICIT
+
+name: ERP Bill of Material Migration
+
+domain: ERP Data Integration
+
+description: >
+  Bills of material are migrated from a legacy ERP system to a new ERP system
+  as part of a system modernization project. The source system stores each
+  component position using the legacy data model and identifies both the
+  header material and its components by their legacy part numbers, while the
+  target ERP system requires the data in a different schema. Material numbers
+  are not carried over and must be resolved via a central material cross
+  reference list. Components that have not been migrated to the target system
+  cannot be referenced as materials and are carried over as text positions
+  instead.
+
+business_objects:
+  - BillOfMaterial
+
+systems:
+  source:
+    name: Legacy ERP System
+    description: >
+      Stores bills of material using the legacy data model.
+
+  target:
+    name: Target ERP System
+    description: >
+      Stores bills of material using the target ERP data model.

@@ -1,0 +1,82 @@
+table: purchase_order_item
+
+entity: PurchaseOrderItem
+
+description: >
+  Structural schema definition for purchase order item data in the target ERP
+  system. Each record represents one purchase order item, identified by the
+  combination of PO_NUMBER and PO_ITEM. This schema defines only data
+  structure, not data quality characteristics.
+
+attributes:
+
+  - name: PO_NUMBER
+    type: integer
+    required: true
+    description: Purchase order number in the target ERP system
+
+  - name: PO_ITEM
+    type: integer
+    required: true
+    description: Item number within the purchase order
+
+  - name: ACCTASSCAT
+    type: string
+    required: true
+    description: Account assignment category of the item
+
+  - name: MATERIAL
+    type: string
+    required: false
+    description: Identifier of the ordered material
+
+  - name: SHORT_TEXT
+    type: string
+    required: false
+    description: Short text of the ordered material or service
+
+  - name: PO_UNIT
+    type: string
+    required: true
+    description: Order unit of measure
+
+  - name: PRICE_UNIT
+    type: integer
+    required: true
+    description: Price unit the net price refers to
+
+  - name: COSTCENTER
+    type: string
+    required: false
+    description: Cost center the item is assigned to
+
+  - name: PLANT
+    type: integer
+    required: true
+    description: Plant the item is delivered to
+
+  - name: QUANTITY
+    type: decimal
+    required: true
+    description: Ordered quantity
+
+  - name: GR_PRICE
+    type: decimal
+    required: true
+    description: Valuation price of the goods receipt
+
+  - name: DELIVERY_DATE
+    type: date
+    required: true
+    format: DD.MM.YYYY
+    description: Delivery date of the item
+
+  - name: ZZNAME_TLF
+    type: string
+    required: true
+    description: Telephone number of the requisitioner
+
+constraints:
+
+  - id: CON-TGT-001
+    description: The combination of PO_NUMBER and PO_ITEM must be unique

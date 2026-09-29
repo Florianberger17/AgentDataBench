@@ -1,0 +1,189 @@
+{
+  "generated_at": "2026-09-29T12:36:57.537393Z",
+  "results": [
+    {
+      "task_id": "001_CUSTOMER_MIGRATION_BASIC_EXPLICIT",
+      "agent_name": "stub",
+      "metrics": [],
+      "passed": false,
+      "timestamp": "2026-09-29T12:36:56.929037Z",
+      "error": "Agent did not produce solution.csv in the workspace",
+      "reproducibility": null,
+      "duration_seconds": 0.013273200020194054,
+      "metadata": {
+        "steps": 0
+      }
+    },
+    {
+      "task_id": "002_SUPPLIER_MIGRATION_BASIC_EXPLICIT",
+      "agent_name": "stub",
+      "metrics": [],
+      "passed": false,
+      "timestamp": "2026-09-29T12:36:56.969118Z",
+      "error": "Agent did not produce solution.csv in the workspace",
+      "reproducibility": null,
+      "duration_seconds": 0.009823000058531761,
+      "metadata": {
+        "steps": 0
+      }
+    },
+    {
+      "task_id": "003_MATERIAL_MIGRATION_BASIC_EXPLICIT",
+      "agent_name": "stub",
+      "metrics": [],
+      "passed": false,
+      "timestamp": "2026-09-29T12:36:57.000998Z",
+      "error": "Agent did not produce solution.csv in the workspace",
+      "reproducibility": null,
+      "duration_seconds": 0.009842700092121959,
+      "metadata": {
+        "steps": 0
+      }
+    },
+    {
+      "task_id": "004_PROJECT_MIGRATION_BASIC_EXPLICIT",
+      "agent_name": "stub",
+      "metrics": [],
+      "passed": false,
+      "timestamp": "2026-09-29T12:36:57.070136Z",
+      "error": "Agent did not produce solution.csv in the workspace",
+      "reproducibility": null,
+      "duration_seconds": 0.01421599998138845,
+      "metadata": {
+        "steps": 0
+      }
+    },
+    {
+      "task_id": "005_PURCHASE_ORDER_MIGRATION_BASIC_EXPLICIT",
+      "agent_name": "stub",
+      "metrics": [],
+      "passed": false,
+      "timestamp": "2026-09-29T12:36:57.128074Z",
+      "error": "Agent did not produce solution.csv in the workspace",
+      "reproducibility": null,
+      "duration_seconds": 0.01739719999022782,
+      "metadata": {
+        "steps": 0
+      }
+    },
+    {
+      "task_id": "006_PURCHASE_ORDER_MIGRATION_BASIC_EXPLICIT",
+      "agent_name": "stub",
+      "metrics": [],
+      "passed": false,
+      "timestamp": "2026-09-29T12:36:57.200201Z",
+      "error": "Agent did not produce solution.csv in the workspace",
+      "reproducibility": null,
+      "duration_seconds": 0.015265599940903485,
+      "metadata": {
+        "steps": 0
+      }
+    },
+    {
+      "task_id": "007_BOM_MIGRATION_BASIC_EXPLICIT",
+      "agent_name": "stub",
+      "metrics": [],
+      "passed": false,
+      "timestamp": "2026-09-29T12:36:57.247349Z",
+      "error": "Agent did not produce solution.csv in the workspace",
+      "reproducibility": null,
+      "duration_seconds": 0.010628099902532995,
+      "metadata": {
+        "steps": 0
+      }
+    },
+    {
+      "task_id": "008_PRICE_LIST_MIGRATION_BASIC_EXPLICIT",
+      "agent_name": "stub",
+      "metrics": [],
+      "passed": false,
+      "timestamp": "2026-09-29T12:36:57.287314Z",
+      "error": "Agent did not produce solution.csv in the workspace",
+      "reproducibility": null,
+      "duration_seconds": 0.017295200028456748,
+      "metadata": {
+        "steps": 0
+      }
+    },
+    {
+      "task_id": "009_MATERIAL_MOVEMENTS_MIGRATION_BASIC_EXPLICIT",
+      "agent_name": "stub",
+      "metrics": [],
+      "passed": false,
+      "timestamp": "2026-09-29T12:36:57.324360Z",
+      "error": "Agent did not produce solution.csv in the workspace",
+      "reproducibility": null,
+      "duration_seconds": 0.012502399971708655,
+      "metadata": {
+        "steps": 0
+      }
+    },
+    {
+      "task_id": "010_SALES_ORDER_MIGRATION_BASIC_EXPLICIT",
+      "agent_name": "stub",
+      "metrics": [],
+      "passed": false,
+      "timestamp": "2026-09-29T12:36:57.365827Z",
+      "error": "Agent did not produce solution.csv in the workspace",
+      "reproducibility": null,
+      "duration_seconds": 0.013612700044177473,
+      "metadata": {
+        "steps": 0
+      }
+    },
+    {
+      "task_id": "006_ERP_CUSTOMER_MIGRATION",
+      "agent_name": "stub",
+      "metrics": [],
+      "passed": false,
+      "timestamp": "2026-09-29T12:36:57.445379Z",
+      "error": "Agent did not produce solution.csv in the workspace",
+      "reproducibility": null,
+      "duration_seconds": 0.058663400006480515,
+      "metadata": {
+        "steps": 0
+      }
+    },
+    {
+      "task_id": "005_ERP_PART_MIGRATION",
+      "agent_name": "stub",
+      "metrics": [],
+      "passed": false,
+      "timestamp": "2026-09-29T12:36:57.496574Z",
+      "error": "Agent did not produce solution.csv in the workspace",
+      "reproducibility": null,
+      "duration_seconds": 0.014368099975399673,
+      "metadata": {
+        "steps": 0
+      }
+    },
+    {
+      "task_id": "004_ERP_SUPPLIER_MIGRATION",
+      "agent_name": "stub",
+      "metrics": [],
+      "passed": false,
+      "timestamp": "2026-09-29T12:36:57.537262Z",
+      "error": "Agent did not produce solution.csv in the workspace",
+      "reproducibility": null,
+      "duration_seconds": 0.012639899970963597,
+      "metadata": {
+        "steps": 0
+      }
+    }
+  ],
+  "summaries": [
+    {
+      "agent_name": "stub",
+      "total_tasks": 13,
+      "passed_tasks": 0,
+      "failed_tasks": 13,
+      "pass_rate": 0.0,
+      "success_rate": 0.0,
+      "average_duration_seconds": 0.016886730767929785,
+      "average_metric_scores": {},
+      "average_metadata": {
+        "steps": 0.0
+      }
+    }
+  ]
+}

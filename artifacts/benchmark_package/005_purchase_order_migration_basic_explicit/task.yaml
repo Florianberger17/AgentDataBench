@@ -1,0 +1,151 @@
+task_id: 005_PURCHASE_ORDER_MIGRATION_BASIC_EXPLICIT
+
+objective: >
+  Transform the provided purchase order header dataset from the source schema
+  to the target schema and produce a CSV file that conforms to the target
+  schema. The supplier number of the target system is not contained in the
+  source dataset and shall be resolved via the central supplier mapping list.
+
+input:
+  source_dataset: data/dataset.csv
+  source_schema: schemas/source_schema.yaml
+  target_schema: schemas/target_schema.yaml
+  reference_data:
+    - name: supplier_mapping
+      file: data/mapping_list_suppliers.csv
+      key_field: "Supplier No. Legacy System"
+      value_field: "Supplier Number New"
+      description: >
+        Assigns the supplier numbers of the legacy ERP system to the supplier
+        numbers of the target ERP system.
+
+required_operations:
+  - filtering
+  - schema_mapping
+  - lookup
+  - value_mapping
+  - value_transformation
+  - constant_assignment
+  - zero_padding
+  - default_value_substitution
+
+business_rules:
+
+  filtering:
+    description: >
+      Purchase orders that have only been recorded but not yet confirmed shall
+      not be migrated.
+    field: Status
+    operator: "!="
+    value: "Recorded"
+
+  mappings:
+
+    - source_field: TransactionNo
+      target_field: PO_NUMBER
+      transformation:
+        type: prefix_and_pad
+        pad_to: 5
+        pad_character: "0"
+        prefix: "97000"
+      description: >
+        Right-align the document number of the legacy system to five digits
+        using leading zeros and prepend the number range prefix 97000.
+
+    - target_field: COMP_CODE
+      transformation:
+        type: constant
+        value: "898"
+
+    - target_field: DOC_TYPE
+      transformation:
+        type: constant
+        value: "NB"
+
+    - source_field: SupplierNo
+      target_field: VENDOR
+      transformation:
+        type: lookup
+        reference: supplier_mapping
+        lookup_key: "Supplier No. Legacy System"
+        return_field: "Supplier Number New"
+        on_missing: exclude_record
+        post_processing:
+          type: pad
+          pad_to: 10
+          pad_character: "0"
+      description: >
+        Resolve the supplier number of the legacy system via the central
+        mapping list and right-align the resulting number to ten digits using
+        leading zeros. Purchase orders whose supplier number is not contained
+        in the mapping list shall not be migrated.
+
+    - target_field: PURCH_ORG
+      transformation:
+        type: constant
+        value: "898"
+
+    - source_field: Planner4
+      target_field: PUR_GROUP
+      transformation:
+        type: value_mapping
+        mapping:
+          "E02": "203"
+          "E03": "204"
+          "E04": "105"
+          "E07": "206"
+          "E21": "044"
+      description: >
+        Convert the planner code of the legacy system to the purchasing group
+        of the target system.
+
+    - target_field: CURRENCY
+      transformation:
+        type: constant
+        value: "EUR"
+
+    - target_field: CREAT_DATE
+      transformation:
+        type: constant
+        value: "30.05.2025"
+
+    - source_field: Preferred Language
+      target_field: LANGU
+      transformation:
+        type: copy
+
+    - source_field: Incoterm
+      target_field: INCOTERMS1
+      transformation:
+        type: uppercase
+      description: >
+        Incoterm codes shall be written in upper case.
+
+    - source_field: IncotermLocation
+      target_field: INCOTERMS2
+      transformation:
+        type: copy
+        default_if_empty: "0"
+      description: >
+        Where no incoterm location is recorded, the target system expects the
+        value 0.
+
+    - source_field: TransactionNo
+      target_field: OUR_REF
+      transformation:
+        type: copy
+
+ignored_source_fields:
+  - TransactionType
+  - SupplierName
+
+output:
+  format: csv
+  schema_reference: schemas/target_schema.yaml
+
+constraints:
+  - The output dataset must follow the target schema exactly.
+  - Each output row shall represent one purchase order header.
+  - No additional columns may be added.
+  - The column order must match the target schema.
+  - Field values must not be empty.

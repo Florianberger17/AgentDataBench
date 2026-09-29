@@ -1,5 +1,12 @@
 """DatasetCreator: turns real/raw company data into a synthetic, publishable
-CleanDataset with the same column structure but no original values."""
+CleanDataset with the same column structure but no original values.
+
+Columns are synthesized in source-column order, and each strategy is handed a
+SynthesisContext carrying the real frame plus the columns produced so far. A
+strategy that derives its column from another one (`date_offset`) therefore
+has to be configured *after* the column it references; it raises rather than
+silently reading a missing column.
+"""
 
 from __future__ import annotations
 
@@ -11,6 +18,7 @@ from faker import Faker
 from agentdatabench.domain.synthesis_configuration import SynthesisConfiguration
 from agentdatabench.generator.synthesis_strategies import (
     DEFAULT_SYNTHESIS_STRATEGIES,
+    SynthesisContext,
     SynthesisStrategy,
 )
 
@@ -44,7 +52,12 @@ class DatasetCreator:
                 )
 
             columns[column_name] = strategy.synthesize(
-                source_df[column_name], column_config, rng, faker, n
+                source_df[column_name],
+                column_config,
+                rng,
+                faker,
+                n,
+                SynthesisContext(source_df=source_df, synthesized=columns),
             )
 
         return pd.DataFrame(columns)

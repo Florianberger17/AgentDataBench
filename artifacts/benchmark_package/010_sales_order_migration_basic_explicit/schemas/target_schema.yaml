@@ -1,0 +1,91 @@
+table: sales_order_item
+
+entity: SalesOrderItem
+
+description: >
+  Target schema for sales order items in the new ERP system. Each record
+  represents one item of a sales order, identified by the combination of
+  VBELN and POSNR.
+
+attributes:
+
+  - name: VBELN
+    type: string
+    required: true
+    description: >
+      Number of the sales order.
+
+  - name: POSNR
+    type: string
+    required: true
+    description: >
+      Item number within the sales order, stored as six digits with leading
+      zeros.
+
+  - name: AUART
+    type: string
+    required: true
+    description: >
+      Sales document type.
+
+  - name: VKORG
+    type: string
+    required: true
+    description: >
+      Sales organisation, consisting of four digits.
+
+  - name: KUNNR
+    type: string
+    required: true
+    description: >
+      Customer number of the sold-to party, consisting of ten digits.
+
+  - name: BSTKD
+    type: string
+    required: false
+    description: >
+      Purchase order number of the customer.
+
+  - name: MATNR
+    type: string
+    required: true
+    description: >
+      Material number of the ordered object, consisting of 13 digits.
+
+  - name: ARKTX
+    type: string
+    required: true
+    description: >
+      Short text of the sales order item, at most 40 characters long.
+
+  - name: KWMENG
+    type: decimal
+    required: true
+    description: >
+      Cumulative order quantity, with three decimal places.
+
+  - name: NETWR
+    type: decimal
+    required: true
+    description: >
+      Net value of the sales order item, with two decimal places.
+
+  - name: VDATU
+    type: date
+    required: true
+    format: DD.MM.YYYY
+    description: >
+      Requested delivery date of the item.
+
+constraints:
+
+  - id: CON-TGT-001
+    description: The combination of VBELN and POSNR must be unique
+
+  - id: CON-TGT-002
+    description: >
+      All items of one sales order must carry the same sold-to party and the
+      same sales document type
+
+  - id: CON-TGT-003
+    description: ARKTX must not exceed 40 characters

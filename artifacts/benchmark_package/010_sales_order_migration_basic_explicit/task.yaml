@@ -1,0 +1,206 @@
+task_id: 010_SALES_ORDER_MIGRATION_BASIC_EXPLICIT
+
+objective: >
+  Transform the provided sales order dataset from the source schema to the
+  target schema and produce a CSV file that conforms exactly to the target
+  schema. The customer numbers and the material numbers of the target ERP
+  system are not contained in the source dataset and shall be resolved via the
+  two central cross reference lists.
+
+input:
+  source_dataset: data/dataset.csv
+  source_schema: schemas/source_schema.yaml
+  target_schema: schemas/target_schema.yaml
+  reference_data:
+    - name: customer_cross_reference
+      file: data/mapping_list_customers.csv
+      key_field:
+        - "customer no. legacy"
+        - "address no."
+      value_field: "customer no. new"
+      description: >
+        Assigns the customer addresses of the legacy ERP system to the
+        customer numbers of the target ERP system. One customer of the legacy
+        system may hold several addresses that became separate customers in
+        the target ERP system, so both columns together identify one entry.
+
+    - name: material_cross_reference
+      file: data/mapping_list_material.csv
+      key_field: "part no."
+      value_field: "material no."
+      description: >
+        Assigns the part numbers of the legacy ERP system to the material
+        numbers of the target ERP system.
+
+required_operations:
+  - filtering
+  - grouping
+  - schema_mapping
+  - lookup
+  - value_mapping
+  - field_concatenation
+  - truncation
+  - zero_padding
+  - date_conversion
+  - rounding
+  - sequential_identifier_generation
+  - constant_assignment
+
+business_rules:
+
+  filtering:
+    description: >
+      Only items whose material and whose sold-to party exist in the master
+      data of the target ERP system can be migrated.
+
+    rules:
+      - field: part no.
+        operator: "in"
+        reference: material_cross_reference
+        key_field: "part no."
+
+      - field:
+          - sold-to no.
+          - sold-to address
+        operator: "in"
+        reference: customer_cross_reference
+        key_field:
+          - "customer no. legacy"
+          - "address no."
+
+  record_order:
+    description: >
+      The remaining records shall be processed in ascending order of sales
+      order no. and, within one sales order, in ascending order of item no.
+      This order determines the assignment of the document numbers.
+    fields:
+      - sales order no.
+      - item no.
+    direction: ascending
+
+  grouping:
+    description: >
+      All items of one sales order of the legacy system are migrated as one
+      sales order of the target ERP system.
+    key_fields:
+      - sales order no.
+
+  mappings:
+
+    - target_field: VBELN
+      transformation:
+        type: sequential_number
+        assigned_per: group
+        start: 1006000000
+        increment: 1
+      description: >
+        Each sales order receives a consecutive document number from the
+        number range of the target ERP system, assigned in the record order
+        defined above. All items of one sales order carry the same number.
+
+    - source_field: item no.
+      target_field: POSNR
+      transformation:
+        type: pad
+        pad_to: 6
+        pad_character: "0"
+      description: >
+        The item numbers of the legacy system are adopted and stored as a six
+        digit string with leading zeros.
+
+    - source_field: order type
+      target_field: AUART
+      transformation:
+        type: value_mapping
+        mapping:
+          "ERS": "ZV43"
+          "KSE": "ZV73"
+      description: >
+        Convert the order type of the legacy system to the sales document type
+        of the target ERP system.
+
+    - target_field: VKORG
+      transformation:
+        type: constant
+        value: "0454"
+
+    - source_fields:
+        - sold-to no.
+        - sold-to address
+      target_field: KUNNR
+      transformation:
+        type: lookup
+        reference: customer_cross_reference
+        lookup_key:
+          - "customer no. legacy"
+          - "address no."
+        return_field: "customer no. new"
+      description: >
+        Resolve the sold-to party via the combination of customer number and
+        address number. One customer of the legacy system may hold several
+        addresses with different customer numbers in the target ERP system.
+
+    - source_field: customer po no.
+      target_field: BSTKD
+      transformation:
+        type: copy
+
+    - source_field: part no.
+      target_field: MATNR
+      transformation:
+        type: lookup
+        reference: material_cross_reference
+        lookup_key: "part no."
+        return_field: "material no."
+
+    - source_fields:
+        - description
+        - description 2
+      target_field: ARKTX
+      transformation:
+        type: concatenate
+        separator: " "
+        skip_empty: true
+        post_processing:
+          type: truncate
+          length: 40
+      description: >
+        Concatenate the designation and the additional designation of the
+        ordered object separated by a single blank character and truncate the
+        result to the maximum field length of the target ERP system. Items
+        without an additional designation receive the designation only.
+
+    - source_field: quantity
+      target_field: KWMENG
+      transformation:
+        type: round
+        decimals: 3
+        decimal_separator: ","
+
+    - source_field: net price
+      target_field: NETWR
+      transformation:
+        type: round
+        decimals: 2
+        decimal_separator: ","
+
+    - source_field: requested date
+      target_field: VDATU
+      transformation:
+        type: serial_date_conversion
+        epoch: "1899-12-30"
+        output_format: DD.MM.YYYY
+
+output:
+  format: csv
+  schema_reference: schemas/target_schema.yaml
+
+constraints:
+  - The output dataset must follow the target schema exactly.
+  - The output column order must match the target schema.
+  - No additional columns may be added.
+  - Each output row shall represent one sales order item.
+  - The combination of VBELN and POSNR must be unique.
+  - All items of one sales order must carry the same sold-to party and the
+    same sales document type.
+  - ARKTX shall not exceed 40 characters.

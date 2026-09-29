@@ -20,12 +20,17 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Protocol
 
+import pandas as pd
+
 from agentdatabench.domain.benchmark_package import BenchmarkPackage
 from agentdatabench.domain.common import load_yaml
 from agentdatabench.domain.noise_configuration import NoiseConfiguration
 from agentdatabench.domain.task import Task
 from agentdatabench.domain.validation_result import ValidationIssue, ValidationResult
-from agentdatabench.generator.ground_truth_creator import GroundTruthCreator
+from agentdatabench.generator.ground_truth_creator import (
+    GroundTruthCreator,
+    load_reference_data,
+)
 from agentdatabench.generator.noise_engine import NoiseEngine
 
 REQUIRED_TOP_LEVEL_FILES = ["scenario.yaml", "task.yaml", "metadata.yaml"]
@@ -295,6 +300,14 @@ class MetadataConsistencyCheck:
         return issues
 
 
+def _comparable(df: pd.DataFrame) -> pd.DataFrame:
+    """Normalizes a frame for comparing a freshly derived ground truth against
+    the one read back from disk. An optional target field with no value is an
+    empty string in memory but NaN after a CSV round-trip; both mean "empty",
+    so neither should read as a reproducibility failure."""
+    return df.reset_index(drop=True).astype(str).replace({"nan": "", "None": ""})
+
+
 class ReproducibilityCheck:
     """Re-derives dataset.csv and ground_truth.csv from clean_dataset.csv and
     compares them to what is on disk. Deliberately does not touch source_data/
@@ -341,10 +354,13 @@ class ReproducibilityCheck:
         # reproducibility can't be checked this way for it.
         if package.target_schema is not None:
             expected_ground_truth = self._ground_truth_creator.create_ground_truth(
-                package.clean_dataset.df, package.task, package.target_schema
+                package.clean_dataset.df,
+                package.task,
+                package.target_schema,
+                load_reference_data(package.root, package.task),
             )
-            if not expected_ground_truth.reset_index(drop=True).astype(str).equals(
-                package.ground_truth.df.reset_index(drop=True).astype(str)
+            if not _comparable(expected_ground_truth).equals(
+                _comparable(package.ground_truth.df)
             ):
                 issues.append(
                     ValidationIssue(

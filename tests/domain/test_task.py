@@ -91,11 +91,8 @@ def test_task_input_rejects_only_one_of_source_and_target_schema():
         )
 
 
-def test_mapping_rule_requires_exactly_one_source():
+def test_mapping_rule_accepts_at_most_one_source():
     base = {"target_field": "description", "transformation": {"type": "copy"}}
-
-    with pytest.raises(ValidationError):
-        MappingRule(**base)  # neither source_field nor source_fields
 
     with pytest.raises(ValidationError):
         MappingRule(**base, source_field="a", source_fields=["a", "b"])  # both
@@ -105,3 +102,13 @@ def test_mapping_rule_requires_exactly_one_source():
 
     ok2 = MappingRule(**base, source_fields=["a", "b"])
     assert ok2.source_fields == ["a", "b"]
+
+
+def test_mapping_rule_allows_source_independent_transformation():
+    """A constant/sequence rule derives its value from the row count alone
+    and therefore names no source column."""
+    rule = MappingRule(
+        target_field="Company Code", transformation={"type": "constant", "value": "0898"}
+    )
+    assert rule.source_field is None
+    assert rule.source_fields is None

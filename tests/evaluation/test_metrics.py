@@ -196,3 +196,59 @@ def test_record_accuracy_all_above_threshold():
     df = pd.DataFrame({"a": ["1", "2"], "b": ["x", "y"]})
     result = RecordAccuracyMetric().compute(df, df, package=None)
     assert result.score == 1.0
+
+
+def test_field_mapping_accuracy_does_not_punish_expected_blanks():
+    """An optional target field that is *supposed* to be empty in most rows
+    (a text only some item categories carry) must not cost the agent points
+    for reproducing exactly that."""
+    ground_truth = pd.DataFrame({"POSTP": ["L", "T"], "POTX1": ["", "text"]})
+    output = ground_truth.copy()
+
+    result = FieldMappingAccuracyMetric().compute(output, ground_truth, package=None)
+
+    assert result.score == 1.0
+    assert result.details["expected_fraction_by_column"]["POTX1"] == 0.5
+    assert result.details["score_by_column"]["POTX1"] == 1.0
+
+
+def test_field_mapping_accuracy_still_catches_an_unpopulated_column():
+    """The failure this metric exists for: a column ground truth populates
+    everywhere that the agent left blank."""
+    ground_truth = pd.DataFrame({"a": ["1", "2"], "b": ["x", "y"]})
+    output = pd.DataFrame({"a": ["1", "2"], "b": ["", ""]})
+
+    result = FieldMappingAccuracyMetric().compute(output, ground_truth, package=None)
+
+    assert result.score == pytest.approx(0.5)
+    assert result.details["score_by_column"]["b"] == 0.0
+
+
+def test_field_mapping_accuracy_scores_partial_population_relative_to_expected():
+    """Half of what was expected scores half - not the raw fraction."""
+    ground_truth = pd.DataFrame({"a": ["1", "2", "", ""]})
+    output = pd.DataFrame({"a": ["1", "", "", ""]})
+
+    result = FieldMappingAccuracyMetric().compute(output, ground_truth, package=None)
+
+    assert result.score == pytest.approx(0.5)
+
+
+def test_field_mapping_accuracy_ignores_a_column_blank_in_ground_truth():
+    ground_truth = pd.DataFrame({"a": ["1"], "b": [""]})
+    output = pd.DataFrame({"a": ["1"], "b": [""]})
+
+    result = FieldMappingAccuracyMetric().compute(output, ground_truth, package=None)
+
+    assert result.score == 1.0
+
+
+def test_field_mapping_accuracy_does_not_reward_over_population():
+    """Filling a field that should be blank is a wrong value, scored by
+    Transformation/Row Accuracy - here it is capped, never a bonus."""
+    ground_truth = pd.DataFrame({"a": ["1", ""]})
+    output = pd.DataFrame({"a": ["1", "invented"]})
+
+    result = FieldMappingAccuracyMetric().compute(output, ground_truth, package=None)
+
+    assert result.score == 1.0

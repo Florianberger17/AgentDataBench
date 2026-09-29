@@ -1,0 +1,100 @@
+﻿supplier no,name 1,name 2,country code,post_code,city,street,house_num1,last_activity
+2100000,Scheibe,Rogge,deu,61608,Viersen,Gundolf-Scheel-Weg,319,22.12.2025
+2100001,Hartung Fechner AG & Co. KG,Pechel GmbH & Co. KGaA,deu,58576,Schleiz,Heserstraße,93-91,08.03.2023
+2100002,Nette Eckbauer KGaA,Hellwig KG,deu,46946,Zerbst,Bergerallee,3/9,16.11.2025
+2100003,Scholtz,Holzapfel,deu,89376,Burg,Gertzstr.,8-4,27.06.2021
+2100004,Trommler GmbH & Co. KG,Scheibe Häring GbR,deu,37289,Grevenbroich,Henschelgasse,40/19,19.11.2024
+2100005,Biggen,Kruschwitz AG,deu,84722,Grafenau,Lidija-Hänel-Platz,4905,14.06.2024
+2100006,Hecker e.V.,Girschner,deu,24122,Viersen,Stolzegasse,9/4,17.09.2022
+2100007,Linke AG,Budig GmbH,deu,25691,Cloppenburg,Fritschstr.,77/17,27.11.2023
+2100008,Röhricht,Baum Wieloch OHG mbH,deu,69549,Miltenberg,Bährallee,9/3,25.01.2023
+2100009,Ehlert,Paffrath,deu,28573,Forst,Heckerring,6-1,28.02.2025
+2100010,Fröhlich,Fritsch KG,deu,00230,Rostock,Inken-Heser-Gasse,79,06.05.2024
+2100011,Mohaupt Weller KGaA,Gnatz,deu,02392,Lichtenfels,Gülay-Klotz-Platz,1/8,01.08.2024
+2100012,Holt,Hermann,deu,45167,Tübingen,Katerina-Pechel-Gasse,86-51,10.06.2025
+2100013,Pruschke KG,Ruppersberger Baum KG,deu,09943,Grimma,Weinholdring,71/34,01.04.2022
+2100014,Stumpf,Tlustek AG,deu,86586,Pinneberg,Carstenallee,8,15.06.2021
+2100015,Scholtz Hoffmann Stiftung & Co. KG,Kensy GmbH & Co. KG,deu,02782,Darmstadt,Luka-Zorbach-Ring,0,17.10.2025
+2100016,Ditschlerin GmbH & Co. KG,Bloch Hande Stiftung & Co. KG,deu,52589,Germersheim,Reinhart-Renner-Platz,85-20,26.06.2025
+2100017,Cichorius,Wähner AG & Co. KG,deu,24489,Helmstedt,Serpil-Benthin-Platz,572,14.04.2022
+2100018,Bohnbach,Eberhardt AG,deu,34281,Mühlhausen,Stiffelstr.,9/9,10.12.2021
+2100019,Johann Schlosser AG & Co. KG,Mude GmbH & Co. KG,deu,79545,Quedlinburg,Boucseinplatz,0,17.05.2025
+2100020,Lindau,Fiebig GmbH,deu,62499,Saulgau,Halina-Bachmann-Allee,1/6,27.12.2021
+2100021,Oderwald AG,Süßebier,deu,07193,Wittstock,Rene-Henschel-Gasse,91,01.03.2023
+2100022,Rogner,Langern KG,deu,04964,Lüneburg,Eric-Meyer-Ring,1282,08.06.2022
+2100023,Berger AG,Paffrath AG & Co. KG,deu,07656,Göttingen,Mangoldallee,4-8,12.12.2021
+2100024,Wieloch GmbH & Co. KG,Biggen e.V.,deu,75726,Grimma,Nuri-Berger-Ring,12,03.04.2024
+2100025,Nette AG,Geißler,deu,68819,Aue,Rennerweg,50,23.02.2025
+2100026,Heuser Bauer AG,Hertrampf,deu,72381,Rehau,Helen-Döring-Allee,207,15.05.2023
+2100027,Girschner Stiftung & Co. KG,Gutknecht,deu,98050,Hagenow,Kraushaarweg,3322,11.08.2024
+2100028,Sager AG,Schacht Scheuermann AG,deu,75516,Soltau,Felicia-Dobes-Platz,9,12.08.2022
+2100029,Hellwig AG,Löwer Renner KG,deu,77427,Kaiserslautern,Wilmsenallee,5,06.03.2022
+2100030,Zorbach AG,Hörle,deu,28897,Zerbst,van der Dussenring,85-59,05.11.2023
+2100031,Ortmann GmbH,Hölzenbecher,deu,84911,Stuttgart,Schönlandplatz,8-6,30.07.2021
+2100032,Kruschwitz,Peukert Staude GmbH,deu,27460,Karlsruhe,Faustweg,14,15.02.2026
+2100033,Ziegert Franke GmbH,Scholz KGaA,deu,44974,Ansbach,Liebeltstraße,76/78,24.04.2022
+2100034,Kreusel KG,Trapp AG & Co. OHG,deu,68238,Grevesmühlen,Elizabeth-Graf-Straße,8374,07.07.2025
+2100035,Schleich GmbH & Co. KG,Werner AG,deu,33282,Vechta,Siegmund-Weihmann-Ring,5-1,25.02.2023
+2100036,Benthin AG,Fröhlich GbR,deu,95695,Wittstock,Adlerring,421,25.01.2024
+2100037,Rust Ullrich GmbH,Ring GmbH & Co. KG,deu,90154,Soest,Gabriela-Heß-Ring,13,18.06.2022
+2100038,Bien Röhrdanz GmbH,Kade,deu,68031,Dessau,Jähngasse,463,04.05.2022
+2100039,Tröst Tschentscher AG,Plath,deu,92155,Fürstenfeldbruck,Adriane-Atzler-Weg,96/49,11.05.2023
+2100040,Kensy GmbH & Co. OHG,Kramer Wirth AG & Co. KG,deu,74991,Eisenberg,Henning-Schottin-Ring,26-97,09.07.2023
+2100041,Caspar Löchel AG & Co. KG,Nerger,deu,33522,Grevesmühlen,Henschelweg,3-1,19.01.2021
+2100042,Seifert,Johann AG,deu,99674,Siegen,Erdogan-Rosemann-Allee,2-3,04.09.2024
+2100043,Seidel KGaA,Sölzer AG & Co. KGaA,deu,78299,Goslar,Hoffmannring,2,17.09.2022
+2100044,Jacobi Jäckel,Klotz Pärtzelt KG,deu,33408,Hannoversch Münden,Rädelplatz,92/44,21.08.2024
+2100045,Beckmann AG & Co. OHG,Steckel,deu,42233,Illertissen,Etzoldgasse,50-18,14.03.2025
+2100046,Kramer,Wagenknecht AG,deu,42214,Eberswalde,Alexandros-Aumann-Weg,34-56,15.01.2026
+2100047,Hoffmann Stumpf GbR,Henck,deu,75640,Rehau,Heidrichweg,506,03.08.2023
+2100048,Schwital,Huhn Bien AG,deu,17384,Soltau,Bergerstraße,75-17,06.11.2022
+2100049,Schuchhardt Wernecke GmbH & Co. KG,Plath,deu,94918,Gardelegen,Eugenie-Ullmann-Ring,387,21.09.2021
+2100050,Hentschel,Hänel Aumann GmbH,deu,11585,Vohenstrauß,Döhnstr.,9,19.02.2024
+2100051,Hecker,Hornich AG,deu,40835,Pegnitz,Erol-Eberhardt-Weg,202,29.04.2023
+2100052,Etzold Bähr GmbH,Hein Mies GmbH & Co. KGaA,deu,75531,Lübeck,Löwerplatz,3,09.07.2023
+2100053,Heß,Lange Gotthard KGaA,deu,53947,Lüneburg,Kreinweg,3504,19.03.2023
+2100054,Staude Stiftung & Co. KGaA,Scholz GmbH & Co. KG,deu,40077,Mellrichstadt,Bärerplatz,6/3,15.12.2021
+2100055,Johann,Walter Karge AG & Co. KG,deu,19566,Pößneck,Mitschkeweg,7/3,20.05.2023
+2100056,Jessel,Beckmann Stiftung & Co. KG,deu,43469,Miltenberg,Köhlergasse,40,17.09.2021
+2100057,Stiffel Winkler GmbH & Co. KG,Holt Rörricht e.G.,deu,84524,Feuchtwangen,Langernstraße,7-8,05.04.2026
+2100058,Becker,Sorgatz GbR,deu,75054,Freital,Eigenwilligstraße,3,19.02.2021
+2100059,Karz,Schleich,deu,43696,Lippstadt,Bastian-Bender-Ring,2182,30.09.2022
+2100060,Hecker Mülichen AG,Trommler KG,deu,17712,Aurich,Ilija-Preiß-Ring,2,09.09.2022
+2100061,Reichmann Christoph GbR,Krebs,deu,16300,Neuruppin,Rudolphstraße,43-96,09.12.2021
+2100062,auch Schlauchin e.V.,Beer AG & Co. OHG,deu,88943,Berlin,Sorgatzplatz,3/8,30.01.2024
+2100063,Gieß GmbH,Matthäi,deu,39942,Melle,Kobeltstraße,4-9,23.03.2022
+2100064,Hethur Heß e.V.,Jähn KG,deu,82723,Griesbach Rottal,Heßstr.,448,19.01.2021
+2100065,Bauer KG,Beer Gehringer OHG mbH,deu,02343,Stade,Theodor-Renner-Allee,3,28.10.2021
+2100066,Mälzer,Bolzmann GmbH & Co. KGaA,deu,91586,München,Mangoldallee,338,14.06.2023
+2100067,Staude GmbH,Eimer Scholtz GmbH,deu,91839,Zerbst,Anneli-Zahn-Weg,2/3,26.11.2022
+2100068,Christoph GmbH & Co. OHG,Söding Bloch GmbH & Co. KG,deu,77429,Einbeck,Dietzstraße,0,29.03.2021
+2100069,Ditschlerin AG & Co. KG,Holt Trupp GmbH & Co. KGaA,deu,77968,Oranienburg,Friedhilde-Wilmsen-Allee,5-7,09.02.2022
+2100070,Hellwig,Eberth Bärer KG,deu,43139,Hildesheim,Necati-Henck-Allee,8-8,18.05.2021
+2100071,Kroker Schwital KG,Siering,deu,35717,Einbeck,Freudenbergerring,90/29,03.08.2025
+2100072,Lindau Henk KG,Hermighausen GmbH & Co. KG,deu,00720,Bischofswerda,Löwerplatz,1541,28.12.2022
+2100073,Mitschke Weihmann AG,Tlustek,deu,36713,Badoberan,Wojciech-Wilms-Straße,3/9,04.08.2025
+2100074,Stiffel Rust GmbH,Gehringer Stiftung & Co. KG,deu,07869,Heinsberg,Gutestraße,15,22.01.2025
+2100075,Steinberg KG,Schüler,deu,92654,Wismar,Michaele-Zimmer-Allee,6108,07.07.2022
+2100076,Müller GmbH,Austermühle Bruder AG,deu,61694,Witzenhausen,Eberhardt-Kade-Allee,1,13.10.2024
+2100077,Eckbauer,Pergande,deu,55587,Marienberg,Karla-Scholl-Allee,66-29,03.10.2023
+2100078,Sager,Kallert,deu,51874,Sigmaringen,Gundel-Killer-Straße,13/63,21.06.2024
+2100079,Lorch AG,Gnatz,deu,41382,Ilmenau,Jüttnerallee,2-1,25.01.2026
+2100080,Zobel Ladeck e.G.,Wirth GmbH & Co. KGaA,deu,37269,Uelzen,Angela-Döring-Ring,8,04.09.2022
+2100081,Haase GmbH & Co. KG,Etzler Steinberg Stiftung & Co. KGaA,deu,57433,Gardelegen,Frederic-Hettner-Gasse,8,04.07.2024
+2100082,Eberth Tröst AG,Bähr,deu,69089,Helmstedt,Torben-Hornig-Ring,7-4,05.07.2022
+2100083,Juncken,Becker Schacht e.V.,deu,80146,Biedenkopf,Kenan-Sauer-Platz,49-70,28.08.2022
+2100084,Jessel,Zänker,deu,65159,Kyritz,Jäntschallee,1/8,05.02.2023
+2100085,Wagner KG,Römer,deu,35536,Teterow,Drubstraße,65,20.02.2026
+2100086,Hartung Bähr AG,Killer,deu,89985,Lobenstein,Heidemarie-Kraus-Weg,4,29.03.2026
+2100087,Schäfer GmbH & Co. KG,Karz Junck GmbH,deu,45487,Gerolzhofen,Heringring,69-44,02.08.2024
+2100088,Keudel Nette AG,Roht Steckel GbR,deu,14022,Böblingen,Igor-Nette-Weg,63,06.01.2026
+2100089,Gute Bolnbach OHG mbH,Förster Hölzenbecher AG,deu,03811,Feuchtwangen,Jaroslav-Schönland-Ring,94,24.03.2022
+2100090,Kobelt Hermann AG,Pärtzelt,deu,44505,Wittenberg,Hassan-Gumprich-Gasse,5582,06.10.2023
+2100091,Hofmann,Mende,deu,09627,Biedenkopf,Mechthild-Gierschner-Allee,40/12,19.03.2026
+2100092,Biggen,Klemm Scheibe GmbH,deu,85871,Wurzen,Hänelgasse,474,22.04.2022
+2100093,Röhrdanz,Stey GmbH & Co. KG,deu,83428,Dessau,Torben-Pohl-Platz,7,28.03.2024
+2100094,Radisch,Thanel,deu,31272,Forchheim,Säuberlichgasse,7/9,05.02.2023
+2100095,Jäkel Caspar KGaA,Stey GbR,deu,84563,Melsungen,Stephan-Grein Groth-Allee,574,26.02.2022
+2100096,Höfig GmbH,Kambs,deu,03675,Forst,Röhrichtallee,90,11.08.2021
+2100097,Krause GmbH & Co. KG,Hübel Dussen van OHG mbH,deu,14561,Reutlingen,Friedrich-Wilhelm-Caspar-Ring,3-4,12.05.2021
+2100098,Heinrich OHG mbH,Reichmann,deu,01701,Kamenz,Erhardt-Zobel-Weg,9-7,22.03.2024

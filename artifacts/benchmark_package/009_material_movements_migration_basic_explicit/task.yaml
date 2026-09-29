@@ -1,0 +1,167 @@
+task_id: 009_MATERIAL_MOVEMENTS_MIGRATION_BASIC_EXPLICIT
+
+objective: >
+  Transform the provided material movement journal from the source schema to
+  the target schema and produce a CSV file that conforms exactly to the target
+  schema. The material numbers of the target ERP system are not contained in
+  the source dataset and shall be resolved via the central material cross
+  reference list.
+
+input:
+  source_dataset: data/dataset.csv
+  source_schema: schemas/source_schema.yaml
+  target_schema: schemas/target_schema.yaml
+  reference_data:
+    - name: material_cross_reference
+      file: data/mapping_list_material.csv
+      key_field: "part no."
+      value_field: "material no."
+      description: >
+        Assigns the part numbers of the legacy ERP system to the material
+        numbers of the target ERP system.
+
+required_operations:
+  - filtering
+  - schema_mapping
+  - lookup
+  - value_mapping
+  - date_conversion
+  - rounding
+  - default_value_substitution
+  - constant_assignment
+  - sequential_identifier_generation
+
+business_rules:
+
+  filtering:
+    description: >
+      Only movements of materials that exist in the material master of the
+      target ERP system can be posted as material documents.
+
+    rules:
+      - field: part no.
+        operator: "is not empty"
+
+      - field: part no.
+        operator: "in"
+        reference: material_cross_reference
+        key_field: "part no."
+
+  record_order:
+    description: >
+      The filtered records shall be processed in ascending order of posting
+      date and, within one posting date, in ascending order of journal no.
+      This order determines the assignment of the document numbers.
+    fields:
+      - posting date
+      - journal no.
+    direction: ascending
+
+  mappings:
+
+    - target_field: MBLNR
+      transformation:
+        type: sequential_number
+        start: 4900000000
+        increment: 1
+      description: >
+        Each movement becomes one material document of the target ERP system
+        and receives a consecutive document number from the number range,
+        assigned in the record order defined above.
+
+    - source_field: posting date
+      target_field: BUDAT
+      transformation:
+        type: date_format
+        input_format: "YYYY-MM-DD 00:00:00"
+        output_format: DD.MM.YYYY
+      description: >
+        The posting date is exported with a time part that is always zero and
+        shall be converted to a plain calendar date.
+
+    - source_field: movement code
+      target_field: BWART
+      transformation:
+        type: value_mapping
+        mapping:
+          "WE" : "101"
+          "WA" : "103"
+          "BWA": "105"
+          "UMW": "311"
+          "RF" : "262"
+          "WAS": "201"
+      description: >
+        Convert the movement code of the legacy system to the movement type of
+        the target ERP system.
+
+    - source_field: part no.
+      target_field: MATNR
+      transformation:
+        type: lookup
+        reference: material_cross_reference
+        lookup_key: "part no."
+        return_field: "material no."
+      description: >
+        Resolve the legacy part number via the central cross reference list.
+
+    - target_field: WERKS
+      transformation:
+        type: constant
+        value: "4170"
+
+    - source_field: storage location
+      target_field: LGORT
+      transformation:
+        type: copy
+        default_if_empty: ""
+      description: >
+        Movements without a storage location are posted without a storage
+        location in the target ERP system.
+
+    - source_field: quantity
+      target_field: ERFMG
+      transformation:
+        type: round
+        decimals: 3
+        decimal_separator: ","
+
+    - source_field: unit
+      target_field: ERFME
+      transformation:
+        type: value_mapping
+        mapping:
+          "PCS": "ST"
+          "M"  : "M"
+          "MM" : "MM"
+      description: >
+        Convert the unit of measure of the legacy system to the unit of
+        measure of the target ERP system.
+
+    - source_field: value
+      target_field: DMBTR
+      transformation:
+        type: round
+        decimals: 2
+        decimal_separator: ","
+
+    - source_field: cost center
+      target_field: KOSTL
+      transformation:
+        type: copy
+        default_if_empty: ""
+
+    - source_field: description 1
+      target_field: SGTXT
+      transformation:
+        type: copy
+
+output:
+  format: csv
+  schema_reference: schemas/target_schema.yaml
+
+constraints:
+  - The output dataset must follow the target schema exactly.
+  - The output column order must match the target schema.
+  - No additional columns may be added.
+  - Each output row shall represent one material document.
+  - MBLNR must be unique.

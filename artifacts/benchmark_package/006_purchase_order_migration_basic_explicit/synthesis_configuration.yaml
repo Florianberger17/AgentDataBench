@@ -42,8 +42,10 @@ columns:
     strategy: date_distribution
     field_format: "YYYY-MM-DD"
 
-  # Real person names (5 buyers) - must not survive. faker yields a fresh
-  # name per row, so the low cardinality is not preserved.
+  # Real person names (5 buyers) - must not survive. faker_categorical draws
+  # one synthetic name per distinct real one and resamples them with the real
+  # frequencies, so the cardinality and frequency profile the ZZNAME_TLF
+  # value_mapping is written against are preserved without any real name.
   - column: Name
-    strategy: faker
+    strategy: faker_categorical
     provider: name

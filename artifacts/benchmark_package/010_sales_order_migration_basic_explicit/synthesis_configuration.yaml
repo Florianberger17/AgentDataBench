@@ -10,8 +10,11 @@ columns:
   - column: sales order no.
     strategy: identity
 
+  # Constant within one sales order in the source. Resampling it per row
+  # gave 9 of 28 orders two different types, which CON-TGT-002 forbids -
+  # kept as-is instead, like the other order-level fields.
   - column: order type
-    strategy: categorical_resample
+    strategy: identity
 
   - column: sold-to no.
     strategy: identity
@@ -30,7 +33,8 @@ columns:
 
   # Paired with part no.; kept as-is so the pairing survives.
   - column: description
-    strategy: identity
+    strategy: part_name_mapping
+    library_path: artifacts/part_name_library/part_name_library.csv
 
   # 68 of 99 values empty, technical variant text; kept as-is.
   - column: description 2

@@ -1,0 +1,65 @@
+table: customer_order
+
+entity: CustomerOrder
+
+description: >
+  Structural schema definition for customer order data in a legacy ERP system.
+  Each record represents one customer order, identified by CustomerTransaction.
+  This schema defines only data structure, not data quality characteristics.
+
+attributes:
+
+  - name: CustomerTransaction
+    type: integer
+    required: true
+    unique: true
+    description: Unique identifier of the customer transaction
+
+  - name: CustomerTransactionType
+    type: string
+    required: true
+    description: Type of the customer transaction
+
+  - name: CustomerName
+    type: string
+    required: true
+    description: Name of the ordering customer organization
+
+  - name: OrderType
+    type: string
+    required: true
+    description: Order type identifier
+
+  - name: "Order Currency"
+    type: string
+    required: true
+    format: ISO-4217
+    description: Currency key of the customer order
+
+  - name: PurchaseOrderDate
+    type: date
+    required: true
+    description: Date of the customer purchase order
+
+  - name: ConfirmedDeliveryDate
+    type: date
+    required: false
+    description: Delivery date confirmed to the customer
+
+  - name: Plant
+    type: integer
+    required: true
+    description: Plant responsible for order processing
+
+  - name: Planner1
+    type: string
+    required: true
+    description: Identifier of the responsible planner
+
+constraints:
+
+  - id: CON-SRC-001
+    description: CustomerTransaction must be unique
+
+  - id: CON-SRC-002
+    description: CustomerName must be provided

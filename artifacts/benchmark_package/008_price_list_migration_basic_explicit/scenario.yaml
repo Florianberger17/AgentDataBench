@@ -1,0 +1,29 @@
+scenario_id: 008_PRICE_LIST_MIGRATION_BASIC_EXPLICIT
+
+name: ERP Price List Migration
+
+domain: ERP Data Integration
+
+description: >
+  Price lists are migrated from a legacy ERP system to a new ERP system as
+  part of a system modernization project. The source system stores one price
+  record per part and price list using the legacy data model, identifies parts
+  by their legacy part numbers and records the start of validity as a
+  spreadsheet serial day number. The target ERP system expects condition
+  records in a different schema, with resolved material numbers, calendar
+  dates and a bounded description length. Material numbers are not carried
+  over and must be resolved via a central material cross reference list.
+
+business_objects:
+  - ConditionRecord
+
+systems:
+  source:
+    name: Legacy ERP System
+    description: >
+      Stores price lists using the legacy data model.
+
+  target:
+    name: Target ERP System
+    description: >
+      Stores price condition records using the target ERP data model.

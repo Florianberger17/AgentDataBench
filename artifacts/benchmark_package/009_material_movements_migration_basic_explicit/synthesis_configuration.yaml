@@ -16,13 +16,16 @@ columns:
   # Paired with part no.; kept as-is so the pairing and the empty pattern
   # survive.
   - column: description 1
-    strategy: identity
+    strategy: part_name_mapping
+    library_path: artifacts/part_name_library/part_name_library.csv
 
-  # Excel cell format YYYY-MM-DD HH:MM:SS - export without the time part, or
-  # set field_format to "YYYY-MM-DD 00:00:00".
+  # Excel exports this column as a datetime; the time part is 00:00:00 in
+  # every one of the 100 rows and carries no information. It is kept as a
+  # literal in field_format so the synthetic data reproduces the export
+  # format exactly - a real quirk the agent under test has to cope with.
   - column: posting date
     strategy: date_distribution
-    field_format: "YYYY-MM-DD"
+    field_format: "YYYY-MM-DD 00:00:00"
 
   - column: movement code
     strategy: categorical_resample
@@ -36,10 +39,14 @@ columns:
   - column: value
     strategy: numeric_distribution
 
-  # 29 distinct internal codes, 35 of 100 empty; resampling fills every row.
+  # 29 distinct internal codes, 35 of 100 empty. Resampled within the
+  # movement codes: whether a movement posts to a storage location at all
+  # depends on its type (BWA never does, WE/WA/UMW/RF always do), and drawing
+  # the column independently filled every row, leaving the "without a storage
+  # location" rule with nothing to act on.
   - column: storage location
-    strategy: categorical_resample
-    max_cardinality: 30
+    strategy: conditional_resample
+    reference_column: movement code
 
   # 80 of 100 values empty; kept as-is to preserve the empty pattern.
   - column: cost center

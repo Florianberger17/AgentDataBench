@@ -30,6 +30,15 @@ from agentdatabench.evaluation.agent_adapter import AgentAdapter
 _RUNNER_SCRIPT = Path(__file__).parent / "_data_interpreter_runner.py"
 
 
+def _default_venv_python() -> Path:
+    """venv-di's interpreter. A virtualenv puts it under bin/ on POSIX and
+    Scripts/ on Windows, so hardcoding either makes the adapter unusable on
+    the other platform."""
+    if os.name == "nt":
+        return Path("venv-di/Scripts/python.exe")
+    return Path("venv-di/bin/python")
+
+
 class _Process(Protocol):
     returncode: int | None
 
@@ -69,7 +78,7 @@ class DataInterpreterAdapter(AgentAdapter):
         # makes Python invoke the base interpreter directly, which then
         # fails to detect it's running inside the venv and loses access to
         # its site-packages (where metagpt is installed) entirely.
-        self._venv_python = (venv_python or Path("venv-di/bin/python")).absolute()
+        self._venv_python = (venv_python or _default_venv_python()).absolute()
         self._metagpt_project_root = metagpt_project_root
         self._launch_subprocess = subprocess_launcher or asyncio.create_subprocess_exec
         self._role_kwargs = role_kwargs

@@ -1,0 +1,63 @@
+table: bill_of_material
+
+entity: BillOfMaterial
+
+description: >
+  Source schema containing bill of material data exported from the legacy ERP
+  system. Each record represents one component position of one bill of
+  material, identified by the combination of bom no. and item no.
+
+attributes:
+
+  - name: bom no.
+    type: string
+    required: true
+    description: >
+      Legacy part number of the material the bill of material belongs to.
+
+  - name: bom description
+    type: string
+    required: true
+    description: >
+      Designation of the bill of material header in the legacy system.
+
+  - name: item no.
+    type: integer
+    required: true
+    description: >
+      Position number of the component within the bill of material.
+
+  - name: component no.
+    type: string
+    required: true
+    description: >
+      Legacy part number of the component.
+
+  - name: component description
+    type: string
+    required: true
+    description: >
+      Designation of the component in the legacy system.
+
+  - name: component quantity
+    type: integer
+    required: true
+    description: >
+      Number of pieces of the component required.
+
+  - name: length
+    type: decimal
+    required: true
+    description: >
+      Length of the component in the unit of the bill of material position.
+
+  - name: bom unit
+    type: string
+    required: true
+    description: >
+      Unit of measure of the bill of material position.
+
+constraints:
+
+  - id: CON-SRC-001
+    description: The combination of bom no. and item no. must be unique

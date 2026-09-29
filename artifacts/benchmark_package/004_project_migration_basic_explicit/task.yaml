@@ -1,0 +1,107 @@
+task_id: 004_PROJECT_MIGRATION_BASIC_EXPLICIT
+
+objective: >
+  Derive project definitions from the provided customer order dataset and
+  produce a CSV file that conforms to the target schema.
+
+input:
+  source_dataset: data/dataset.csv
+  source_schema: schemas/source_schema.yaml
+  target_schema: schemas/target_schema.yaml
+
+required_operations:
+  - schema_mapping
+  - value_mapping
+  - field_concatenation
+  - constant_assignment
+  - sequence_generation
+
+business_rules:
+
+  mappings:
+
+    - target_field: Project Definition
+      transformation:
+        type: sequence
+        prefix: "P-"
+        start_value: 310000
+        increment: 1
+      description: >
+        Assign a consecutive project number to every record of the source
+        dataset, starting with P-310000.
+
+    - target_field: Project Profile
+      transformation:
+        type: constant
+        value: "TS00007"
+
+    - source_fields:
+        - OrderType
+        - CustomerTransaction
+        - CustomerName
+      target_field: Short Description
+      transformation:
+        type: concatenate
+        pattern: "{OrderType} {CustomerTransaction}-{CustomerName}"
+      description: >
+        Concatenate the order type and the customer transaction identifier
+        separated by a single blank character, followed by a hyphen and the
+        customer name.
+
+    - source_field: Planner1
+      target_field: Person Responsible ID
+      transformation:
+        type: value_mapping
+        mapping:
+          "S01": 52010
+          "S12": 52001
+          "S24": 52002
+      description: >
+        Convert the legacy planner identifier to the identifier of the person
+        responsible in the target ERP system.
+
+    - target_field: Company Code
+      transformation:
+        type: constant
+        value: "0898"
+
+    - source_field: Order Currency
+      target_field: Project Currency
+      transformation:
+        type: copy
+
+    - source_field: PurchaseOrderDate
+      target_field: Start Date
+      transformation:
+        type: copy
+
+    - source_field: ConfirmedDeliveryDate
+      target_field: Finish Date
+      transformation:
+        type: copy
+
+    - target_field: Factory Calendar Key
+      transformation:
+        type: constant
+        value: 1
+
+    - target_field: Planning Profile
+      transformation:
+        type: constant
+        value: "ZR0001"
+
+    - target_field: Network Assignment
+      transformation:
+        type: constant
+        value: 2
+
+output:
+  format: csv
+  schema_reference: schemas/target_schema.yaml
+
+constraints:
+  - The output dataset must follow the target schema exactly.
+  - Each output row shall represent one project definition.
+  - Each customer order of the source dataset results in exactly one project.
+  - No additional columns may be added.
+  - The column order must match the target schema.

@@ -12,7 +12,8 @@ columns:
     strategy: identity
 
   - column: bom description
-    strategy: identity
+    strategy: part_name_mapping
+    library_path: artifacts/part_name_library/part_name_library.csv
 
   - column: item no.
     strategy: identity
@@ -21,7 +22,8 @@ columns:
     strategy: identity
 
   - column: component description
-    strategy: identity
+    strategy: part_name_mapping
+    library_path: artifacts/part_name_library/part_name_library.csv
 
   - column: component quantity
     strategy: numeric_distribution

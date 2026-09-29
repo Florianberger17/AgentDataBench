@@ -92,3 +92,175 @@ def test_unregistered_transformation_type_raises():
     schema = _schema([{"name": "a", "type": "string", "required": True}])
     with pytest.raises(ValueError, match="does_not_exist"):
         GroundTruthCreator().create_ground_truth(df, task, schema)
+
+
+def test_lookup_exclude_record_drops_row_from_every_column():
+    """An unresolvable lookup key removes the whole record, so the other
+    columns must not keep a value for it either."""
+    df = pd.DataFrame({"src_a": ["x", "y", "z"], "supplier": ["1", "unknown", "2"]})
+    task = _task(
+        mappings=[
+            {
+                "source_field": "src_a",
+                "target_field": "a",
+                "transformation": {"type": "copy"},
+            },
+            {
+                "source_field": "supplier",
+                "target_field": "b",
+                "transformation": {
+                    "type": "lookup",
+                    "reference": "suppliers",
+                    "lookup_key": "legacy",
+                    "return_field": "new",
+                    "on_missing": "exclude_record",
+                },
+            },
+        ]
+    )
+    schema = _schema(
+        [
+            {"name": "a", "type": "string", "required": True},
+            {"name": "b", "type": "string", "required": True},
+        ]
+    )
+    reference = {"suppliers": pd.DataFrame({"legacy": ["1", "2"], "new": ["100", "200"]})}
+
+    result = GroundTruthCreator().create_ground_truth(df, task, schema, reference)
+
+    assert len(result) == 2
+    assert list(result["a"]) == ["x", "z"]
+    assert list(result["b"]) == ["100", "200"]
+
+
+def test_filtering_runs_before_lookup_exclusion():
+    """A record the filter already removed must not make the lookup fail on
+    a key that only exists in filtered-out rows."""
+    df = pd.DataFrame(
+        {"src_a": ["x", "y"], "supplier": ["1", "unknown"], "status": ["keep", "drop"]}
+    )
+    task = _task(
+        filtering={"field": "status", "operator": "!=", "value": "drop"},
+        mappings=[
+            {
+                "source_field": "src_a",
+                "target_field": "a",
+                "transformation": {"type": "copy"},
+            },
+            {
+                "source_field": "supplier",
+                "target_field": "b",
+                "transformation": {
+                    "type": "lookup",
+                    "reference": "suppliers",
+                    "lookup_key": "legacy",
+                    "return_field": "new",
+                    "on_missing": "exclude_record",
+                },
+            },
+        ],
+    )
+    schema = _schema(
+        [
+            {"name": "a", "type": "string", "required": True},
+            {"name": "b", "type": "string", "required": True},
+        ]
+    )
+    reference = {"suppliers": pd.DataFrame({"legacy": ["1"], "new": ["100"]})}
+
+    result = GroundTruthCreator().create_ground_truth(df, task, schema, reference)
+
+    assert list(result["a"]) == ["x"]
+    assert list(result["b"]) == ["100"]
+
+
+def test_record_order_sorts_before_sequential_numbers_are_assigned():
+    """The numbers follow the configured order, not the source file's."""
+    df = pd.DataFrame({"src_a": ["c", "a", "b"], "seq": ["3", "1", "2"]})
+    task = _task(
+        record_order={"fields": ["seq"], "direction": "ascending"},
+        mappings=[
+            {
+                "source_field": "src_a",
+                "target_field": "a",
+                "transformation": {"type": "copy"},
+            },
+            {
+                "target_field": "b",
+                "transformation": {"type": "sequential_number", "start": 100},
+            },
+        ],
+    )
+    schema = _schema(
+        [
+            {"name": "a", "type": "string", "required": True},
+            {"name": "b", "type": "string", "required": True},
+        ]
+    )
+
+    result = GroundTruthCreator().create_ground_truth(df, task, schema)
+
+    assert list(result["a"]) == ["a", "b", "c"]
+    assert list(result["b"]) == ["100", "101", "102"]
+
+
+def test_record_order_sorts_numeric_columns_numerically():
+    """Every column is text, so "10" must not sort before "9"."""
+    df = pd.DataFrame({"src_a": ["x", "y"], "seq": ["10", "9"]})
+    task = _task(
+        record_order={"fields": ["seq"]},
+        mappings=[
+            {"source_field": "src_a", "target_field": "a", "transformation": {"type": "copy"}}
+        ],
+    )
+    schema = _schema([{"name": "a", "type": "string", "required": True}])
+
+    assert list(GroundTruthCreator().create_ground_truth(df, task, schema)["a"]) == ["y", "x"]
+
+
+def test_record_order_can_sort_descending():
+    df = pd.DataFrame({"src_a": ["x", "y"], "seq": ["1", "2"]})
+    task = _task(
+        record_order={"fields": ["seq"], "direction": "descending"},
+        mappings=[
+            {"source_field": "src_a", "target_field": "a", "transformation": {"type": "copy"}}
+        ],
+    )
+    schema = _schema([{"name": "a", "type": "string", "required": True}])
+
+    assert list(GroundTruthCreator().create_ground_truth(df, task, schema)["a"]) == ["y", "x"]
+
+
+def test_record_order_rejects_an_unknown_field():
+    df = pd.DataFrame({"src_a": ["x"]})
+    task = _task(record_order={"fields": ["nope"]})
+    schema = _schema([{"name": "a", "type": "string", "required": True}])
+
+    with pytest.raises(ValueError, match="nope"):
+        GroundTruthCreator().create_ground_truth(df, task, schema)
+
+
+def test_record_order_runs_after_filtering():
+    """A filtered-out row must not consume a sequential number."""
+    df = pd.DataFrame(
+        {"src_a": ["c", "a", "b"], "seq": ["3", "1", "2"], "keep": ["y", "n", "y"]}
+    )
+    task = _task(
+        filtering={"field": "keep", "operator": "==", "value": "y"},
+        record_order={"fields": ["seq"]},
+        mappings=[
+            {"source_field": "src_a", "target_field": "a", "transformation": {"type": "copy"}},
+            {"target_field": "b", "transformation": {"type": "sequential_number", "start": 1}},
+        ],
+    )
+    schema = _schema(
+        [
+            {"name": "a", "type": "string", "required": True},
+            {"name": "b", "type": "string", "required": True},
+        ]
+    )
+
+    result = GroundTruthCreator().create_ground_truth(df, task, schema)
+
+    assert list(result["a"]) == ["b", "c"]
+    assert list(result["b"]) == ["1", "2"]

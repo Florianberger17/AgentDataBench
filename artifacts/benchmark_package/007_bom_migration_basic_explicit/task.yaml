@@ -1,0 +1,170 @@
+task_id: 007_BOM_MIGRATION_BASIC_EXPLICIT
+
+objective: >
+  Transform the provided bill of material dataset from the source schema to
+  the target schema and produce a CSV file that conforms exactly to the target
+  schema. The material numbers of the target ERP system are not contained in
+  the source dataset and shall be resolved via the central material cross
+  reference list.
+
+input:
+  source_dataset: data/dataset.csv
+  source_schema: schemas/source_schema.yaml
+  target_schema: schemas/target_schema.yaml
+  reference_data:
+    - name: material_cross_reference
+      file: data/mapping_list_materials.csv
+      key_field: "part no."
+      value_field:
+        - "material no."
+        - "material description"
+      description: >
+        Assigns the part numbers of the legacy ERP system to the material
+        master records of the target ERP system.
+
+required_operations:
+  - schema_mapping
+  - lookup
+  - value_mapping
+  - conditional_assignment
+
+business_rules:
+
+  mappings:
+
+    - source_field: bom no.
+      target_field: MATNR
+      transformation:
+        type: lookup
+        reference: material_cross_reference
+        lookup_key: "part no."
+        return_field: "material no."
+      description: >
+        Resolve the legacy part number of the bill of material header via the
+        central cross reference list and adopt the material number of the
+        target ERP system.
+
+    - source_field: bom no.
+      target_field: MAKTX
+      transformation:
+        type: lookup
+        reference: material_cross_reference
+        lookup_key: "part no."
+        return_field: "material description"
+      description: >
+        Adopt the material description of the bill of material header from the
+        central cross reference list.
+
+    - source_field: item no.
+      target_field: POSNR
+      transformation:
+        type: copy
+
+    - source_field: component no.
+      target_field: POSTP
+      transformation:
+        type: conditional_value
+        conditions:
+          - when:
+              field: component no.
+              is: in_reference
+              reference: material_cross_reference
+              key_field: "part no."
+            value: "L"
+          - value: "T"
+      description: >
+        Components that exist in the material master of the target ERP system
+        are migrated as stock items. Components that have not been migrated to
+        the target ERP system are migrated as text items.
+
+    - source_field: component no.
+      target_field: IDNRK
+      transformation:
+        type: lookup
+        reference: material_cross_reference
+        lookup_key: "part no."
+        return_field: "material no."
+        on_missing: keep_empty
+      description: >
+        Resolve the legacy part number of the component via the central cross
+        reference list. Text items receive an empty value.
+
+    - source_field: component no.
+      target_field: MAKTX_COMP
+      transformation:
+        type: lookup
+        reference: material_cross_reference
+        lookup_key: "part no."
+        return_field: "material description"
+        on_missing: keep_empty
+      description: >
+        Adopt the material description of the component from the central cross
+        reference list. Text items receive an empty value.
+
+    - source_fields:
+        - component description
+        - component no.
+      target_field: POTX1
+      transformation:
+        type: conditional_value
+        conditions:
+          - when:
+              field: component no.
+              is: not_in_reference
+              reference: material_cross_reference
+              key_field: "part no."
+            from_field: component description
+          - value: ""
+      description: >
+        Text items carry the designation of the component from the legacy
+        system as description text. Stock items receive an empty value.
+
+    - source_fields:
+        - bom unit
+        - component quantity
+        - length
+      target_field: MENGE
+      transformation:
+        type: conditional_value
+        conditions:
+          - when:
+              field: bom unit
+              is: in
+              to:
+                - MM
+                - M
+            from_field: length
+          - from_field: component quantity
+      description: >
+        Components measured in a unit of length are required by their length.
+        For all other units the number of pieces applies.
+
+    - source_field: bom unit
+      target_field: MEINS_POS
+      transformation:
+        type: value_mapping
+        mapping:
+          "PCS": "ST"
+          "GR": "G"
+          "P": "PAK"
+        default: copy
+      description: >
+        Convert the unit of measure of the legacy system to the unit of
+        measure of the target ERP system. Units that are not contained in the
+        mapping are adopted unchanged.
+
+ignored_source_fields:
+  - bom description
+
+output:
+  format: csv
+  schema_reference: schemas/target_schema.yaml
+
+constraints:
+  - The output dataset must follow the target schema exactly.
+  - The output column order must match the target schema.
+  - No additional columns may be added.
+  - Each output row shall represent one bill of material position.
+  - The combination of MATNR and POSNR must be unique.
+  - Positions with item category L must carry a component material number,
+    positions with item category T must carry a description text.

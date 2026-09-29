@@ -1,0 +1,101 @@
+﻿TransactionType,TransactionNo,Status,SupplierNo,SupplierName,Planner4,Incoterm,IncotermLocation,Preferred Language
+Purchase order,10000,Full delivery/partial invoice,2787004,Zobel Kuhl KG,E02,FCA,Berlin,DE
+Purchase order,10001,Full delivery without invoice,2787012,Ruppersberger Schweitzer GmbH,E02,FCA,Ueckermünde,DE
+Purchase order,10002,Partial delivery/partial invoice,2314005,Rogner Speer AG & Co. KGaA,E07,DAP,Plauen,EN
+Purchase order,10003,Full delivery without invoice,2865002,Eberhardt Ruppersberger GmbH,E04,fca,Amberg,DE
+Purchase order,10004,Full delivery without invoice,2100030,Hänel Beier OHG mbH,E02,DAP,Plauen,DE
+Purchase order,10005,Full delivery/partial invoice,2523004,Salz,E04,DAP,Gütersloh,DE
+Purchase order,10006,Full delivery without invoice,2523004,Huhn e.G.,E02,DAP,Neubrandenburg,DE
+Purchase order,10007,Partial delivery without invoice,2240061,Karge GmbH & Co. KGaA,E04,FCA,Viechtach,DE
+Purchase order,10008,Recorded,2165006,Hettner GbR,E04,FCA,Niesky,DE
+Purchase order,10009,Partial delivery/partial invoice,2240250,Hübel KGaA,E02,FCA,Warendorf,DE
+Purchase order,10010,Recorded,2865002,Mühle AG & Co. OHG,E04,FCA,Coburg,DE
+Purchase order,10011,Full delivery without invoice,2240185,Kreusel,E04,FCA,Germersheim,DE
+Purchase order,10012,Recorded,2781003,Trüb Riehl AG,E04,FCA,Malchin,DE
+Purchase order,10013,Partial delivery/partial invoice,2547007,Zorbach Stey OHG mbH,E02,FCA,Beilngries,DE
+Purchase order,10014,Recorded,2240205,Höfig Lindner KG,E02,FCA,Eggenfelden,DE
+Purchase order,10015,Full delivery/partial invoice,2240069,Meyer Martin GmbH,E03,FCA,Neustadt am Rübenberge,DE
+Purchase order,10016,Full delivery without invoice,2240074,Holzapfel,E04,FCA,Crailsheim,DE
+Purchase order,10017,Partial delivery/partial invoice,2240328,Dehmel,E02,FCA,Schwerin,DE
+Purchase order,10018,Full delivery without invoice,2851005,Köhler KG,E04,FCA,Marktheidenfeld,DE
+Purchase order,10019,Partial delivery/partial invoice,2504024,Hövel Rohleder e.V.,E03,FCA,Meppen,EN
+Purchase order,10020,Recorded,2878034,Rosenow Graf KG,E02,FCA,Wiedenbrück,DE
+Purchase order,10021,Full delivery without invoice,2722025,Renner Striebitz Stiftung & Co. KG,E02,DAP,Monschau,DE
+Purchase order,10022,Partial delivery/partial invoice,2517002,Flantz,E07,FCA,Osterode am Harz,DE
+Purchase order,10023,Partial delivery/partial invoice,2388003,Rädel AG,E02,FCA,Roding,DE
+Purchase order,10024,Full delivery without invoice,2801020,Baum Berger AG & Co. OHG,E07,FCA,Wittmund,DE
+Purchase order,10025,Recorded,2240426,Mangold AG,E02,FCA,Zschopau,DE
+Purchase order,10026,Confirmed,2739003,Mitschke GmbH & Co. KGaA,E07,FCA,Hildburghausen,DE
+Purchase order,10027,Confirmed,2517002,Karz AG & Co. KGaA,E02,FCA,Neunburg vorm Wald,DE
+Purchase order,10028,Recorded,2240472,Gehringer GmbH,E02,FCA,Stadtroda,EN
+Purchase order,10029,Full delivery without invoice,2240351,Kohl,E04,FCA,Kassel,DE
+Purchase order,10030,Partial delivery/partial invoice,2240074,Mies,E21,DAP,Pinneberg,DE
+Purchase order,10031,Recorded,2240351,Naser Trubin KG,E03,FCA,Main-Höchst,DE
+Purchase order,10032,Confirmed,2240487,Löchel GmbH & Co. KG,E07,FCA,Kyritz,DE
+Purchase order,10033,Recorded,2338007,Hering,E02,FCA,Bergzabern,DE
+Purchase order,10034,Partial delivery/partial invoice,2722025,Misicher GmbH,E03,FCA,Pirmasens,DE
+Purchase order,10035,Recorded,2338007,Hauffer Pohl AG & Co. OHG,E02,FCA,Regen,DE
+Purchase order,10036,Confirmed,2338007,Scheuermann Heidrich OHG mbH,E02,FCA,Schwandorf,DE
+Purchase order,10037,Partial delivery/partial invoice,2787007,Ruppert,E04,FCA,Mainburg,DE
+Purchase order,10038,Partial delivery/partial invoice,2240488,Gumprich Schottin GmbH,E07,DAP,Grafenau,DE
+Purchase order,10039,Full delivery/partial invoice,2338007,Biggen,E04,FCA,Northeim,DE
+Purchase order,10040,Confirmed,2338007,Salz,E02,FCA,Strasburg,DE
+Purchase order,10041,Confirmed,2722025,Herrmann Dowerg KG,E04,FCA,Crailsheim,DE
+Purchase order,10042,Recorded,2706002,Becker Benthin AG,E04,FCA,Grafenau,DE
+Purchase order,10043,Recorded,2722025,Stahr,E04,FCA,Lübeck,DE
+Purchase order,10044,Full delivery without invoice,2338007,Steuer,E02,FCA,Grevesmühlen,DE
+Purchase order,10045,Full delivery without invoice,2787007,Eigenwillig,E02,FCA,Flöha,DE
+Purchase order,10046,Full delivery without invoice,2240463,Kohl Bolander KGaA,E02,FCA,Worbis,EN
+Purchase order,10047,Partial delivery/partial invoice,2240185,Mude GmbH,E04,FCA,Bergzabern,DE
+Purchase order,10048,Full delivery without invoice,2338007,Ruppersberger Wilms GmbH,E03,FCA,Northeim,DE
+Purchase order,10049,Partial delivery/partial invoice,2775010,Meister,E03,FCA,Gelnhausen,DE
+Purchase order,10050,Full delivery without invoice,2240185,Trubin e.G.,E04,FCA,Hünfeld,DE
+Purchase order,10051,Partial delivery without invoice,2123016,Ullrich Pieper e.V.,E02,FCA,Strasburg,DE
+Purchase order,10052,Recorded,2338007,Gierschner,E04,FCA,Bersenbrück,DE
+Purchase order,10053,Full delivery/partial invoice,2503004,Wilms GmbH & Co. OHG,E02,FCA,Hohenstein-Ernstthal,DE
+Purchase order,10054,Recorded,2801028,Scheuermann,E04,DAP,Eisenberg,DE
+Purchase order,10055,Recorded,2240185,Gotthard KGaA,E02,DAP,Calw,DE
+Purchase order,10056,Full delivery without invoice,2905003,Junitz GbR,E02,DAP,Angermünde,DE
+Purchase order,10057,Partial delivery/partial invoice,2649004,Benthin e.V.,E07,FCA,Hünfeld,EN
+Purchase order,10058,Recorded,2240440,Meyer Seidel Stiftung & Co. KG,E02,FCA,Waren,DE
+Purchase order,10059,Confirmed,2240185,Heintze,E04,DAP,Erding,DE
+Purchase order,10060,Partial delivery/partial invoice,2240185,Förster GbR,E03,FCA,Griesbach Rottal,DE
+Purchase order,10061,Confirmed,2338007,Süßebier Kruschwitz KG,E02,FCA,Melle,DE
+Purchase order,10062,Recorded,2338007,Lorch Hauffer GmbH,E04,FCA,Dachau,DE
+Purchase order,10063,Full delivery/partial invoice,2504003,Reichmann Pölitz GmbH,E03,DAP,Luckau,DE
+Purchase order,10064,Full delivery without invoice,2504003,Harloff KGaA,E02,FCA,Eichstätt,DE
+Purchase order,10065,Full delivery without invoice,2504003,Kranz KGaA,E02,DAP,Dachau,DE
+Purchase order,10066,Partial delivery without invoice,2504003,Adler Wesack KG,E07,FCA,Schweinfurt,DE
+Purchase order,10067,Full delivery without invoice,2504003,Krebs OHG mbH,E04,DAP,Schrobenhausen,DE
+Purchase order,10068,Confirmed,2123016,Kranz AG,E04,DAP,Kehl,DE
+Purchase order,10069,Full delivery without invoice,2514007,Weimer Nette GmbH,E03,FCA,Crailsheim,DE
+Purchase order,10070,Confirmed,2504003,Wilms Schweitzer OHG mbH,E04,FCA,Saarbrücken,DE
+Purchase order,10071,Full delivery/partial invoice,2504003,Jopich,E04,fca,Neuruppin,EN
+Purchase order,10072,Full delivery without invoice,2649004,Paffrath,E02,DAP,Diepholz,DE
+Purchase order,10073,Partial delivery/partial invoice,2338007,Huhn,E04,FCA,Wismar,DE
+Purchase order,10074,Partial delivery/partial invoice,2723011,Jäkel Stiftung & Co. KG,E04,DAP,Belzig,DE
+Purchase order,10075,Full delivery without invoice,2955002,Dussen van,E03,FCA,Leipziger Land,DE
+Purchase order,10076,Partial delivery/partial invoice,2240351,Oderwald AG,E04,FCA,Gräfenhainichen,DE
+Purchase order,10077,Recorded,2782006,Linke,E07,FCA,Nordhausen,DE
+Purchase order,10078,Confirmed,2338007,Scheel Rosenow AG & Co. KG,E04,DAP,Schwäbisch Gmünd,EN
+Purchase order,10079,Recorded,2281008,Rust Holsten GmbH & Co. KG,E07,FCA,Aschaffenburg,DE
+Purchase order,10080,Full delivery without invoice,2955002,Gude,E02,DAP,Lüdenscheid,DE
+Purchase order,10081,Full delivery without invoice,2155002,Krein AG & Co. KGaA,E04,FCA,Geithain,EN
+Purchase order,10082,Partial delivery/partial invoice,2878009,Kabus,E04,FCA,Forchheim,EN
+Purchase order,10083,Partial delivery/partial invoice,2240028,Mies Süßebier GmbH,E04,FCA,Pinneberg,DE
+Purchase order,10084,Recorded,2284018,Barth GmbH & Co. KG,E07,FCA,Zerbst,DE
+Purchase order,10085,Recorded,2649004,Warmer,E04,FCA,Gadebusch,DE
+Purchase order,10086,Full delivery without invoice,2517002,Karz Stadelmann e.G.,E04,FCA,Wertingen,DE
+Purchase order,10087,Full delivery without invoice,2268025,Weimer AG,E04,DAP,Bernburg,DE
+Purchase order,10088,Partial delivery without invoice,2105008,Martin,E07,FCA,Apolda,EN
+Purchase order,10089,Confirmed,2955002,Langern KG,E02,FCA,Vohenstrauß,DE
+Purchase order,10090,Confirmed,2649004,Mies,E07,FCA,Bad Liebenwerda,DE
+Purchase order,10091,Partial delivery/partial invoice,2504003,Röhrdanz Schenk AG & Co. KGaA,E02,DAP,Schweinfurt,DE
+Purchase order,10092,Full delivery without invoice,2552010,Hering AG,E07,DAP,Moers,DE
+Purchase order,10093,Partial delivery/partial invoice,2794002,Pölitz,E04,DAP,Apolda,DE
+Purchase order,10094,Partial delivery/partial invoice,2514004,Säuberlich,E02,DAP,Crailsheim,EN
+Purchase order,10095,Confirmed,2549002,Stiebitz GmbH,E04,FCA,Celle,DE
+Purchase order,10096,Partial delivery/partial invoice,2878009,Linke Ladeck GmbH,E04,FCA,Husum,DE
+Purchase order,10097,Partial delivery/partial invoice,2240305,Stiffel Stiftung & Co. KGaA,E03,FCA,Aue,DE
+Purchase order,10098,Recorded,2240305,Jähn GbR,E04,FCA,Neubrandenburg,DE
+Purchase order,10099,Full delivery without invoice,2338007,Neureuther Ditschlerin e.V.,E03,FCA,Artern,EN

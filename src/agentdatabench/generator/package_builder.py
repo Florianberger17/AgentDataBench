@@ -24,7 +24,10 @@ from agentdatabench.domain.schema import Schema
 from agentdatabench.domain.synthesis_configuration import SynthesisConfiguration
 from agentdatabench.domain.task import Task
 from agentdatabench.generator.dataset_creator import DatasetCreator
-from agentdatabench.generator.ground_truth_creator import GroundTruthCreator
+from agentdatabench.generator.ground_truth_creator import (
+    GroundTruthCreator,
+    load_reference_data,
+)
 from agentdatabench.generator.noise_engine import NoiseEngine
 from agentdatabench.generator.source_data import purge_source_data
 
@@ -66,7 +69,7 @@ class PackageBuilder:
             dataset_df = clean_df
 
         ground_truth_df = self._ground_truth_creator.create_ground_truth(
-            clean_df, task, target_schema
+            clean_df, task, target_schema, load_reference_data(root, task)
         )
 
         dataset_path = root / task.input.source_dataset
