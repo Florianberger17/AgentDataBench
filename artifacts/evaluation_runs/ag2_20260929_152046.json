@@ -1,0 +1,182 @@
+{
+  "generated_at": "2026-09-29T15:20:46.775800Z",
+  "results": [
+    {
+      "task_id": "001_CUSTOMER_MIGRATION_BASIC_EXPLICIT",
+      "agent_name": "ag2",
+      "metrics": [
+        {
+          "name": "schema_accuracy",
+          "score": 0.75,
+          "details": {
+            "expected_columns": [
+              "CustomerID",
+              "Name",
+              "Street",
+              "City",
+              "PostalCode",
+              "Country",
+              "LastBusinessActivityDate",
+              "Status"
+            ],
+            "actual_columns": [
+              "CustomerID",
+              "Name",
+              "Street",
+              "City",
+              "PostalCode",
+              "Country",
+              "Email",
+              "LastBusinessActivityDate",
+              "Status"
+            ]
+          }
+        },
+        {
+          "name": "row_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch",
+            "expected_columns": [
+              "CustomerID",
+              "Name",
+              "Street",
+              "City",
+              "PostalCode",
+              "Country",
+              "LastBusinessActivityDate",
+              "Status"
+            ],
+            "actual_columns": [
+              "CustomerID",
+              "Name",
+              "Street",
+              "City",
+              "PostalCode",
+              "Country",
+              "Email",
+              "LastBusinessActivityDate",
+              "Status"
+            ]
+          }
+        },
+        {
+          "name": "filtering_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_rows": 45,
+            "actual_rows": 45
+          }
+        },
+        {
+          "name": "field_mapping_accuracy",
+          "score": 1.0,
+          "details": {
+            "populated_fraction_by_column": {
+              "CustomerID": 1.0,
+              "Name": 1.0,
+              "Street": 1.0,
+              "City": 1.0,
+              "PostalCode": 1.0,
+              "Country": 1.0,
+              "LastBusinessActivityDate": 1.0,
+              "Status": 1.0
+            },
+            "expected_fraction_by_column": {
+              "CustomerID": 1.0,
+              "Name": 1.0,
+              "Street": 1.0,
+              "City": 1.0,
+              "PostalCode": 1.0,
+              "Country": 1.0,
+              "LastBusinessActivityDate": 1.0,
+              "Status": 1.0
+            },
+            "score_by_column": {
+              "CustomerID": 1.0,
+              "Name": 1.0,
+              "Street": 1.0,
+              "City": 1.0,
+              "PostalCode": 1.0,
+              "Country": 1.0,
+              "LastBusinessActivityDate": 1.0,
+              "Status": 1.0
+            }
+          }
+        },
+        {
+          "name": "transformation_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch"
+          }
+        },
+        {
+          "name": "record_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch"
+          }
+        },
+        {
+          "name": "error_correction_accuracy",
+          "score": 1.0,
+          "details": {
+            "applicable": false,
+            "reason": "no noise_configuration.yaml"
+          }
+        }
+      ],
+      "passed": false,
+      "timestamp": "2026-09-29T15:20:46.775727Z",
+      "error": null,
+      "reproducibility": {
+        "name": "reproducibility",
+        "score": 1.0,
+        "details": {
+          "matched_rows": 45,
+          "total_rows": 45
+        }
+      },
+      "duration_seconds": 27.883096538000245,
+      "metadata": {
+        "steps": 8,
+        "llm_calls": 4,
+        "total_cost": 0,
+        "prompt_tokens": 21222,
+        "completion_tokens": 2183,
+        "total_tokens": 23405,
+        "model": "gpt-6-luna"
+      }
+    }
+  ],
+  "summaries": [
+    {
+      "agent_name": "ag2",
+      "total_tasks": 1,
+      "passed_tasks": 0,
+      "failed_tasks": 1,
+      "pass_rate": 0.0,
+      "success_rate": 1.0,
+      "average_duration_seconds": 27.883096538000245,
+      "average_metric_scores": {
+        "schema_accuracy": 0.75,
+        "row_accuracy": 0.0,
+        "filtering_accuracy": 1.0,
+        "field_mapping_accuracy": 1.0,
+        "transformation_accuracy": 0.0,
+        "record_accuracy": 0.0,
+        "error_correction_accuracy": 1.0,
+        "reproducibility": 1.0
+      },
+      "average_metadata": {
+        "steps": 8.0,
+        "llm_calls": 4.0,
+        "total_cost": 0.0,
+        "prompt_tokens": 21222.0,
+        "completion_tokens": 2183.0,
+        "total_tokens": 23405.0
+      }
+    }
+  ]
+}

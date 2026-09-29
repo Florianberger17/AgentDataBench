@@ -85,7 +85,11 @@ def build_adapter(name: str) -> AgentAdapter:
         from agentdatabench.evaluation.data_interpreter_adapter import DataInterpreterAdapter
 
         return DataInterpreterAdapter()
-    raise SystemExit(f"Unknown agent {name!r} (known: stub, perfect, data-interpreter)")
+    if name == "ag2":
+        from agentdatabench.evaluation.ag2_adapter import AG2Adapter
+
+        return AG2Adapter()
+    raise SystemExit(f"Unknown agent {name!r} (known: stub, perfect, data-interpreter, ag2)")
 
 
 def discover_packages(root: Path, names: list[str] | None, include_legacy: bool) -> list[Path]:
@@ -104,7 +108,7 @@ def discover_packages(root: Path, names: list[str] | None, include_legacy: bool)
 
 async def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--agent", default="stub", help="stub | data-interpreter")
+    parser.add_argument("--agent", default="stub", help="stub | perfect | data-interpreter | ag2")
     parser.add_argument("--package", action="append", help="package directory name (repeatable)")
     parser.add_argument("--packages-root", type=Path, default=DEFAULT_PACKAGES_ROOT)
     parser.add_argument("--repeat", type=int, default=1, help="runs per package")

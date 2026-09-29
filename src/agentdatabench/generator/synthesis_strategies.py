@@ -433,6 +433,65 @@ class PartNameMappingStrategy:
         ).reset_index(drop=True)
 
 
+class NumericMappingStrategy:
+    """One random number per *distinct* real value, substituted consistently
+    and rendered through a configurable format string.
+
+    Numbers are drawn without replacement from `[min, max]`, so two distinct
+    real values never collapse onto the same synthetic one - the same
+    guarantee `part_name_mapping` gives for text. Use this instead when the
+    column already *is* a formatted number (e.g. a material number like
+    "3001-6994") rather than a name drawn from a library.
+
+    Config keys: `format` (a Python str.format() template applied to the
+    drawn integer, e.g. `"00-{:06d}"`), `min` and `max` (inclusive bounds of
+    the integer drawn before formatting). Empty values stay empty.
+    """
+
+    def synthesize(
+        self,
+        real_series: pd.Series,
+        config: ColumnSynthesisConfig,
+        rng: random.Random,
+        faker: Faker,
+        n: int,
+        context: SynthesisContext = EMPTY_SYNTHESIS_CONTEXT,
+    ) -> pd.Series:
+        value_format = config.format
+        minimum = config.min
+        maximum = config.max
+        if minimum > maximum:
+            raise ValueError(
+                f"NumericMappingStrategy: column '{config.column}' has min "
+                f"({minimum}) greater than max ({maximum})."
+            )
+
+        values = real_series.head(n)
+        present = values[~_is_blank(values)].astype(str).str.strip()
+        distinct = present.unique().tolist()
+
+        capacity = maximum - minimum + 1
+        if len(distinct) > capacity:
+            raise ValueError(
+                f"NumericMappingStrategy: column '{config.column}' has "
+                f"{len(distinct)} distinct values but the range [{minimum}, "
+                f"{maximum}] only provides {capacity} distinct numbers. "
+                f"Widen the range - two real values must not share one "
+                f"synthetic number."
+            )
+
+        drawn = rng.sample(range(minimum, maximum + 1), len(distinct))
+        substitution = {
+            value: value_format.format(number)
+            for value, number in zip(distinct, drawn)
+        }
+        return values.map(
+            lambda value: value
+            if _is_blank_value(value)
+            else substitution[str(value).strip()]
+        ).reset_index(drop=True)
+
+
 def _is_blank_value(value: object) -> bool:
     return pd.isna(value) or str(value).strip() == ""
 
@@ -671,4 +730,5 @@ DEFAULT_SYNTHESIS_STRATEGIES: dict[str, SynthesisStrategy] = {
     "faker_categorical": FakerCategoricalStrategy(),
     "part_name_mapping": PartNameMappingStrategy(),
     "conditional_resample": ConditionalResampleStrategy(),
+    "numeric_mapping": NumericMappingStrategy(),
 }

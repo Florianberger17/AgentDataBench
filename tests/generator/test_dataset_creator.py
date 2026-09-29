@@ -304,6 +304,98 @@ def test_part_name_mapping_raises_when_the_library_is_too_small(tmp_path):
 
 
 # Fabricated placeholder data, not real company data.
+REPEATED_MATERIAL_SOURCE_DF = pd.DataFrame(
+    {
+        "MaterialNo": ["3001-6994", "3001-6994", "3001-7000", "3001-6994", "3001-7010"],
+    }
+)
+
+NUMERIC_MAPPING_CONFIG = SynthesisConfiguration(
+    seed=13,
+    columns=[
+        {
+            "column": "MaterialNo",
+            "strategy": "numeric_mapping",
+            "format": "00-{:06d}",
+            "min": 0,
+            "max": 999999,
+        },
+    ],
+)
+
+
+def test_numeric_mapping_replaces_equal_values_with_equal_numbers():
+    result = DatasetCreator().create_clean_dataset(
+        REPEATED_MATERIAL_SOURCE_DF, NUMERIC_MAPPING_CONFIG
+    )
+
+    numbers = result["MaterialNo"]
+    assert numbers.iloc[0] == numbers.iloc[1] == numbers.iloc[3]  # the three "3001-6994" rows
+    assert numbers.iloc[2] != numbers.iloc[4]
+
+
+def test_numeric_mapping_lets_no_real_value_survive():
+    result = DatasetCreator().create_clean_dataset(
+        REPEATED_MATERIAL_SOURCE_DF, NUMERIC_MAPPING_CONFIG
+    )
+
+    assert not set(result["MaterialNo"]) & set(REPEATED_MATERIAL_SOURCE_DF["MaterialNo"])
+
+
+def test_numeric_mapping_never_collapses_two_values_onto_one_number():
+    result = DatasetCreator().create_clean_dataset(
+        REPEATED_MATERIAL_SOURCE_DF, NUMERIC_MAPPING_CONFIG
+    )
+
+    pairs = dict(zip(REPEATED_MATERIAL_SOURCE_DF["MaterialNo"], result["MaterialNo"]))
+    assert len(set(pairs.values())) == REPEATED_MATERIAL_SOURCE_DF["MaterialNo"].nunique()
+
+
+def test_numeric_mapping_matches_the_configured_format():
+    result = DatasetCreator().create_clean_dataset(
+        REPEATED_MATERIAL_SOURCE_DF, NUMERIC_MAPPING_CONFIG
+    )
+
+    assert result["MaterialNo"].str.match(r"^00-\d{6}$").all()
+
+
+def test_numeric_mapping_leaves_empty_values_empty():
+    source = pd.DataFrame({"MaterialNo": ["3001-6994", None]})
+    result = DatasetCreator().create_clean_dataset(source, NUMERIC_MAPPING_CONFIG)
+
+    assert pd.isna(result["MaterialNo"].iloc[1])
+    assert result["MaterialNo"].iloc[0] != "3001-6994"
+
+
+def test_numeric_mapping_is_reproducible_for_the_same_seed():
+    first = DatasetCreator().create_clean_dataset(
+        REPEATED_MATERIAL_SOURCE_DF, NUMERIC_MAPPING_CONFIG
+    )
+    second = DatasetCreator().create_clean_dataset(
+        REPEATED_MATERIAL_SOURCE_DF, NUMERIC_MAPPING_CONFIG
+    )
+
+    assert first.equals(second)
+
+
+def test_numeric_mapping_raises_when_the_range_is_too_small():
+    config = SynthesisConfiguration(
+        seed=13,
+        columns=[
+            {
+                "column": "MaterialNo",
+                "strategy": "numeric_mapping",
+                "format": "00-{:06d}",
+                "min": 0,
+                "max": 1,
+            },
+        ],
+    )
+    with pytest.raises(ValueError, match="only provides 2 distinct numbers"):
+        DatasetCreator().create_clean_dataset(REPEATED_MATERIAL_SOURCE_DF, config)
+
+
+# Fabricated placeholder data, not real company data.
 PAIRED_SOURCE_DF = pd.DataFrame(
     {
         "validity": ["valid from"] * 4 + ["generally valid"] * 4,

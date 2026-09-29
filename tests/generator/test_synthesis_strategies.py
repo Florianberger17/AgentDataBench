@@ -1,4 +1,5 @@
 import random
+import re
 
 import pandas as pd
 import pytest
@@ -11,6 +12,7 @@ from agentdatabench.generator.synthesis_strategies import (
     FakerStrategy,
     IdentityStrategy,
     NumericDistributionStrategy,
+    NumericMappingStrategy,
     PartNameReplacementStrategy,
     UniqueSequenceStrategy,
 )
@@ -236,3 +238,42 @@ def test_part_name_replacement_strategy_uses_shipped_library_by_default():
     )
     assert len(result) == 50
     assert len(set(result)) == 50
+
+
+def test_numeric_mapping_strategy_formats_within_range():
+    series = pd.Series(["3001-6994", "3001-6994", "3001-7000"])
+    config = ColumnSynthesisConfig(
+        column="MaterialNo",
+        strategy="numeric_mapping",
+        format="00-{:06d}",
+        min=0,
+        max=999999,
+    )
+    result = NumericMappingStrategy().synthesize(
+        series, config, random.Random(0), _faker(), 3
+    )
+    for value in result:
+        assert re.fullmatch(r"00-\d{6}", value)
+    assert result.iloc[0] == result.iloc[1]
+
+
+def test_numeric_mapping_strategy_raises_when_range_too_small():
+    series = pd.Series(["A", "B", "C"])
+    config = ColumnSynthesisConfig(
+        column="code", strategy="numeric_mapping", format="{:d}", min=0, max=1
+    )
+    with pytest.raises(ValueError, match="only provides 2 distinct numbers"):
+        NumericMappingStrategy().synthesize(
+            series, config, random.Random(0), _faker(), 3
+        )
+
+
+def test_numeric_mapping_strategy_raises_when_min_exceeds_max():
+    series = pd.Series(["A"])
+    config = ColumnSynthesisConfig(
+        column="code", strategy="numeric_mapping", format="{:d}", min=5, max=1
+    )
+    with pytest.raises(ValueError, match="min .* greater than max"):
+        NumericMappingStrategy().synthesize(
+            series, config, random.Random(0), _faker(), 1
+        )

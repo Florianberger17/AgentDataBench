@@ -1,0 +1,29 @@
+{
+  "generated_at": "2026-09-29T15:19:52.900354Z",
+  "results": [
+    {
+      "task_id": "001_CUSTOMER_MIGRATION_BASIC_EXPLICIT",
+      "agent_name": "data-interpreter",
+      "metrics": [],
+      "passed": false,
+      "timestamp": "2026-09-29T15:19:52.900296Z",
+      "error": "RuntimeError: Data Interpreter subprocess exited with code 1 - see /home/florian/Projects/agentdatabench/venv-di/metagpt-runtime/manual_runs/data-interpreter_20260929_171949/run.log",
+      "reproducibility": null,
+      "duration_seconds": 3.43256510700121,
+      "metadata": {}
+    }
+  ],
+  "summaries": [
+    {
+      "agent_name": "data-interpreter",
+      "total_tasks": 1,
+      "passed_tasks": 0,
+      "failed_tasks": 1,
+      "pass_rate": 0.0,
+      "success_rate": 0.0,
+      "average_duration_seconds": 3.43256510700121,
+      "average_metric_scores": {},
+      "average_metadata": {}
+    }
+  ]
+}

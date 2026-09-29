@@ -15,8 +15,11 @@ columns:
   # 29 empty values (service items without material); kept as-is so the
   # empty pattern and the pairing with Description1 survive.
   - column: MaterialNo
-    strategy: identity
-
+    strategy: numeric_mapping
+    format: "00-{:06d}"
+    min: 0
+    max: 999999
+    
   - column: Description1
     strategy: part_name_replacement
 

@@ -190,7 +190,11 @@ class DateFormatHandler:
 
 
 def _joined_key(df: pd.DataFrame, fields: list[str]) -> pd.Series:
-    stripped = df[fields].astype(str).apply(lambda column: column.str.strip())
+    # fillna() has to run before astype(str): pandas' default string dtype
+    # (future.infer_string, default since pandas 3.0) keeps a missing cell as
+    # a bare float NaN through astype(str) instead of stringifying it to
+    # "nan", which str.join() below then rejects as a non-str sequence item.
+    stripped = df[fields].fillna("nan").astype(str).apply(lambda column: column.str.strip())
     return stripped.agg(_KEY_JOIN.join, axis=1)
 
 

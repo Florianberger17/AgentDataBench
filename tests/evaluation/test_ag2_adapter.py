@@ -55,6 +55,53 @@ def test_invoke_calls_run_chat_with_prompt_and_writes_output(pkg1_root, tmp_path
     assert (result.workspace / "run.log").read_text() == "fake chat ran\n"
 
 
+def test_invoke_captures_ag2_event_log_on_every_call_not_just_the_first(pkg1_root, tmp_path):
+    """Regression test for a real bug: AG2's own conversation logging goes
+    through a process-global logging.Logger whose StreamHandler binds a
+    stream once, on first use, and keeps writing to that same object forever
+    - contextlib.redirect_stdout() alone only fools it on the first call made
+    in a process, leaving every later call's run.log empty. run_benchmark.py
+    runs every --package in one process, so this silently broke run.log for
+    every package but the first."""
+    from autogen.io.base import IOStream
+
+    package = BenchmarkPackage.load(pkg1_root)
+
+    def fake_run_chat(prompt, workspace, docs_paths, llm_config, retrieve_config_extra):
+        IOStream.get_default().print(f"chat for {workspace.name}")
+        df = pd.read_csv(workspace / "dataset.csv", dtype=str)
+        df.to_csv(workspace / OUTPUT_FILENAME, index=False)
+
+    adapter = AG2Adapter(
+        default_workspace_root=tmp_path,
+        run_chat=fake_run_chat,
+        llm_config={"config_list": [{"model": "fake-model", "api_key": "fake"}]},
+    )
+
+    first = asyncio.run(adapter.run(package))
+    second = asyncio.run(adapter.run(package))
+
+    assert first.workspace != second.workspace
+    first_log = (first.workspace / "run.log").read_text()
+    second_log = (second.workspace / "run.log").read_text()
+
+    # Each call's own message must land in its own log - not be missing (the
+    # bug: an empty file) and not be the other call's message (a stale
+    # handler .stream pointed at the wrong buffer). Whole-line (not bare
+    # substring) checks: the timestamp-based workspace names can share a
+    # prefix (a same-second second run gets a random suffix appended), so a
+    # bare "in" check would call the other run's longer name a false match.
+    # Membership rather than equality because pytest's own logging capture
+    # can add unrelated noise to the same underlying handler when this runs
+    # alongside other tests.
+    own_line = f"chat for {first.workspace.name}\n"
+    other_line = f"chat for {second.workspace.name}\n"
+    assert own_line in first_log
+    assert other_line in second_log
+    assert other_line not in first_log
+    assert own_line not in second_log
+
+
 class _FakeChatResult:
     """Duck-typed stand-in for autogen's real ChatResult - _extract_metadata
     only reads .chat_history and .cost, so a real ag2 install isn't needed

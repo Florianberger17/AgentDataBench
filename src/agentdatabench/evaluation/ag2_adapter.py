@@ -56,6 +56,43 @@ ChatRunner = Callable[[str, Path, list[Path], dict, dict], Any]
 _ASSISTANT_NAME = "assistant"
 
 
+@contextlib.contextmanager
+def _redirect_ag2_events(log_buffer: io.StringIO):
+    """Makes AG2's own conversation logging follow `log_buffer`, not just
+    whatever `contextlib.redirect_stdout` swaps `sys.stdout` to.
+
+    AG2 (autogen>=0.4-ish) no longer prints the conversation with a bare
+    `print()` - it routes through a process-global `logging.Logger`
+    ("ag2.event.processor") whose `StreamHandler` is created once, the first
+    time anything is printed in this process, as `EventStreamHandler(
+    sys.stdout)`. That handler keeps that *object reference* forever;
+    `redirect_stdout` swapping `sys.stdout` afterwards does nothing to it.
+    Confirmed by printing twice under two separate `redirect_stdout` blocks:
+    both messages land in the first buffer, the second stays empty.
+
+    Since `run_benchmark.py` runs every `--package` in one process, only the
+    first package's `_invoke` call ever got AG2's actual output - every
+    later package's `run.log` was silently empty. Reassigning the handler's
+    own `.stream` per call, and restoring it afterwards, is what actually
+    redirects it call by call. Best-effort: an autogen internal layout
+    change here should not turn an otherwise-successful run into a failure.
+    """
+    originals: list[tuple[Any, Any]] = []
+    try:
+        from autogen.logger.logger_utils import get_event_logger
+
+        for handler in get_event_logger().handlers:
+            originals.append((handler, handler.stream))
+            handler.stream = log_buffer
+    except Exception:
+        pass
+    try:
+        yield
+    finally:
+        for handler, stream in originals:
+            handler.stream = stream
+
+
 def _default_llm_config() -> dict:
     return {
         "config_list": [
@@ -173,7 +210,7 @@ class AG2Adapter(AgentAdapter):
 
         def run_and_capture() -> None:
             nonlocal chat_result
-            with contextlib.redirect_stdout(log_buffer):
+            with contextlib.redirect_stdout(log_buffer), _redirect_ag2_events(log_buffer):
                 chat_result = self._run_chat(
                     prompt, workspace, docs_paths, self._llm_config, self._retrieve_config_extra
                 )

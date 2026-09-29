@@ -1,0 +1,128 @@
+{
+  "generated_at": "2026-09-29T14:41:06.938727Z",
+  "results": [
+    {
+      "task_id": "001_CUSTOMER_MIGRATION_BASIC_EXPLICIT",
+      "agent_name": "data-interpreter",
+      "metrics": [],
+      "passed": false,
+      "timestamp": "2026-09-29T14:41:06.858302Z",
+      "error": "FileNotFoundError: [Errno 2] No such file or directory: '/home/florian/Projects/agentdatabench/venv-di/bin/python'",
+      "reproducibility": null,
+      "duration_seconds": 0.0010174749995712773,
+      "metadata": {}
+    },
+    {
+      "task_id": "002_SUPPLIER_MIGRATION_BASIC_EXPLICIT",
+      "agent_name": "data-interpreter",
+      "metrics": [],
+      "passed": false,
+      "timestamp": "2026-09-29T14:41:06.865591Z",
+      "error": "FileNotFoundError: [Errno 2] No such file or directory: '/home/florian/Projects/agentdatabench/venv-di/bin/python'",
+      "reproducibility": null,
+      "duration_seconds": 0.0007660060000489466,
+      "metadata": {}
+    },
+    {
+      "task_id": "003_MATERIAL_MIGRATION_BASIC_EXPLICIT",
+      "agent_name": "data-interpreter",
+      "metrics": [],
+      "passed": false,
+      "timestamp": "2026-09-29T14:41:06.872521Z",
+      "error": "FileNotFoundError: [Errno 2] No such file or directory: '/home/florian/Projects/agentdatabench/venv-di/bin/python'",
+      "reproducibility": null,
+      "duration_seconds": 0.0008024560002013459,
+      "metadata": {}
+    },
+    {
+      "task_id": "004_PROJECT_MIGRATION_BASIC_EXPLICIT",
+      "agent_name": "data-interpreter",
+      "metrics": [],
+      "passed": false,
+      "timestamp": "2026-09-29T14:41:06.880599Z",
+      "error": "FileNotFoundError: [Errno 2] No such file or directory: '/home/florian/Projects/agentdatabench/venv-di/bin/python'",
+      "reproducibility": null,
+      "duration_seconds": 0.0007530370003223652,
+      "metadata": {}
+    },
+    {
+      "task_id": "005_PURCHASE_ORDER_MIGRATION_BASIC_EXPLICIT",
+      "agent_name": "data-interpreter",
+      "metrics": [],
+      "passed": false,
+      "timestamp": "2026-09-29T14:41:06.889901Z",
+      "error": "FileNotFoundError: [Errno 2] No such file or directory: '/home/florian/Projects/agentdatabench/venv-di/bin/python'",
+      "reproducibility": null,
+      "duration_seconds": 0.0008248260000982555,
+      "metadata": {}
+    },
+    {
+      "task_id": "006_PURCHASE_ORDER_MIGRATION_BASIC_EXPLICIT",
+      "agent_name": "data-interpreter",
+      "metrics": [],
+      "passed": false,
+      "timestamp": "2026-09-29T14:41:06.900863Z",
+      "error": "FileNotFoundError: [Errno 2] No such file or directory: '/home/florian/Projects/agentdatabench/venv-di/bin/python'",
+      "reproducibility": null,
+      "duration_seconds": 0.0009600250004950794,
+      "metadata": {}
+    },
+    {
+      "task_id": "007_BOM_MIGRATION_BASIC_EXPLICIT",
+      "agent_name": "data-interpreter",
+      "metrics": [],
+      "passed": false,
+      "timestamp": "2026-09-29T14:41:06.910406Z",
+      "error": "FileNotFoundError: [Errno 2] No such file or directory: '/home/florian/Projects/agentdatabench/venv-di/bin/python'",
+      "reproducibility": null,
+      "duration_seconds": 0.0008422060000157217,
+      "metadata": {}
+    },
+    {
+      "task_id": "008_PRICE_LIST_MIGRATION_BASIC_EXPLICIT",
+      "agent_name": "data-interpreter",
+      "metrics": [],
+      "passed": false,
+      "timestamp": "2026-09-29T14:41:06.918772Z",
+      "error": "FileNotFoundError: [Errno 2] No such file or directory: '/home/florian/Projects/agentdatabench/venv-di/bin/python'",
+      "reproducibility": null,
+      "duration_seconds": 0.0009075950001715682,
+      "metadata": {}
+    },
+    {
+      "task_id": "009_MATERIAL_MOVEMENTS_MIGRATION_BASIC_EXPLICIT",
+      "agent_name": "data-interpreter",
+      "metrics": [],
+      "passed": false,
+      "timestamp": "2026-09-29T14:41:06.927930Z",
+      "error": "FileNotFoundError: [Errno 2] No such file or directory: '/home/florian/Projects/agentdatabench/venv-di/bin/python'",
+      "reproducibility": null,
+      "duration_seconds": 0.0008130360001814552,
+      "metadata": {}
+    },
+    {
+      "task_id": "010_SALES_ORDER_MIGRATION_BASIC_EXPLICIT",
+      "agent_name": "data-interpreter",
+      "metrics": [],
+      "passed": false,
+      "timestamp": "2026-09-29T14:41:06.938691Z",
+      "error": "FileNotFoundError: [Errno 2] No such file or directory: '/home/florian/Projects/agentdatabench/venv-di/bin/python'",
+      "reproducibility": null,
+      "duration_seconds": 0.0009139750000031199,
+      "metadata": {}
+    }
+  ],
+  "summaries": [
+    {
+      "agent_name": "data-interpreter",
+      "total_tasks": 10,
+      "passed_tasks": 0,
+      "failed_tasks": 10,
+      "pass_rate": 0.0,
+      "success_rate": 0.0,
+      "average_duration_seconds": 0.0008600637001109135,
+      "average_metric_scores": {},
+      "average_metadata": {}
+    }
+  ]
+}
