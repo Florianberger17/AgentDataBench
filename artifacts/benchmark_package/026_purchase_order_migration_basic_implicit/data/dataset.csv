@@ -1,0 +1,101 @@
+﻿TransactionNo,ItemNo,MaterialNo,Description1,CostCenter,UnitOfMeasure,PriceUnit,OpenQuantity,OrderPrice,ConfirmedDate,Name
+21910,3,00-363457,punch knife 100 mm,,STK,Per 1 UoM,"670,64","48207,96",2027-02-25,Hansjörg Becker
+21910,7,00-058557,push unit 100 mm,,STK,Per 1 UoM,"56,45","23546,63",2027-06-02,Ramazan Häring
+21910,15,00-239747,running gear 500 kg,,STK,Per 1 UoM,"928,74","57157,81",2026-02-26,Magret Flantz
+21910,18,00-465285,insulation 10 mm,,STK,Per 1 UoM,"384,81","96633,71",2027-08-05,Agatha Haering B.Eng.
+21910,20,00-012994,transport arm 400 mm,,STK,Per 1 UoM,"699,75","67093,57",2026-03-15,Hansjörg Becker
+21910,22,,wire guide d1.0-2.0 mm,,STK,Per 1 UoM,"743,13","47879,80",2027-04-23,Hansjörg Becker
+22494,2,,socket 230v 16a,,STK,Per 100 UoM,"324,18","77471,89",2026-09-23,Ann-Kathrin Hein
+23379,1,,disc segment 45 deg,,STK,Per 100 UoM,"404,34","49266,95",2024-11-25,Magret Flantz
+23777,3,00-215131,channel 50x30 mm 1m,,STK,Per 1 UoM,"431,10","10149,27",2024-11-19,Ramazan Häring
+24335,3,,rubber washer d20x8x2 mm,0417-2005,STD,Per 1 UoM,"132,08","66286,00",2026-01-14,Agatha Haering B.Eng.
+25207,1,00-976042,guide roller d40 mm,,STK,Per 1 UoM,"838,90","73493,35",2027-06-09,Magret Flantz
+25502,4,00-605691,retraction 50 mm,,STK,Per 1 UoM,"663,96","14627,58",2024-11-13,Ann-Kathrin Hein
+25502,11,,pressure cylinder d50x100 mm,,STK,Per 100 UoM,"181,15","50806,29",2027-01-10,Ramazan Häring
+25502,24,00-338181,wall cover 1000x500 mm,,STK,Per 1 UoM,"630,51","39141,07",2026-01-20,Ramazan Häring
+25502,28,,mounting kit m8,,STK,Per 1 UoM,"118,43","97762,87",2025-05-17,Magret Flantz
+25541,1,,adjustment plate 80x50 mm,,STK,Per 1 UoM,"745,02","4507,50",2025-03-06,Ramazan Häring
+27736,1,00-691378,spindle slide 100 mm,,STK,Per 100 UoM,"747,06","23080,09",2026-12-27,Agatha Haering B.Eng.
+27736,4,00-000729,mandrel holder d20 mm,,STK,Per 1 UoM,"817,11","68531,38",2027-11-30,Ann-Kathrin Hein
+27855,1,00-803353,stabilizer rail 500 mm,,STK,Per 1 UoM,"611,94","36650,41",2024-06-25,Agatha Haering B.Eng.
+28762,1,,clamping band 500x20 mm,,STK,Per 1 UoM,"677,58","8932,13",2026-08-11,Agatha Haering B.Eng.
+28762,2,,tooth piece 30 mm,,STK,Per 1 UoM,"868,85","50075,71",2026-07-30,Magret Flantz
+28995,6,00-219904,reducer piece g1/2 - g3/8,,STK,Per 1 UoM,"690,13","88524,40",2027-03-06,Ann-Kathrin Hein
+28995,7,00-942683,step disc d60/d40 mm,,STK,Per 100 UoM,"827,57","50920,95",2024-01-03,Magret Flantz
+28999,1,,set 100-piece,,STK,Per 1 UoM,"434,19","71616,86",2027-05-06,Ann-Kathrin Hein
+29129,1,00-543120,joint d16 mm,,MON,Per 1 UoM,"71,05","30768,98",2027-08-19,Agatha Haering B.Eng.
+29139,1,00-803353,cam element r20,,STK,Per 100 UoM,"447,79","2472,61",2027-01-13,Ann-Kathrin Hein
+29288,1,,base unit 300x200 mm,,STK,Per 1 UoM,"671,79","76520,44",2028-01-09,Ramazan Häring
+29304,2,00-937279,slide shaft d20x300 mm,,STK,Per 1 UoM,"989,02","10547,98",2025-10-11,Ann-Kathrin Hein
+29313,1,,pressure roller d60x25 mm,,STK,Per 100 UoM,"994,89","83478,95",2025-11-08,Agatha Haering B.Eng.
+29431,1,00-799877,bending tool r5,,STK,Per 1 UoM,"382,17","58843,64",2024-11-08,Magret Flantz
+29470,1,,clamping block 80x50 mm,0417-2005,STK,Per 1 UoM,"17,70","21040,89",2024-05-24,Ann-Kathrin Hein
+29577,2,00-323980,cable mount d4mm,,STK,Per 100 UoM,"884,78","12227,81",2028-01-05,Agatha Haering B.Eng.
+29642,4,00-665521,welding device pneumatic,,STK,Per 1 UoM,"966,24","27557,22",2027-04-04,Magret Flantz
+29667,5,00-158472,pressure ring d40 mm,,STK,Per 1 UoM,"537,12","370,75",2026-09-07,Ann-Kathrin Hein
+29678,2,00-614491,positioning complete 50 mm,,STK,Per 1 UoM,"596,43","46463,80",2025-12-03,Ann-Kathrin Hein
+29709,1,,switching time 10 ms,0417-2005,STK,Per 1 UoM,"958,03","60275,45",2024-12-14,Magret Flantz
+29821,2,00-073880,brake unit 24v,,STK,Per 1 UoM,"391,67","44526,89",2024-05-05,Magret Flantz
+29908,1,,bearing plate 120x100 mm,,STK,Per 1 UoM,"3,78","39650,68",2024-12-07,Ann-Kathrin Hein
+29932,2,00-425549,positioning unit 0.01 mm,,STK,Per 1 UoM,"732,51","18864,78",2027-06-12,Ramazan Häring
+29932,6,00-914889,worm wheel z=30 m1.5,,STK,Per 1 UoM,"63,59","24442,13",2025-01-02,Magret Flantz
+29973,7,00-031138,sensor strip 200 mm,,STK,Per 1 UoM,"805,94","75755,07",2028-01-03,Ramazan Häring
+29973,14,00-322435,retaining pin d8x30 mm,,STK,Per 100 UoM,"789,55","55009,06",2025-09-30,Ann-Kathrin Hein
+29973,16,00-002495,control valve g1/4,,STK,Per 1 UoM,"957,14","68127,83",2024-10-23,Ann-Kathrin Hein
+29979,4,00-286114,slide block 100x60 mm,,STK,Per 1 UoM,"407,46","9632,26",2025-12-05,Ann-Kathrin Hein
+30005,1,00-051899,side frame 800x400 mm,,STK,Per 1 UoM,"406,08","28729,47",2026-06-12,Ann-Kathrin Hein
+30044,6,00-313156,pliers piece 30 mm,,STK,Per 100 UoM,"275,80","45238,70",2026-07-23,Ann-Kathrin Hein
+30148,1,,drive shaft d25x350 mm,0417-2005,STK,Per 1 UoM,"441,27","80068,29",2025-07-30,Magret Flantz
+30177,1,00-774381,piston head d50 mm,,STK,Per 1 UoM,"4,92","19367,69",2026-07-26,Ann-Kathrin Hein
+30196,6,00-806436,support bracket 100x100 mm,,STK,Per 1000 UoM,"705,33","9949,37",2024-05-06,Ann-Kathrin Hein
+30203,4,00-798598,deflection disc d80 mm,,STK,Per 100 UoM,"926,02","87898,48",2025-06-18,Ann-Kathrin Hein
+30251,5,00-770470,wire d1.5 mm,,STK,Per 1 UoM,"348,65","50856,13",2024-06-12,Ann-Kathrin Hein
+30321,3,00-009536,deflection roller d50x30 mm,,STK,Per 1 UoM,"232,98","20054,06",2024-12-26,Hansjörg Becker
+30321,11,00-042058,clamping system pneumatic,,STK,Per 1 UoM,"515,37","77734,04",2025-10-16,Ann-Kathrin Hein
+30339,1,,spring plate d50 mm,,STK,Per 1000 UoM,"414,02","67500,22",2024-08-05,Ann-Kathrin Hein
+30361,2,00-274462,extension plate 100x100 mm,,STK,Per 1 UoM,"388,84","7657,49",2024-08-03,Ramazan Häring
+30431,1,00-821324,roller skates 100 kg,,STK,Per 1 UoM,"331,02","72834,58",2026-08-01,Magret Flantz
+30443,5,00-302649,sector 60 deg,,STK,Per 1 UoM,"974,64","13474,15",2026-08-27,Ann-Kathrin Hein
+30445,1,00-981420,connection complete g1/2,,STK,Per 1 UoM,"669,77","42985,44",2025-01-14,Ann-Kathrin Hein
+30545,6,00-906673,flap complete 200x150 mm,,STK,Per 1 UoM,"696,12","64938,80",2025-04-14,Hansjörg Becker
+30555,2,00-096010,measuring head d40 mm,,STK,Per 1 UoM,"395,33","12575,14",2025-09-26,Ann-Kathrin Hein
+30564,6,00-098061,ram block 150x100 mm,,STK,Per 1 UoM,"396,84","5896,25",2026-01-31,Ann-Kathrin Hein
+30598,1,,sounds 85 db,0417-2005,STK,Per 1 UoM,"132,54","54915,08",2025-11-21,Magret Flantz
+30607,7,00-646950,vacuum nozzle d1.5 mm,,STK,Per 1 UoM,"384,84","97933,82",2024-02-19,Ann-Kathrin Hein
+30638,1,,lock piece 25 mm,0417-2005,STK,Per 1 UoM,"986,68","25441,31",2026-12-13,Hansjörg Becker
+30638,2,,guide slide 100 mm,0417-2005,STK,Per 1 UoM,"639,41","76022,31",2024-12-11,Ann-Kathrin Hein
+30638,3,,oil pan 500x400 mm,0417-2005,STK,Per 1 UoM,"674,37","62972,77",2025-02-10,Ann-Kathrin Hein
+30638,4,,linear slide 100 mm,0417-2005,STK,Per 1 UoM,"664,57","53542,43",2025-08-07,Magret Flantz
+30653,7,00-404502,rubber sleeve d25x50 mm,,STK,Per 1 UoM,"383,50","40612,33",2024-09-15,Hansjörg Becker
+30804,1,00-946527,adjustment unit 100 mm,,STK,Per 1 UoM,"270,13","85637,35",2024-04-23,Agatha Haering B.Eng.
+30812,1,,plug pin d5x25 mm,,STK,Per 1 UoM,"729,30","52949,72",2025-01-25,Ann-Kathrin Hein
+30828,5,00-008377,toothed belt 15 t5 / 600 mm,,STK,Per 1000 UoM,"784,06","29297,60",2025-02-23,Ramazan Häring
+30849,2,00-837330,forming ram 100 kN,,STK,Per 1 UoM,"799,05","65008,53",2026-11-22,Ann-Kathrin Hein
+30912,4,00-471947,hexagon pin sw8x40 mm,,STK,Per 1 UoM,"900,86","20315,24",2024-06-19,Magret Flantz
+30924,1,,slide bracket 60x60 mm,,MON,Per 1 UoM,"983,58","39252,13",2027-08-02,Agatha Haering B.Eng.
+30953,1,,journal pin d8x30 mm,,STK,Per 1 UoM,"932,33","69652,02",2025-08-05,Ramazan Häring
+30965,5,00-395971,wire guide block 40x40 mm,,STK,Per 1 UoM,"65,64","87597,69",2027-04-18,Ann-Kathrin Hein
+30965,10,00-512935,micro 5v,,STK,Per 1 UoM,"929,53","3458,50",2025-06-13,Hansjörg Becker
+30965,11,00-372069,compass 150 mm,,STK,Per 1 UoM,"243,93","31406,93",2024-10-15,Ann-Kathrin Hein
+30975,1,,adapter piece 50 mm,,STK,Per 1 UoM,"476,56","78992,94",2027-09-19,Ann-Kathrin Hein
+30998,1,,bushing d20/d16x20 mm,,STK,Per 1 UoM,"120,09","45902,64",2026-06-19,Magret Flantz
+31007,5,00-340048,punch tool d10 mm,,STK,Per 1000 UoM,"497,62","36032,64",2026-10-13,Ann-Kathrin Hein
+31015,1,,centring strip 250 mm,,STK,Per 1 UoM,"778,68","7304,49",2025-01-06,Agatha Haering B.Eng.
+31019,4,00-423048,shear knife 150 mm,,STK,Per 1 UoM,"524,08","4356,54",2027-10-30,Ramazan Häring
+31025,3,00-111643,ram block 100x100 mm,,STK,Per 100 UoM,"602,10","18914,63",2026-12-28,Ann-Kathrin Hein
+31025,4,00-550398,extension 100 mm,,STK,Per 1 UoM,"191,40","37159,48",2026-05-01,Ramazan Häring
+31030,2,00-814087,joint complete d16 mm,,STK,Per 1 UoM,"318,78","81553,14",2025-08-22,Ramazan Häring
+31041,1,00-430650,lever head d30 mm,,STK,Per 1 UoM,"335,59","45556,12",2027-07-08,Ramazan Häring
+31043,3,00-925348,position measurement system optical 500mm,,STK,Per 1 UoM,"728,56","27857,54",2026-09-22,Ann-Kathrin Hein
+31058,3,00-670749,control cabinet 600x600x200 mm,,STK,Per 1 UoM,"420,74","17498,37",2024-08-28,Hansjörg Becker
+31058,8,00-593429,vacuum suction cup d30 mm,,STK,Per 1 UoM,"698,03","22699,50",2027-08-27,Magret Flantz
+31064,2,00-676190,pipe clamp d20 mm,,STK,Per 1 UoM,"864,72","65605,96",2025-08-08,Magret Flantz
+31064,5,00-194376,line d8x1 5m,,STK,Per 100 UoM,"883,44","4397,38",2026-07-25,Ramazan Häring
+31064,8,00-753616,pressure piece complete d30 mm,,STK,Per 1 UoM,"288,18","79255,28",2024-07-12,Ramazan Häring
+31064,10,00-725665,housing side 200x100 mm,,STK,Per 1 UoM,"190,91","45103,16",2027-04-17,Agatha Haering B.Eng.
+31064,11,00-483055,probe d6x50 mm pt100,,STK,Per 1 UoM,"117,56","94811,98",2024-08-27,Ann-Kathrin Hein
+31064,13,00-993256,switch bracket 50x50 mm,,STK,Per 1 UoM,"756,26","20900,10",2026-06-18,Magret Flantz
+31066,8,00-267898,ejector plate 150x100 mm,,STD,Per 1 UoM,"491,52","82039,53",2026-11-15,Magret Flantz
+31076,1,,ram guide 400 mm,0417-2005,STK,Per 1 UoM,"114,38","90236,27",2026-06-29,Ann-Kathrin Hein
+31097,2,00-574722,gear drive 0.37 kw,,STD,Per 1 UoM,"904,35","33397,91",2025-12-16,Agatha Haering B.Eng.
+31149,1,00-625163,ejector sleeve d16/d10x80 mm,,MON,Per 1 UoM,"414,51","19331,49",2026-09-23,Agatha Haering B.Eng.

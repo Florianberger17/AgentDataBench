@@ -308,6 +308,31 @@ def _load_part_names(config: ColumnSynthesisConfig) -> tuple[list[str], Path]:
     return names.unique().tolist(), library_path
 
 
+def _draw_distinct_faker_values(provider, count: int, config: ColumnSynthesisConfig) -> list[str]:
+    """`count` distinct values from a faker provider.
+
+    Faker repeats itself, so drawing `count` times would yield duplicates and
+    silently collapse two real values onto one synthetic value - exactly what
+    the mapping strategies promise not to do. Draws until enough distinct
+    values exist instead, and gives up rather than looping forever on a
+    provider too low-cardinality for the column.
+    """
+    values: list[str] = []
+    seen: set[str] = set()
+    for _ in range(count * 100):
+        if len(values) == count:
+            return values
+        value = str(provider())
+        if value not in seen:
+            seen.add(value)
+            values.append(value)
+    raise ValueError(
+        f"Column '{config.column}' needs {count} distinct values from faker "
+        f"provider '{config.provider}', but only {len(values)} could be drawn - "
+        f"the provider is too low-cardinality for this column."
+    )
+
+
 def _draw_names(
     available: list[str],
     count: int,
@@ -500,6 +525,52 @@ def _is_blank(column: pd.Series) -> pd.Series:
     return column.isna() | (column.astype(str).str.strip() == "")
 
 
+class FakerMappingStrategy:
+    """One faker value per *distinct* real value, substituted consistently.
+
+    The Faker-backed sibling of `part_name_mapping`: where that one draws
+    replacements from a CSV library, this draws them from a faker provider,
+    which suits columns holding names faker actually models - companies,
+    cities, people - rather than part designations.
+
+    Every occurrence of the same real value becomes the same faker value, so
+    the repetition pattern and any pairing with another column survive while
+    no real value does. Values are drawn distinct, so two different real
+    values never collapse onto one.
+
+    Config keys: `provider` (required). Empty values stay empty.
+
+    Unlike `faker_categorical`, the substitution is row-faithful rather than
+    resampled: `faker_categorical` redraws the column from the real frequency
+    distribution, so row *i* has no relation to the real value in row *i*,
+    which breaks any pairing with a neighbouring column. Use that one to
+    preserve a frequency profile, this one to preserve the rows themselves.
+    """
+
+    def synthesize(
+        self,
+        real_series: pd.Series,
+        config: ColumnSynthesisConfig,
+        rng: random.Random,
+        faker: Faker,
+        n: int,
+        context: SynthesisContext = EMPTY_SYNTHESIS_CONTEXT,
+    ) -> pd.Series:
+        provider = getattr(faker, config.provider)
+
+        values = real_series.head(n)
+        present = values[~_is_blank(values)].astype(str).str.strip()
+        distinct = present.unique().tolist()
+
+        drawn = _draw_distinct_faker_values(provider, len(distinct), config)
+        substitution = dict(zip(distinct, drawn))
+        return values.map(
+            lambda value: value
+            if _is_blank_value(value)
+            else substitution[str(value).strip()]
+        ).reset_index(drop=True)
+
+
 class DateOffsetStrategy:
     """A date derived from another synthesized date column, drawn from the
     real offsets observed between the two (e.g. a confirmed delivery date as
@@ -629,27 +700,9 @@ class FakerCategoricalStrategy:
             )
 
         provider = getattr(faker, config.provider)
-        labels = self._distinct_labels(provider, len(value_counts))
+        labels = _draw_distinct_faker_values(provider, len(value_counts), config)
         weights = value_counts.tolist()
         return pd.Series(rng.choices(labels, weights=weights, k=n))
-
-    def _distinct_labels(self, provider, count: int) -> list[str]:
-        """Faker repeats itself, so draw until `count` distinct labels exist -
-        duplicates would silently lower the cardinality the strategy exists to
-        preserve."""
-        labels: list[str] = []
-        seen: set[str] = set()
-        for _ in range(count * 100):
-            if len(labels) == count:
-                return labels
-            label = str(provider())
-            if label not in seen:
-                seen.add(label)
-                labels.append(label)
-        raise ValueError(
-            f"Could not draw {count} distinct values from the configured faker "
-            f"provider - is it too low-cardinality for this column?"
-        )
 
 
 class ConditionalResampleStrategy:
@@ -731,4 +784,5 @@ DEFAULT_SYNTHESIS_STRATEGIES: dict[str, SynthesisStrategy] = {
     "part_name_mapping": PartNameMappingStrategy(),
     "conditional_resample": ConditionalResampleStrategy(),
     "numeric_mapping": NumericMappingStrategy(),
+    "faker_mapping": FakerMappingStrategy(),
 }

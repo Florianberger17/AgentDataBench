@@ -1,0 +1,85 @@
+table: purchase_order_header
+
+entity: PurchaseOrder
+
+description: >
+  Structural schema definition for purchase order headers in the target ERP
+  system. Each record represents one purchase order header, identified by
+  PO_NUMBER. This schema defines only data structure, not data quality
+  characteristics.
+
+attributes:
+
+  - name: PO_NUMBER
+    type: string
+    required: true
+    unique: true
+    description: Purchase order number consisting of the number range prefix and the padded legacy document number
+
+  - name: COMP_CODE
+    type: string
+    required: true
+    description: Company code
+
+  - name: DOC_TYPE
+    type: string
+    required: true
+    description: Document type
+
+  - name: VENDOR
+    type: string
+    required: true
+    description: Supplier number in the target ERP system, right-aligned to ten digits
+
+  - name: PURCH_ORG
+    type: string
+    required: true
+    description: Purchasing organisation
+
+  - name: PUR_GROUP
+    type: string
+    required: true
+    description: Purchasing group
+
+  - name: CURRENCY
+    type: string
+    required: true
+    format: ISO-4217
+    description: Document currency
+
+  - name: CREAT_DATE
+    type: date
+    required: true
+    format: DD.MM.YYYY
+    description: Creation date of the document
+
+  - name: LANGU
+    type: string
+    required: true
+    description: Correspondence language
+
+  - name: INCOTERMS1
+    type: string
+    required: true
+    description: Incoterm code in upper case
+
+  - name: INCOTERMS2
+    type: string
+    required: true
+    description: Incoterm location, or 0 where none is recorded
+
+  - name: OUR_REF
+    type: string
+    required: true
+    description: Document number of the legacy system
+
+constraints:
+
+  - id: CON-TGT-001
+    description: PO_NUMBER must be unique
+
+  - id: CON-TGT-002
+    description: VENDOR must be resolved via the central supplier mapping list
+
+  - id: CON-TGT-003
+    description: No field value may be empty

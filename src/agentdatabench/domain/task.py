@@ -167,7 +167,7 @@ class TaskInput(StrictBaseModel):
     # Formal schemas, or a small (e.g. 1-2 row) target_example the agent must
     # infer the mapping/target structure from instead - mutually exclusive,
     # see _schema_xor_target_example. Underspecified tasks
-    # (Metadata.specification_completeness == "underspecified") use
+    # (Metadata.specification_style == "implicit") use
     # target_example; the package can still keep a real target_schema.yaml
     # on disk for internal tooling (e.g. authoring ground_truth.csv) even
     # when it isn't referenced here, since only this reference controls
@@ -203,7 +203,7 @@ class TaskInput(StrictBaseModel):
 
 class TaskOutput(StrictBaseModel):
     format: str
-    # None for underspecified tasks (see TaskInput.target_example) - there
+    # None for implicit tasks (see TaskInput.target_example) - there
     # is no formal schema to reference.
     schema_reference: str | None = None
 
@@ -212,7 +212,7 @@ class Task(StrictBaseModel):
     task_id: str
     objective: str
     input: TaskInput
-    # None for an underspecified task (see TaskInput.target_example): naming
+    # None for an implicit task (see TaskInput.target_example): naming
     # the operation categories (filtering, value_mapping, ...) up front would
     # itself leak part of what the agent is supposed to infer.
     required_operations: list[str] | None = None

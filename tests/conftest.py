@@ -6,7 +6,7 @@ ARTIFACTS_ROOT = Path(__file__).parents[1] / "artifacts" / "benchmark_package"
 
 
 # Package directories were renamed/consolidated to the
-# <seq>_<domain>_<task_complexity>_<specification_completeness> scheme (see
+# <seq>_<domain>_<task_complexity>_<specification_style> scheme (see
 # artifacts/benchmark_package/). Fixtures below are matched to their original
 # role by task_id (stable across the rename), not by directory number.
 

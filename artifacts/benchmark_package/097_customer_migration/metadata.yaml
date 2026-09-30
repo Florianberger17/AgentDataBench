@@ -9,7 +9,7 @@ author: Florian Berger
 created: 01/07/2026
 
 task_complexity: basic
-specification_completeness: explicit
+specification_style: explicit
 data_quality: noisy
 
 seed: 

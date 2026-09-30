@@ -17,6 +17,7 @@ without changing Validator itself by passing a custom `package_checks` list.
 
 from __future__ import annotations
 
+import re
 from pathlib import Path
 from typing import Protocol
 
@@ -24,6 +25,7 @@ import pandas as pd
 
 from agentdatabench.domain.benchmark_package import BenchmarkPackage
 from agentdatabench.domain.common import load_yaml
+from agentdatabench.domain.dataset import Dataset
 from agentdatabench.domain.noise_configuration import NoiseConfiguration
 from agentdatabench.domain.task import Task
 from agentdatabench.domain.validation_result import ValidationIssue, ValidationResult
@@ -112,7 +114,7 @@ class SchemaConformanceCheck:
     already documents real packages whose clean dataset legitimately isn't
     shaped like the source schema.
 
-    Both checks are no-ops for an underspecified task (see
+    Both checks are no-ops for an implicit task (see
     TaskInput.target_example): there is no formal schema to check
     ground_truth.csv/clean_dataset.csv against."""
 
@@ -215,7 +217,19 @@ class SchemaConformanceCheck:
         ]
 
 
+# "2,54991E+12" and the like: what Excel writes back when a CSV holding long
+# numbers is opened and saved. The conversion keeps six significant digits and
+# discards the rest, so distinct identifiers silently collapse onto one value -
+# measured on a real material cross reference, 107 part numbers came out as 78
+# material numbers. Irreversible, hence an error rather than a warning.
+_SCIENTIFIC_NOTATION_PATTERN = re.compile(r"^-?\d+[.,]\d+[Ee][+-]?\d+$")
+
+
 class CsvStructureCheck:
+    """Structural sanity of the package's CSVs, independent of their content:
+    they have to hold columns and rows, and must not carry values mangled by a
+    spreadsheet round-trip."""
+
     def check(self, package: BenchmarkPackage) -> list[ValidationIssue]:
         issues: list[ValidationIssue] = []
         datasets = {
@@ -223,6 +237,9 @@ class CsvStructureCheck:
             "clean_dataset.csv": package.clean_dataset,
             "ground_truth.csv": package.ground_truth,
         }
+        for reference in package.task.input.reference_data or []:
+            datasets[reference.file] = Dataset(package.root / reference.file)
+
         for label, dataset in datasets.items():
             df = dataset.df
             if df.shape[1] == 0:
@@ -237,6 +254,28 @@ class CsvStructureCheck:
                         severity="error", code="empty_csv", message=f"{label} has no rows"
                     )
                 )
+            issues.extend(self._scientific_notation(label, df))
+        return issues
+
+    def _scientific_notation(self, label: str, df: pd.DataFrame) -> list[ValidationIssue]:
+        issues: list[ValidationIssue] = []
+        for column in df.columns:
+            values = df[column].dropna().astype(str).str.strip()
+            hits = values[values.str.match(_SCIENTIFIC_NOTATION_PATTERN)]
+            if hits.empty:
+                continue
+            issues.append(
+                ValidationIssue(
+                    severity="error",
+                    code="scientific_notation",
+                    message=(
+                        f"{label} column '{column}' holds {len(hits)} value(s) in "
+                        f"scientific notation (e.g. {hits.iloc[0]!r}) - a spreadsheet "
+                        f"round-trip has truncated them to six significant digits and "
+                        f"the original values cannot be recovered"
+                    ),
+                )
+            )
         return issues
 
 
@@ -312,7 +351,7 @@ class ReproducibilityCheck:
     """Re-derives dataset.csv and ground_truth.csv from clean_dataset.csv and
     compares them to what is on disk. Deliberately does not touch source_data/
     or synthesis_configuration.yaml (out of scope, see module docstring).
-    The ground_truth.csv half of this is skipped for an underspecified task
+    The ground_truth.csv half of this is skipped for an implicit task
     (package.target_schema is None, see TaskInput.target_example) - dataset.csv
     reproducibility still applies regardless."""
 
@@ -349,7 +388,7 @@ class ReproducibilityCheck:
             )
 
         # GroundTruthCreator needs a formal target schema to re-derive the
-        # expected output - an underspecified task (see
+        # expected output - an implicit task (see
         # TaskInput.target_example) has none, so ground_truth.csv's
         # reproducibility can't be checked this way for it.
         if package.target_schema is not None:

@@ -157,7 +157,7 @@ def test_validate_pkg5_no_noise_configuration_is_reproducible(pkg5_root):
 
 
 def _underspecify(work_root):
-    """Turns a copied real package into an underspecified one: drops schema
+    """Turns a copied real package into an implicit one: drops schema
     references from task.yaml in favor of a small target_example.csv."""
     ground_truth_lines = (work_root / "ground_truth" / "ground_truth.csv").read_text().splitlines()
     (work_root / "data" / "target_example.csv").write_text(
@@ -173,11 +173,11 @@ def _underspecify(work_root):
 
     meta_path = work_root / "metadata.yaml"
     meta_data = yaml.safe_load(meta_path.read_text())
-    meta_data["specification_completeness"] = "underspecified"
+    meta_data["specification_style"] = "implicit"
     meta_path.write_text(yaml.safe_dump(meta_data))
 
 
-def test_validate_underspecified_package_skips_schema_dependent_checks(pkg1_root, tmp_path):
+def test_validate_implicit_package_skips_schema_dependent_checks(pkg1_root, tmp_path):
     work_root = _copy(pkg1_root, tmp_path / "pkg")
     _underspecify(work_root)
 
@@ -195,7 +195,7 @@ def test_validate_underspecified_package_skips_schema_dependent_checks(pkg1_root
     assert result.is_valid, [i.message for i in result.issues]
 
 
-def test_validate_underspecified_package_detects_missing_target_example(pkg1_root, tmp_path):
+def test_validate_implicit_package_detects_missing_target_example(pkg1_root, tmp_path):
     work_root = _copy(pkg1_root, tmp_path / "pkg")
     _underspecify(work_root)
     (work_root / "data" / "target_example.csv").unlink()
@@ -206,3 +206,32 @@ def test_validate_underspecified_package_detects_missing_target_example(pkg1_roo
     assert any(
         i.code == "missing_file" and "target_example" in i.message for i in result.issues
     )
+
+
+def test_validate_detects_scientific_notation_from_a_spreadsheet_round_trip(pkg1_root, tmp_path):
+    """Excel rewrites long numbers as "2,54991E+12", keeping six significant
+    digits - distinct identifiers then collapse onto one value, irreversibly."""
+    work_root = _copy(pkg1_root, tmp_path / "pkg")
+    ground_truth = work_root / "ground_truth" / "ground_truth.csv"
+    df = pd.read_csv(ground_truth, dtype=str, encoding="utf-8-sig")
+    df.loc[0, df.columns[0]] = "2,54991E+12"
+    df.to_csv(ground_truth, index=False, encoding="utf-8-sig")
+
+    result = Validator().validate(work_root)
+
+    codes = [issue.code for issue in result.issues]
+    assert "scientific_notation" in codes
+    assert not result.is_valid
+
+
+def test_validate_accepts_plain_long_numbers_and_decimal_commas(pkg1_root, tmp_path):
+    """A 13-digit number and a comma decimal are normal data, not damage."""
+    work_root = _copy(pkg1_root, tmp_path / "pkg")
+    ground_truth = work_root / "ground_truth" / "ground_truth.csv"
+    df = pd.read_csv(ground_truth, dtype=str, encoding="utf-8-sig")
+    df.loc[0, df.columns[0]] = "2549910000000"
+    df.loc[1, df.columns[0]] = "12,50"
+    df.to_csv(ground_truth, index=False, encoding="utf-8-sig")
+
+    codes = [issue.code for issue in Validator().validate(work_root).issues]
+    assert "scientific_notation" not in codes

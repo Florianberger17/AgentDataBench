@@ -1,0 +1,23 @@
+task_id: 023_MATERIAL_MIGRATION_BASIC_IMPLICIT
+
+objective: >
+  Transform the provided part master dataset into the structure and format
+  shown by the target example, and produce a CSV file containing one row
+  for every part whose part status is 1 or lower. The ERP number is not
+  contained in the source dataset: assign a consecutive number starting
+  at 30000000000, in the order of the filtered dataset.
+  No formal source or target schema is given - infer the required structure, the field mapping and the value formats yourself by comparing the input dataset against the target example.
+
+input:
+  source_dataset: data/dataset.csv
+  target_example: data/target_example.csv
+
+business_rules: {}
+
+output:
+  format: csv
+
+constraints:
+  - Each output row shall represent one valid part record.
+  - No additional columns beyond those shown in the target example may be added.
+  - The column order must match the target example.

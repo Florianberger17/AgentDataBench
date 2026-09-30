@@ -10,7 +10,7 @@ VALID = {
     "author": "Florian Berger",
     "created": "01/07/2026",
     "task_complexity": "basic",
-    "specification_completeness": "explicit",
+    "specification_style": "explicit",
     "data_quality": "clean",
     "seed": None,
 }
@@ -33,8 +33,8 @@ def test_metadata_invalid_task_complexity_raises():
         Metadata(**data)
 
 
-def test_metadata_invalid_specification_completeness_raises():
-    data = {**VALID, "specification_completeness": "vague"}
+def test_metadata_invalid_specification_style_raises():
+    data = {**VALID, "specification_style": "vague"}
     with pytest.raises(ValidationError):
         Metadata(**data)
 

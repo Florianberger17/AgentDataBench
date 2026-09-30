@@ -7,7 +7,7 @@ does not cross-validate CSV columns against schemas, since real example packages
 are not fully consistent in that respect (e.g. a package's "clean" dataset can
 already be in target-schema shape).
 
-``source_schema``/``target_schema`` are None for underspecified tasks (see
+``source_schema``/``target_schema`` are None for implicit tasks (see
 ``TaskInput.target_example``) - ``target_example`` is populated instead, a
 small Dataset of example target rows the agent must infer the mapping/target
 structure from itself.

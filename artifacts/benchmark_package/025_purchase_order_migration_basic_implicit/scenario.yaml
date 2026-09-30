@@ -1,0 +1,28 @@
+scenario_id: 025_PURCHASE_ORDER_MIGRATION_BASIC_IMPLICIT
+
+name: ERP Purchase Order Migration
+
+domain: ERP Data Integration
+
+description: >
+  Purchase order headers are migrated from a legacy ERP system to a new ERP
+  system as part of a system modernization project. The source system stores
+  purchase orders using the legacy data model and identifies suppliers by
+  their legacy supplier numbers, while the target ERP system requires the data
+  in a different schema with standardized identifiers and attribute values.
+  Supplier numbers are not carried over and must be resolved via a central
+  supplier mapping list maintained outside the source system.
+
+business_objects:
+  - PurchaseOrder
+
+systems:
+  source:
+    name: Legacy ERP System
+    description: >
+      Stores purchase order headers using the legacy data model.
+
+  target:
+    name: Target ERP System
+    description: >
+      Stores purchase order headers using the target ERP data model.

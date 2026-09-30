@@ -18,8 +18,8 @@ def test_load_pkg1_customer_migration(pkg1_root):
     assert not pkg.ground_truth.df.empty
 
 
-def _underspecified_variant(pkg_root, tmp_path):
-    """Copies a real (explicit) package and turns it into an underspecified
+def _implicit_variant(pkg_root, tmp_path):
+    """Copies a real (explicit) package and turns it into an implicit
     one: drops the schema references from task.yaml in favor of a small
     target_example.csv built from the first two ground_truth.csv rows -
     mirrors how a hand-authored level 2/4 package would look."""
@@ -39,14 +39,14 @@ def _underspecified_variant(pkg_root, tmp_path):
 
     meta_path = work_root / "metadata.yaml"
     meta_data = yaml.safe_load(meta_path.read_text())
-    meta_data["specification_completeness"] = "underspecified"
+    meta_data["specification_style"] = "implicit"
     meta_path.write_text(yaml.safe_dump(meta_data))
 
     return work_root
 
 
-def test_load_underspecified_package_has_no_schemas_but_has_target_example(pkg1_root, tmp_path):
-    work_root = _underspecified_variant(pkg1_root, tmp_path)
+def test_load_implicit_package_has_no_schemas_but_has_target_example(pkg1_root, tmp_path):
+    work_root = _implicit_variant(pkg1_root, tmp_path)
 
     pkg = BenchmarkPackage.load(work_root)
 

@@ -1,0 +1,37 @@
+task_id: 028_PRICE_LIST_MIGRATION_BASIC_IMPLICIT
+
+objective: >
+  Transform the provided price list dataset into the structure and format
+  shown by the target example. Price records that are generally invalid
+  shall not be migrated. The material number of the target system is not
+  contained in the source dataset and shall be resolved via the central
+  material cross reference list. The start of validity is stored as a
+  serial day number counted from 30.12.1899 and shall be converted to a
+  calendar date; price records without a recorded start of validity become
+  valid on the cutover date 01.06.2025. Every condition record is migrated
+  without a limitation of the validity period, ending 31.12.9999, and
+  refers to the unit of measure ST.
+  No formal source or target schema is given - infer the required structure, the field mapping and the value formats yourself by comparing the input dataset against the target example.
+
+input:
+  source_dataset: data/dataset.csv
+  target_example: data/target_example.csv
+  reference_data:
+    - name: material_cross_reference
+      file: data/mapping_list_materials.csv
+      key_field: "part no. legacy system"
+      value_field: "part no. new system"
+      description: >
+        Assigns the part numbers of the legacy ERP system to the material
+        numbers of the target ERP system.
+
+
+business_rules: {}
+
+output:
+  format: csv
+
+constraints:
+  - Each output row shall represent one condition record.
+  - No additional columns beyond those shown in the target example may be added.
+  - The column order must match the target example.

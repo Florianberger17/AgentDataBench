@@ -559,3 +559,100 @@ def test_part_name_mapping_honours_the_same_length_guarantee(tmp_path):
 
     assert int((result["description"].str.len() > 40).sum()) >= 1
     assert result["description"].iloc[0] == result["description"].iloc[1]
+
+
+# Fabricated placeholder data, not real company data.
+REPEATED_SUPPLIER_SOURCE_DF = pd.DataFrame(
+    {
+        "SupplierNo": ["2787004", "2787004", "2314005", "2787004", "2865002"],
+        "SupplierName": ["Alpha AG", "Alpha AG", "Beta GmbH", "Alpha AG", "Gamma KG"],
+    }
+)
+
+FAKER_MAPPING_CONFIG = SynthesisConfiguration(
+    seed=17,
+    columns=[
+        {"column": "SupplierNo", "strategy": "identity"},
+        {"column": "SupplierName", "strategy": "faker_mapping", "provider": "company"},
+    ],
+)
+
+
+def test_faker_mapping_replaces_equal_values_with_equal_faker_values():
+    result = DatasetCreator().create_clean_dataset(
+        REPEATED_SUPPLIER_SOURCE_DF, FAKER_MAPPING_CONFIG
+    )
+
+    names = result["SupplierName"]
+    assert names.iloc[0] == names.iloc[1] == names.iloc[3]  # the three "Alpha AG" rows
+    assert names.iloc[2] != names.iloc[4]
+
+
+def test_faker_mapping_lets_no_real_value_survive():
+    result = DatasetCreator().create_clean_dataset(
+        REPEATED_SUPPLIER_SOURCE_DF, FAKER_MAPPING_CONFIG
+    )
+
+    assert not set(result["SupplierName"]) & set(REPEATED_SUPPLIER_SOURCE_DF["SupplierName"])
+
+
+def test_faker_mapping_never_collapses_two_values_onto_one():
+    """Faker repeats itself when drawn naively - two distinct real values
+    must still end up distinct."""
+    result = DatasetCreator().create_clean_dataset(
+        REPEATED_SUPPLIER_SOURCE_DF, FAKER_MAPPING_CONFIG
+    )
+
+    pairs = dict(zip(REPEATED_SUPPLIER_SOURCE_DF["SupplierName"], result["SupplierName"]))
+    assert len(set(pairs.values())) == REPEATED_SUPPLIER_SOURCE_DF["SupplierName"].nunique()
+
+
+def test_faker_mapping_preserves_the_repetition_profile():
+    result = DatasetCreator().create_clean_dataset(
+        REPEATED_SUPPLIER_SOURCE_DF, FAKER_MAPPING_CONFIG
+    )
+
+    real = REPEATED_SUPPLIER_SOURCE_DF["SupplierName"].value_counts().tolist()
+    assert result["SupplierName"].value_counts().tolist() == real
+
+
+def test_faker_mapping_keeps_the_pairing_with_another_column():
+    """A supplier number must not end up with two different names."""
+    result = DatasetCreator().create_clean_dataset(
+        REPEATED_SUPPLIER_SOURCE_DF, FAKER_MAPPING_CONFIG
+    )
+
+    assert result.groupby("SupplierNo")["SupplierName"].nunique().max() == 1
+
+
+def test_faker_mapping_leaves_empty_values_empty():
+    source = pd.DataFrame({"SupplierNo": ["1", "2"], "SupplierName": ["Alpha AG", None]})
+    result = DatasetCreator().create_clean_dataset(source, FAKER_MAPPING_CONFIG)
+
+    assert pd.isna(result["SupplierName"].iloc[1])
+    assert result["SupplierName"].iloc[0] != "Alpha AG"
+
+
+def test_faker_mapping_is_reproducible_for_the_same_seed():
+    first = DatasetCreator().create_clean_dataset(
+        REPEATED_SUPPLIER_SOURCE_DF, FAKER_MAPPING_CONFIG
+    )
+    second = DatasetCreator().create_clean_dataset(
+        REPEATED_SUPPLIER_SOURCE_DF, FAKER_MAPPING_CONFIG
+    )
+
+    assert first.equals(second)
+
+
+def test_faker_mapping_raises_on_a_provider_too_low_cardinality():
+    """`boolean` yields only True/False - it cannot cover three distinct
+    real values, and the strategy says so instead of looping forever."""
+    config = SynthesisConfiguration(
+        seed=17,
+        columns=[
+            {"column": "SupplierNo", "strategy": "identity"},
+            {"column": "SupplierName", "strategy": "faker_mapping", "provider": "boolean"},
+        ],
+    )
+    with pytest.raises(ValueError, match="too low-cardinality"):
+        DatasetCreator().create_clean_dataset(REPEATED_SUPPLIER_SOURCE_DF, config)

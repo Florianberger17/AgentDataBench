@@ -1,0 +1,65 @@
+table: purchase_order_header
+
+entity: PurchaseOrder
+
+description: >
+  Structural schema definition for purchase order header data in a legacy ERP
+  system. Each record represents one purchase order header, identified by
+  TransactionNo. This schema defines only data structure, not data quality
+  characteristics.
+
+attributes:
+
+  - name: TransactionType
+    type: string
+    required: true
+    description: Type of the business document
+
+  - name: TransactionNo
+    type: integer
+    required: true
+    unique: true
+    description: Document number of the purchase order
+
+  - name: Status
+    type: string
+    required: true
+    description: Processing status of the purchase order
+
+  - name: SupplierNo
+    type: integer
+    required: true
+    description: Supplier number in the legacy ERP system
+
+  - name: SupplierName
+    type: string
+    required: true
+    description: Supplier name
+
+  - name: Planner4
+    type: string
+    required: true
+    description: Planner code of the responsible purchaser
+
+  - name: Incoterm
+    type: string
+    required: true
+    description: Incoterm code
+
+  - name: IncotermLocation
+    type: string
+    required: false
+    description: Incoterm location
+
+  - name: Preferred Language
+    type: string
+    required: true
+    description: Correspondence language of the supplier
+
+constraints:
+
+  - id: CON-SRC-001
+    description: TransactionNo must be unique
+
+  - id: CON-SRC-002
+    description: SupplierNo must be provided

@@ -1,0 +1,74 @@
+table: price_list
+
+entity: PriceRecord
+
+description: >
+  Source schema containing price list data exported from the legacy ERP
+  system. Each record represents the price of one part within one price list.
+
+attributes:
+
+  - name: price list no.
+    type: integer
+    required: true
+    description: >
+      Identifier of the price list the record belongs to.
+
+  - name: item no.
+    type: integer
+    required: true
+    description: >
+      Position number of the record within the price list.
+
+  - name: part no.
+    type: string
+    required: true
+    description: >
+      Legacy part number of the priced part.
+
+  - name: description
+    type: string
+    required: true
+    description: >
+      Designation of the part.
+
+  - name: quantity base
+    type: string
+    required: true
+    description: >
+      Quantity the price refers to.
+
+  - name: currency
+    type: string
+    required: true
+    format: ISO-4217
+    description: >
+      Currency of the price.
+
+  - name: validity
+    type: string
+    required: true
+    allowed_values:
+      - generally valid
+      - generally invalid
+      - valid from
+    description: >
+      Validity indicator of the price record.
+
+  - name: valid from date
+    type: integer
+    required: false
+    description: >
+      Date from which the price is valid, recorded as a serial day number
+      counted from 30.12.1899.
+
+  - name: price
+    type: decimal
+    required: true
+    description: >
+      Price of the part.
+
+constraints:
+
+  - id: CON-SRC-001
+    description: The combination of price list no. and part no. must be unique

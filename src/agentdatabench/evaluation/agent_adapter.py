@@ -168,8 +168,8 @@ class AgentAdapter(ABC):
         `_build_prompt`.
 
         Exactly one of (source_schema + target_schema) or target_example is
-        present (TaskInput enforces this) - an underspecified task
-        (Metadata.specification_completeness == "underspecified") gives the
+        present (TaskInput enforces this) - an implicit task
+        (Metadata.specification_style == "implicit") gives the
         agent a small example of the target output instead of formal
         schemas, and it must infer the mapping/structure itself."""
         shutil.copy(package.dataset.path, workspace / "dataset.csv")
@@ -218,7 +218,7 @@ class AgentAdapter(ABC):
 
     def _render_schema_or_target_example(self, task_input: TaskInput, workspace: Path) -> list[str]:
         """Formal schemas for an explicit task, or a small target_example for
-        an underspecified one (see TaskInput) - never both, TaskInput's own
+        an implicit one (see TaskInput) - never both, TaskInput's own
         validator guarantees exactly one is set."""
         if task_input.source_schema and task_input.target_schema:
             return [
@@ -235,7 +235,7 @@ class AgentAdapter(ABC):
         ]
 
     def _render_required_operations(self, required_operations: list[str] | None) -> list[str]:
-        """Omitted entirely for an underspecified task (required_operations
+        """Omitted entirely for an implicit task (required_operations
         is None, see Task) - naming the operation categories up front (e.g.
         "value_mapping", "field_concatenation") would itself be a hint the
         agent is supposed to infer on its own from the target example."""

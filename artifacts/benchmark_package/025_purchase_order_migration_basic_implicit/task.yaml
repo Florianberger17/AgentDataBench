@@ -1,0 +1,37 @@
+task_id: 025_PURCHASE_ORDER_MIGRATION_BASIC_IMPLICIT
+
+objective: >
+  Transform the provided purchase order header dataset into the structure
+  and format shown by the target example. Purchase orders whose status is
+  "Recorded" shall not be migrated. The purchase order number is formed by
+  right-aligning the legacy document number to five digits with leading
+  zeros and prepending the number range prefix 97000. The supplier number
+  of the target system is not contained in the source dataset and shall be
+  resolved via the central supplier mapping list. Every record receives the
+  fixed company code 898, document type NB, purchasing organisation 898,
+  currency EUR and creation date 30.05.2025. Where no incoterm location is
+  recorded, the target system expects the value 0.
+  No formal source or target schema is given - infer the required structure, the field mapping and the value formats yourself by comparing the input dataset against the target example.
+
+input:
+  source_dataset: data/dataset.csv
+  target_example: data/target_example.csv
+  reference_data:
+    - name: supplier_mapping
+      file: data/mapping_list_suppliers.csv
+      key_field: "Supplier No. Legacy System"
+      value_field: "Supplier Number New"
+      description: >
+        Assigns the supplier numbers of the legacy ERP system to the supplier
+        numbers of the target ERP system.
+
+
+business_rules: {}
+
+output:
+  format: csv
+
+constraints:
+  - Each output row shall represent one purchase order header.
+  - No additional columns beyond those shown in the target example may be added.
+  - The column order must match the target example.

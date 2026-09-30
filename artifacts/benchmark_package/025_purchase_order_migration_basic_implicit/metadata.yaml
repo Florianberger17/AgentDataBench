@@ -1,0 +1,19 @@
+scenario_id: 025_PURCHASE_ORDER_MIGRATION_BASIC_IMPLICIT
+
+task_id: 025_PURCHASE_ORDER_MIGRATION_BASIC_IMPLICIT
+
+version: 1.0
+
+author: Florian Berger
+
+created: 01/07/2026
+
+task_complexity: basic
+specification_style: implicit
+data_quality: clean
+
+seed: 
+
+
+
+

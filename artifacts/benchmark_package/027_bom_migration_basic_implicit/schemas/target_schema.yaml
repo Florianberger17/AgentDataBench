@@ -1,0 +1,82 @@
+table: bill_of_material
+
+entity: BillOfMaterial
+
+description: >
+  Target schema for bill of material data in the new ERP system. Each record
+  represents one position of one bill of material, identified by the
+  combination of MATNR and POSNR.
+
+attributes:
+
+  - name: MATNR
+    type: string
+    required: true
+    description: >
+      Material number of the bill of material header, consisting of 13 digits.
+
+  - name: MAKTX
+    type: string
+    required: true
+    description: >
+      Material description of the bill of material header.
+
+  - name: POSNR
+    type: integer
+    required: true
+    description: >
+      Position number of the component within the bill of material.
+
+  - name: POSTP
+    type: string
+    required: true
+    allowed_values:
+      - L
+      - T
+    description: >
+      Item category of the position. L denotes a stock item, T a text item.
+
+  - name: IDNRK
+    type: string
+    required: false
+    description: >
+      Material number of the component, consisting of 13 digits.
+
+  - name: MAKTX_COMP
+    type: string
+    required: false
+    description: >
+      Material description of the component.
+
+  - name: MENGE
+    type: decimal
+    required: true
+    description: >
+      Required quantity of the component.
+
+  - name: MEINS_POS
+    type: string
+    required: true
+    description: >
+      Unit of measure of the required quantity.
+
+  - name: POTX1
+    type: string
+    required: false
+    description: >
+      Description text of a text item.
+
+constraints:
+
+  - id: CON-TGT-001
+    description: The combination of MATNR and POSNR must be unique
+
+  - id: CON-TGT-002
+    description: >
+      IDNRK and MAKTX_COMP must be provided for positions with item category L
+      and must be empty for positions with item category T
+
+  - id: CON-TGT-003
+    description: >
+      POTX1 must be provided for positions with item category T and must be
+      empty for positions with item category L

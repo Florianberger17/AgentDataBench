@@ -20,12 +20,12 @@ class Metadata(StrictBaseModel):
     # task specification (schemas, mapping rules) is actually given to the
     # agent vs. left for it to infer. The four combinations are the
     # project's four benchmark difficulty levels (basic+explicit = level 1,
-    # basic+underspecified = level 2, realistic+explicit = level 3,
-    # realistic+underspecified = level 4) - kept as two fields instead of a
+    # basic+implicit = level 2, realistic+explicit = level 3,
+    # realistic+implicit = level 4) - kept as two fields instead of a
     # single "level" enum so scores can later be aggregated/filtered by
     # either axis independently.
     task_complexity: Literal["basic", "realistic"]
-    specification_completeness: Literal["explicit", "underspecified"]
+    specification_style: Literal["explicit", "implicit"]
     # A third independent axis, same rationale as the two above: whether the
     # source data has injected data-quality issues (typos, missing values,
     # duplicates - see noise_configuration.yaml) the agent must correct

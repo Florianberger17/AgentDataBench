@@ -1,0 +1,42 @@
+seed: 1001
+
+locale: de_DE
+
+columns:
+
+  - column: CustNo
+    strategy: unique_sequence
+    format: "CUST{:06d}"
+    start: 1
+
+  - column: CompanyName
+    strategy: faker
+    provider: company
+
+  - column: StreetAddress
+    strategy: faker
+    provider: street_name
+
+  - column: HouseNo
+    strategy: faker
+    provider: building_number
+
+  - column: ZipCode
+    strategy: faker
+    provider: postcode
+
+  - column: Town
+    strategy: faker
+    provider: city
+
+  - column: CountryCode
+    strategy: identity
+
+  # ISO dates in the source export; date_distribution needs the format
+  # spelled out to parse the real values and re-emit the synthetic ones.
+  - column: LastOrderDate
+    strategy: date_distribution
+    field_format: "YYYY-MM-DD"
+
+  - column: CustomerType
+    strategy: categorical_resample

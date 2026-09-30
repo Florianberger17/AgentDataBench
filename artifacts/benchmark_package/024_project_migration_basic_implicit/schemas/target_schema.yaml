@@ -1,0 +1,81 @@
+table: project_definition
+
+entity: Project
+
+description: >
+  Structural schema definition for project definitions in the target ERP
+  system. Each record represents one project, identified by Project Definition.
+  This schema defines only data structure, not data quality characteristics.
+
+attributes:
+
+  - name: "Project Definition"
+    type: string
+    required: true
+    unique: true
+    description: Identifier of the project definition
+
+  - name: "Project Profile"
+    type: string
+    required: true
+    description: Project profile controlling the project settings
+
+  - name: "Short Description"
+    type: string
+    required: true
+    description: Short description of the project
+
+  - name: "Person Responsible ID"
+    type: integer
+    required: true
+    description: Identifier of the person responsible for the project
+
+  - name: "Company Code"
+    type: string
+    required: true
+    description: Company code the project is assigned to
+
+  - name: "Project Currency"
+    type: string
+    required: true
+    format: ISO-4217
+    description: Currency key of the project
+
+  - name: "Start Date"
+    type: date
+    required: true
+    description: Planned start date of the project
+
+  - name: "Finish Date"
+    type: date
+    required: false
+    description: Planned finish date of the project
+
+  - name: "Factory Calendar Key"
+    type: integer
+    required: true
+    description: Factory calendar used for project scheduling
+
+  - name: "Planning Profile"
+    type: string
+    required: true
+    description: Planning profile of the project
+
+  - name: "Network Assignment"
+    type: integer
+    required: true
+    description: Assignment type of the network to the project
+
+constraints:
+
+  - id: CON-TGT-001
+    description: Project Definition must be unique
+
+  - id: CON-TGT-002
+    description: Short Description must not be empty
+
+  - id: CON-TGT-003
+    description: Project Currency must follow ISO 4217 format
+
+  - id: CON-TGT-004
+    description: Finish Date, if provided, must not be earlier than Start Date

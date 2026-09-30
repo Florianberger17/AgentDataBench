@@ -302,8 +302,8 @@ def test_prompt_omits_additional_documents_section_when_absent(pkg1_root):
     assert "Additional documents" not in adapter.captured_prompt
 
 
-def _underspecified_package(pkg1_root, tmp_path):
-    """Copies a real (explicit) package and turns it into an underspecified
+def _implicit_package(pkg1_root, tmp_path):
+    """Copies a real (explicit) package and turns it into an implicit
     one: drops schema references from task.yaml in favor of a small
     target_example.csv - mirrors a hand-authored level 2/4 package."""
     package_root = tmp_path / "pkg"
@@ -323,14 +323,14 @@ def _underspecified_package(pkg1_root, tmp_path):
 
     meta_path = package_root / "metadata.yaml"
     meta_data = yaml.safe_load(meta_path.read_text())
-    meta_data["specification_completeness"] = "underspecified"
+    meta_data["specification_style"] = "implicit"
     meta_path.write_text(yaml.safe_dump(meta_data))
 
     return BenchmarkPackage.load(package_root)
 
 
 def test_prepare_workspace_copies_target_example_instead_of_schemas(pkg1_root, tmp_path):
-    package = _underspecified_package(pkg1_root, tmp_path)
+    package = _implicit_package(pkg1_root, tmp_path)
     adapter = _EchoingFakeAdapter(name="echo")
 
     result = asyncio.run(adapter.run(package))
@@ -341,7 +341,7 @@ def test_prepare_workspace_copies_target_example_instead_of_schemas(pkg1_root, t
 
 
 def test_prompt_mentions_target_example_and_infer_note_instead_of_schemas(pkg1_root, tmp_path):
-    package = _underspecified_package(pkg1_root, tmp_path)
+    package = _implicit_package(pkg1_root, tmp_path)
     adapter = _PromptCapturingFakeAdapter()
 
     asyncio.run(adapter.run(package))

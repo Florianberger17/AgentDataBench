@@ -9,7 +9,7 @@ author: Florian Berger
 created: 19/07/2026
 
 task_complexity: basic
-specification_completeness: underspecified
+specification_style: implicit
 data_quality: clean
 
 seed:

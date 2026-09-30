@@ -1,0 +1,75 @@
+table: condition_record
+
+entity: ConditionRecord
+
+description: >
+  Target schema for price condition records in the new ERP system. Each record
+  represents one condition record, identified by the combination of
+  PRICE_LIST and MATERIAL.
+
+attributes:
+
+  - name: PRICE_LIST
+    type: string
+    required: true
+    description: >
+      Price list of the target ERP system, consisting of two digits.
+
+  - name: MATERIAL
+    type: string
+    required: true
+    description: >
+      Material number of the priced material.
+
+  - name: MATERIAL_DESC
+    type: string
+    required: true
+    description: >
+      Material description.
+
+  - name: VALID_FROM
+    type: date
+    required: true
+    format: DD.MM.YYYY
+    description: >
+      Start of the validity period of the condition record.
+
+  - name: VALID_TO
+    type: date
+    required: true
+    format: DD.MM.YYYY
+    description: >
+      End of the validity period of the condition record.
+
+  - name: COND_AMOUNT
+    type: decimal
+    required: true
+    description: >
+      Condition amount of the condition record, rounded to two decimal places.
+
+  - name: COND_CURR
+    type: string
+    required: true
+    format: ISO-4217
+    description: >
+      Currency of the condition amount.
+
+  - name: PRICE_UNIT
+    type: integer
+    required: true
+    description: >
+      Quantity the condition amount refers to.
+
+  - name: UOM
+    type: string
+    required: true
+    description: >
+      Unit of measure of the price unit.
+
+constraints:
+
+  - id: CON-TGT-001
+    description: The combination of PRICE_LIST and MATERIAL must be unique
+
+  - id: CON-TGT-002
+    description: COND_AMOUNT must be greater than zero

@@ -1,0 +1,75 @@
+table: material_movement_journal
+
+entity: MaterialMovement
+
+description: >
+  Source schema containing the material movement journal exported from the
+  legacy ERP system. Each record represents one posted stock movement,
+  identified by the journal no.
+
+attributes:
+
+  - name: journal no.
+    type: integer
+    required: true
+    description: >
+      Identifier of the posted stock movement.
+
+  - name: part no.
+    type: string
+    required: false
+    description: >
+      Legacy part number of the moved material.
+
+  - name: description 1
+    type: string
+    required: false
+    description: >
+      Designation of the material.
+
+  - name: posting date
+    type: date
+    required: true
+    description: >
+      Date on which the movement was posted.
+
+  - name: movement code
+    type: string
+    required: true
+    description: >
+      Code of the movement type in the legacy ERP system.
+
+  - name: unit
+    type: string
+    required: true
+    description: >
+      Unit of measure of the moved quantity.
+
+  - name: quantity
+    type: decimal
+    required: true
+    description: >
+      Moved quantity.
+
+  - name: value
+    type: decimal
+    required: true
+    description: >
+      Value of the movement.
+
+  - name: storage location
+    type: string
+    required: false
+    description: >
+      Storage location the movement was posted to.
+
+  - name: cost center
+    type: string
+    required: false
+    description: >
+      Cost center the movement was charged to.
+
+constraints:
+
+  - id: CON-SRC-001
+    description: journal no. must be unique

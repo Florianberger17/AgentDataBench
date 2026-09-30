@@ -1,0 +1,40 @@
+task_id: 027_BOM_MIGRATION_BASIC_IMPLICIT
+
+objective: >
+  Transform the provided bill of material dataset into the structure and
+  format shown by the target example. The material numbers and descriptions
+  of the target system are not contained in the source dataset and shall be
+  resolved via the central material cross reference list, for the bill of
+  material header as well as for each component. Components that exist in
+  that list are migrated as stock items and carry the resolved component
+  material number and description but no description text; components that
+  are absent from it are migrated as text items and carry the legacy
+  designation as description text instead, with no component material
+  number or description. Components measured in a unit of length are
+  required by their length, all others by their number of pieces.
+  No formal source or target schema is given - infer the required structure, the field mapping and the value formats yourself by comparing the input dataset against the target example.
+
+input:
+  source_dataset: data/dataset.csv
+  target_example: data/target_example.csv
+  reference_data:
+    - name: material_cross_reference
+      file: data/mapping_list_materials.csv
+      key_field: "part no."
+      value_field:
+        - "material no."
+        - "material description"
+      description: >
+        Assigns the part numbers of the legacy ERP system to the material
+        master records of the target ERP system.
+
+
+business_rules: {}
+
+output:
+  format: csv
+
+constraints:
+  - Each output row shall represent one bill of material position.
+  - No additional columns beyond those shown in the target example may be added.
+  - The column order must match the target example.

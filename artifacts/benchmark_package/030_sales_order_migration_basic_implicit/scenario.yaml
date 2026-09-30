@@ -1,0 +1,31 @@
+scenario_id: 030_SALES_ORDER_MIGRATION_BASIC_IMPLICIT
+
+name: ERP Sales Order Migration
+
+domain: ERP Data Integration
+
+description: >
+  Open sales orders are migrated from a legacy ERP system to a new ERP system
+  as part of a system modernization project. The source system stores one
+  record per order item using the legacy data model and identifies customers
+  by the combination of customer number and address number, and ordered
+  objects by their legacy part numbers. The target ERP system expects the
+  items of one legacy order as one sales document, numbered from a document
+  number range, with resolved customer and material numbers. Customer and
+  material numbers are not carried over and must be resolved via two central
+  cross reference lists; items whose material or sold-to party is absent from
+  the target master data cannot be migrated.
+
+business_objects:
+  - SalesOrder
+
+systems:
+  source:
+    name: Legacy ERP System
+    description: >
+      Stores sales order items using the legacy data model.
+
+  target:
+    name: Target ERP System
+    description: >
+      Stores sales orders using the target ERP data model.

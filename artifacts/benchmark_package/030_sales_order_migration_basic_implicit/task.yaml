@@ -1,0 +1,54 @@
+task_id: 030_SALES_ORDER_MIGRATION_BASIC_IMPLICIT
+
+objective: >
+  Transform the provided sales order dataset into the structure and format
+  shown by the target example. Only items whose material exists in the
+  central material cross reference list and whose sold-to party exists in
+  the central customer cross reference list can be migrated; the customer
+  is identified by the combination of customer number and address number.
+  Material and customer numbers of the target system are not contained in
+  the source dataset and shall be resolved via those two lists. All items
+  of one legacy sales order become one sales order of the target system.
+  Process the remaining records in ascending order of sales order no. and,
+  within one sales order, in ascending order of item no.; in that order
+  each sales order receives a consecutive document number starting at
+  1006000000, which all of its items carry. The requested delivery date is
+  stored as a serial day number counted from 30.12.1899 and shall be
+  converted to a calendar date. Every item belongs to sales organisation
+  0454.
+  No formal source or target schema is given - infer the required structure, the field mapping and the value formats yourself by comparing the input dataset against the target example.
+
+input:
+  source_dataset: data/dataset.csv
+  target_example: data/target_example.csv
+  reference_data:
+    - name: customer_cross_reference
+      file: data/mapping_list_customers.csv
+      key_field:
+        - "customer no. legacy"
+        - "address no."
+      value_field: "customer no. new"
+      description: >
+        Assigns the customer addresses of the legacy ERP system to the
+        customer numbers of the target ERP system. One customer of the legacy
+        system may hold several addresses that became separate customers in
+        the target ERP system, so both columns together identify one entry.
+
+    - name: material_cross_reference
+      file: data/mapping_list_material.csv
+      key_field: "part no."
+      value_field: "material no."
+      description: >
+        Assigns the part numbers of the legacy ERP system to the material
+        numbers of the target ERP system.
+
+
+business_rules: {}
+
+output:
+  format: csv
+
+constraints:
+  - Each output row shall represent one sales order item.
+  - No additional columns beyond those shown in the target example may be added.
+  - The column order must match the target example.

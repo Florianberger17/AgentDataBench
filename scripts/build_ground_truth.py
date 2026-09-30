@@ -46,7 +46,7 @@ def build_ground_truth(package_dir: Path) -> Path:
         raise FileNotFoundError(f"Missing task.yaml in {package_dir}")
     task = Task(**load_yaml(task_path))
 
-    # An underspecified package deliberately hides its target schema from the
+    # An implicit package deliberately hides its target schema from the
     # agent (TaskInput.target_example), but authoring the ground truth still
     # needs one, so fall back to the schema kept on disk for internal tooling.
     schema_reference = task.input.target_schema or "schemas/target_schema.yaml"
