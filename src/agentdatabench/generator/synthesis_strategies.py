@@ -35,6 +35,7 @@ from faker import Faker
 
 from agentdatabench.domain.synthesis_configuration import ColumnSynthesisConfig
 from agentdatabench.generator.date_formats import translate_date_format
+from agentdatabench.generator.transformations import evaluate_formula
 
 
 @dataclass(frozen=True)
@@ -705,6 +706,98 @@ class FakerCategoricalStrategy:
         return pd.Series(rng.choices(labels, weights=weights, k=n))
 
 
+class ConstantStrategy:
+    """The same fixed value in every row.
+
+    `identity` would carry the real value through, which is wrong for a code
+    a benchmark package wants to standardise - a plant or a fiscal year that
+    should read the same everywhere regardless of what the export happened to
+    contain. Config keys: `value` (required).
+    """
+
+    def synthesize(
+        self,
+        real_series: pd.Series,
+        config: ColumnSynthesisConfig,
+        rng: random.Random,
+        faker: Faker,
+        n: int,
+        context: SynthesisContext = EMPTY_SYNTHESIS_CONTEXT,
+    ) -> pd.Series:
+        return pd.Series(str(config.value), index=range(n), dtype="object")
+
+
+class ComputedStrategy:
+    """Derives the column from other, already-synthesized columns.
+
+    Some columns are not independent facts but consequences: a stock value is
+    quantity times price divided by price unit, and the source schema states
+    exactly that as a constraint. Resynthesizing the operands while keeping
+    the result would break it in every row - the same way drawing two date
+    columns independently breaks their order.
+
+    The referenced columns have to be configured above this one, since they
+    must already be synthesized. Config keys: `formula` (required), `decimals`
+    (optional, the places the result is rounded and rendered to).
+    """
+
+    def synthesize(
+        self,
+        real_series: pd.Series,
+        config: ColumnSynthesisConfig,
+        rng: random.Random,
+        faker: Faker,
+        n: int,
+        context: SynthesisContext = EMPTY_SYNTHESIS_CONTEXT,
+    ) -> pd.Series:
+        formula = config.formula
+        decimals = getattr(config, "decimals", None)
+
+        operands: dict[str, pd.Series] = {}
+        separator = "."
+        for name in _formula_operands(formula, context.synthesized):
+            numbers, found = _as_numeric(context.synthesized[name].head(n))
+            operands[name] = numbers
+            if found == ",":
+                separator = found
+
+        if not operands:
+            raise ValueError(
+                f"Column '{config.column}' computes {formula!r} but none of its "
+                f"operands has been synthesized yet - move them above "
+                f"'{config.column}' in synthesis_configuration.yaml"
+            )
+
+        result = evaluate_formula(formula, operands)
+        if decimals is not None:
+            result = result.round(decimals)
+        return _render_numeric(result, separator, decimals)
+
+
+def _formula_operands(formula: str, available: dict[str, pd.Series]) -> list[str]:
+    """The synthesized column names the formula mentions, longest first so a
+    name cannot be mistaken for a prefix of another."""
+    return [name for name in sorted(available, key=len, reverse=True) if name in formula]
+
+
+def _as_numeric(column: pd.Series) -> tuple[pd.Series, str]:
+    text = column.astype(str).str.strip()
+    separator = "," if text.str.contains(",", regex=False).any() else "."
+    return pd.to_numeric(text.str.replace(",", ".", regex=False), errors="coerce"), separator
+
+
+def _render_numeric(values: pd.Series, separator: str, decimals: int | None) -> pd.Series:
+    def render(value: float) -> str:
+        if pd.isna(value):
+            return ""
+        if decimals is not None:
+            return f"{value:.{decimals}f}"
+        return str(int(value)) if float(value).is_integer() else repr(float(value))
+
+    rendered = values.map(render)
+    return rendered.str.replace(".", ",", regex=False) if separator == "," else rendered
+
+
 class ConditionalResampleStrategy:
     """Resamples this column *within* the groups another column defines, so a
     pairing between the two survives.
@@ -785,4 +878,6 @@ DEFAULT_SYNTHESIS_STRATEGIES: dict[str, SynthesisStrategy] = {
     "conditional_resample": ConditionalResampleStrategy(),
     "numeric_mapping": NumericMappingStrategy(),
     "faker_mapping": FakerMappingStrategy(),
+    "computed": ComputedStrategy(),
+    "constant": ConstantStrategy(),
 }

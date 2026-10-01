@@ -1,0 +1,152 @@
+table: fi_document_upload
+
+entity: FinancialDocument
+
+description: >
+  Target schema of the financial document upload container of the new ERP
+  system. Each record represents one document to be posted. Several fields of
+  the container are not relevant for this migration and are delivered empty.
+
+attributes:
+
+  - name: ANWID
+    type: string
+    required: true
+    description: >
+      Identifier of the posting application.
+
+  - name: VORG1
+    type: string
+    required: true
+    description: >
+      Transaction category.
+
+  - name: VORG2
+    type: string
+    required: true
+    description: >
+      Transaction subcategory.
+
+  - name: SHKZG
+    type: string
+    required: true
+    allowed_values:
+      - S
+      - H
+    description: >
+      Debit or credit indicator. S denotes a debit posting, H a credit
+      posting.
+
+  - name: BUKRS
+    type: string
+    required: true
+    description: >
+      Company code.
+
+  - name: BLDAT
+    type: date
+    required: true
+    format: DD.MM.YYYY
+    description: >
+      Document date of the invoice.
+
+  - name: BUDAT
+    type: date
+    required: true
+    format: DD.MM.YYYY
+    description: >
+      Posting date of the document.
+
+  - name: BSCHL
+    type: string
+    required: true
+    description: >
+      Posting key, distinguishing an invoice from a credit memo.
+
+  - name: BKTXT
+    type: string
+    required: true
+    description: >
+      Document header text.
+
+  - name: KONTO
+    type: string
+    required: true
+    description: >
+      Account number in the target ERP system.
+
+  - name: WAERS
+    type: string
+    required: true
+    format: ISO-4217
+    description: >
+      Currency of the document.
+
+  - name: WRBTR
+    type: decimal
+    required: true
+    description: >
+      Amount in the document currency, with two decimal places.
+
+  - name: DMBTR
+    type: decimal
+    required: true
+    description: >
+      Amount in local currency, with two decimal places.
+
+  - name: DMBE2
+    type: decimal
+    required: true
+    description: >
+      Amount in group currency, with two decimal places.
+
+  - name: ZFBDT
+    type: date
+    required: true
+    format: DD.MM.YYYY
+    description: >
+      Baseline date for the due date calculation.
+
+  - name: XBLNR
+    type: string
+    required: true
+    description: >
+      Reference document number, carrying the invoice number of the legacy
+      ERP system.
+
+  - name: SGTXT
+    type: string
+    required: true
+    description: >
+      Item text of the document, naming the customer transaction and the
+      customer it was invoiced to.
+
+  - name: ZLSCH
+    type: string
+    required: true
+    description: >
+      Payment method, determined by the customer group.
+
+  - name: ZTERM
+    type: string
+    required: true
+    description: >
+      Payment term of the document.
+
+constraints:
+
+  - id: CON-TGT-001
+    description: XBLNR must be unique
+
+  - id: CON-TGT-002
+    description: >
+      WRBTR, DMBTR and DMBE2 must be identical, since every invoice is issued
+      in the local currency
+
+  - id: CON-TGT-003
+    description: >
+      SHKZG must be S where BSCHL denotes an invoice and H where it denotes a
+      credit memo
+
+  - id: CON-TGT-004
+    description: ZFBDT must not be earlier than BLDAT

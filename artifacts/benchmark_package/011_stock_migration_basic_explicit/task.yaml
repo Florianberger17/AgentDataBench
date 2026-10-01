@@ -1,0 +1,237 @@
+task_id: 011_STOCK_MIGRATION_BASIC_EXPLICIT
+
+objective: >
+  Transform the provided stock balance dataset from the source schema to the
+  target schema and produce a CSV file that conforms exactly to the target
+  schema. The material numbers, the base units of measure and the price units
+  of the target ERP system are not contained in the source dataset and shall
+  be resolved via the central material cross reference list. The value of the
+  stock is invariant under the migration: quantities are converted into the
+  base unit of the target ERP system, and the valuation price is then derived
+  from the stock value, the converted quantity and the price unit of the
+  target ERP system.
+
+input:
+  source_dataset: data/dataset.csv
+  source_schema: schemas/source_schema.yaml
+  target_schema: schemas/target_schema.yaml
+  reference_data:
+    - name: material_cross_reference
+      file: data/mapping_list_material.csv
+      key_field: "part no."
+      value_field:
+        - "material no."
+        - "base unit"
+        - "price unit"
+        - "density"
+      description: >
+        Assigns the part numbers of the legacy ERP system to the material
+        master records of the target ERP system, including the base unit of
+        measure, the price unit and the density of the material grade.
+
+required_operations:
+  - schema_mapping
+  - lookup
+  - unit_conversion
+  - calculation
+  - zero_padding
+  - rounding
+  - constant_assignment
+
+business_rules:
+
+  mappings:
+
+    - target_field: WERKS
+      transformation:
+        type: constant
+        value: "4170"
+
+    - source_field: part no.
+      target_field: MATNR
+      transformation:
+        type: lookup
+        reference: material_cross_reference
+        lookup_key: "part no."
+        return_field: "material no."
+
+    - source_field: storage location
+      target_field: LGORT
+      transformation:
+        type: copy
+
+    - source_field: year
+      target_field: LFGJA
+      transformation:
+        type: copy
+
+    - source_field: month
+      target_field: LFMON
+      transformation:
+        type: pad
+        pad_to: 2
+        pad_character: "0"
+
+    - source_field: part no.
+      target_field: MEINS
+      transformation:
+        type: lookup
+        reference: material_cross_reference
+        lookup_key: "part no."
+        return_field: "base unit"
+      description: >
+        The base unit of measure of the target ERP system is taken from the
+        material cross reference list and may differ from the stock unit of
+        the legacy ERP system.
+
+    - source_field: part no.
+      target_field: PEINH
+      transformation:
+        type: lookup
+        reference: material_cross_reference
+        lookup_key: "part no."
+        return_field: "price unit"
+      description: >
+        The price unit of the target ERP system is taken from the material
+        cross reference list and may differ from the price unit of the legacy
+        ERP system.
+
+    - source_fields:
+        - part no.
+        - quantity
+        - stock unit
+        - profile
+        - length
+        - width
+        - depth
+      target_field: LBKUM
+      transformation:
+        type: unit_conversion
+        source_unit_field: stock unit
+        target_unit_field: MEINS
+        reference: material_cross_reference
+        lookup_key: "part no."
+        lookup_source_field: part no.
+        reference_fields:
+          - density
+        conversions:
+          - from: PCS
+            to: ST
+            rule: "quantity"
+          - from: MM
+            to: MM
+            rule: "quantity"
+          - from: CM2
+            to: CM2
+            rule: "quantity"
+          - from: M
+            to: M
+            rule: "quantity"
+          - from: KG
+            to: KG
+            rule: "quantity"
+          - from: MM
+            to: M
+            rule: "quantity / 1000"
+          - from: CM2
+            to: M2
+            rule: "quantity / 10000"
+          - from: PCS
+            to: KG
+            rule: "quantity * cross_section * length * density / 1000000"
+          - from: MM
+            to: KG
+            rule: "quantity * cross_section * density / 1000000"
+          - from: CM2
+            to: KG
+            rule: "quantity * 100 * depth * density / 1000000"
+        cross_section:
+          field: profile
+          fields:
+            - width
+            - depth
+          rules:
+            - profile: round bar
+              formula: "pi * (width / 2) ^ 2"
+            - profile: square bar
+              formula: "width * depth"
+        post_processing:
+          type: round
+          decimals: 3
+      description: >
+        Where the stock unit of the legacy system and the base unit of the
+        target system are identical, the quantity is adopted unchanged. Where
+        they differ, the quantity is converted. Raw material held in pieces or
+        in millimetres is valuated by weight in the target ERP system; the
+        weight follows from the cross sectional area of the bar, its length
+        and the density of the material grade taken from the cross reference
+        list. Lengths and diameters are recorded in millimetres and the
+        density in grams per cubic centimetre, so that the product of volume
+        and density divided by one million yields the weight in kilograms.
+
+    - source_fields:
+        - stock value
+        - LBKUM
+        - PEINH
+      target_field: VERPR
+      transformation:
+        type: calculation
+        formula: "stock value / LBKUM * PEINH"
+        decimals: 2
+      description: >
+        The valuation price of the target ERP system refers to the converted
+        quantity and to the price unit of the target ERP system. It therefore
+        follows from the stock value, the converted quantity and the price
+        unit, which covers both a change of the unit of measure and a change
+        of the price unit.
+
+    - source_fields:
+        - LBKUM
+        - VERPR
+        - PEINH
+      target_field: SALK3
+      transformation:
+        type: calculation
+        formula: "LBKUM * VERPR / PEINH"
+        decimals: 2
+      description: >
+        The stock value of the target ERP system follows from the converted
+        quantity and the converted valuation price. Rounding differences
+        against the stock value of the legacy system are accepted.
+
+    - target_field: VPRSV
+      transformation:
+        type: constant
+        value: "V"
+
+    - target_field: BWTAR
+      transformation:
+        type: constant
+        value: "NEU"
+
+    - target_field: BUKRS
+      transformation:
+        type: constant
+        value: "0454"
+
+    - target_field: WAERS
+      transformation:
+        type: constant
+        value: "EUR"
+
+ignored_source_fields:
+  - description
+  - material category
+
+output:
+  format: csv
+  schema_reference: schemas/target_schema.yaml
+
+constraints:
+  - The output dataset must follow the target schema exactly.
+  - The output column order must match the target schema.
+  - No additional columns may be added.
+  - Each output row shall represent the stock of one material.
+  - MATNR must be unique.
+  - SALK3 must equal LBKUM multiplied by VERPR and divided by PEINH.
+  - LBKUM and SALK3 must be greater than zero.

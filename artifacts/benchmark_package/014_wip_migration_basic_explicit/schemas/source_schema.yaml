@@ -1,0 +1,94 @@
+table: project_cost_posting
+
+entity: ProjectCostPosting
+
+description: >
+  Source schema of the project cost report exported from the legacy ERP
+  system. Each record is one posting on one project, so a project appears in
+  as many records as figures were ever posted to it. The export holds the
+  planned order value and the incurred costs side by side, told apart only by
+  the value type, and is the only record the work in progress of a project can
+  be derived from.
+
+attributes:
+
+  - name: project no.
+    type: string
+    required: true
+    description: >
+      Project number in the legacy ERP system. Every posting of a project
+      carries it, so it is what the postings of a project are collected by.
+
+  - name: cost object
+    type: string
+    required: true
+    description: >
+      Cost object the posting was made on.
+
+  - name: production order no.
+    type: string
+    required: false
+    description: >
+      Production order the posting belongs to. Empty for a posting made
+      directly on the project rather than through an order.
+
+  - name: production order status
+    type: string
+    required: false
+    allowed_values:
+      - started
+      - cancelled
+    description: >
+      Processing status of the production order. Empty wherever there is no
+      production order. A cancelled order will never be delivered, so what was
+      posted to it is reversed and is no cost of the project.
+
+  - name: value type
+    type: string
+    required: true
+    allowed_values:
+      - KAWV
+      - ISWV
+      - ISWF
+    description: >
+      The kind of figure the record carries. KAWV is the planned order value,
+      posted as a credit. ISWV is the full actual value of a posting. ISWF is
+      the fixed-cost portion of a posting already carried by an ISWV record,
+      so it is the same money seen a second time from another angle.
+
+  - name: period
+    type: string
+    required: true
+    format: M/YYYY
+    description: >
+      Posting period and fiscal year the figure was posted in.
+
+  - name: cost element
+    type: string
+    required: true
+    description: >
+      Cost element the figure was posted under.
+
+  - name: cost element name
+    type: string
+    required: true
+    description: >
+      Name of the cost element.
+
+  - name: amount
+    type: decimal
+    required: true
+    description: >
+      Amount of the posting in euro. Revenue is posted as a credit and
+      therefore carries a negative sign, costs as a debit.
+
+constraints:
+
+  - id: CON-SRC-001
+    description: >
+      production order status is filled exactly where production order no. is
+
+  - id: CON-SRC-002
+    description: >
+      cost element and cost element name are paired, so every record of a cost
+      element carries the same name

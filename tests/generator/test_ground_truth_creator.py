@@ -264,3 +264,82 @@ def test_record_order_runs_after_filtering():
 
     assert list(result["a"]) == ["b", "c"]
     assert list(result["b"]) == ["1", "2"]
+
+
+def _aggregating_task(**overrides):
+    business_rules = {
+        "filtering": {"rules": [{"field": "status", "operator": "!=", "value": "open"}]},
+        "aggregation": {
+            "key_fields": ["customer"],
+            "aggregates": [
+                {"name": "revenue", "source_field": "amount", "function": "sum"}
+            ],
+        },
+        "record_order": {"fields": ["customer"]},
+        "mappings": [
+            {
+                "source_field": "customer",
+                "target_field": "a",
+                "transformation": {"type": "copy"},
+            },
+            {
+                "source_field": "revenue",
+                "target_field": "b",
+                "transformation": {"type": "copy"},
+            },
+        ],
+    }
+    business_rules.update(overrides)
+    return Task(
+        task_id="T1",
+        objective="test",
+        input={
+            "source_dataset": "data/dataset.csv",
+            "source_schema": "schemas/source_schema.yaml",
+            "target_schema": "schemas/target_schema.yaml",
+        },
+        required_operations=["aggregation"],
+        business_rules=business_rules,
+        output={"format": "csv", "schema_reference": "schemas/target_schema.yaml"},
+        constraints=[],
+    )
+
+
+def test_aggregation_collapses_the_records_of_a_group_into_one_row():
+    df = pd.DataFrame(
+        {
+            "customer": ["B", "A", "B", "A"],
+            "status": ["done", "done", "done", "done"],
+            "amount": ["1", "7", "2", "3"],
+        }
+    )
+    schema = _schema(
+        [
+            {"name": "a", "type": "string", "required": True},
+            {"name": "b", "type": "string", "required": True},
+        ]
+    )
+    result = GroundTruthCreator().create_ground_truth(df, _aggregating_task(), schema)
+    # record_order sorts the collapsed records, not the source rows.
+    assert list(result["a"]) == ["A", "B"]
+    assert list(result["b"]) == ["10", "3"]
+
+
+def test_filtered_records_do_not_contribute_to_an_aggregate():
+    """Aggregation has to run after filtering: an order the migration does not
+    carry over must not end up in the sum either."""
+    df = pd.DataFrame(
+        {
+            "customer": ["A", "A"],
+            "status": ["done", "open"],
+            "amount": ["3", "1000"],
+        }
+    )
+    schema = _schema(
+        [
+            {"name": "a", "type": "string", "required": True},
+            {"name": "b", "type": "string", "required": True},
+        ]
+    )
+    result = GroundTruthCreator().create_ground_truth(df, _aggregating_task(), schema)
+    assert list(result["b"]) == ["3"]

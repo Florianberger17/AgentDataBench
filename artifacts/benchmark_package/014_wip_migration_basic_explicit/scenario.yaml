@@ -1,0 +1,37 @@
+scenario_id: 014_WIP_MIGRATION_BASIC_EXPLICIT
+
+name: ERP Work in Progress Migration
+
+domain: ERP Data Integration
+
+description: >
+  The work in progress of the open projects is set up in a new ERP system as
+  part of a system modernization project. The legacy ERP system never carried
+  a work in progress figure, so there is nothing to take over: it has to be
+  determined from the project cost report, which is the only record of what
+  was planned for a project and what has been spent on it. That report holds
+  one record per posting, and the planned order value and the incurred costs
+  stand next to each other in it, told apart only by a value type - one of
+  which repeats costs already recorded, from the fixed-cost angle. The target
+  system expects one record per project, so both figures have to be
+  accumulated first. Work in progress may only be capitalised as far as the
+  planned revenue of the project covers it; the costs beyond that are an
+  expected loss and have to be provided for instead. The work breakdown
+  structure elements and the project descriptions of the new system come from
+  the central project cross reference list.
+
+business_objects:
+  - WorkInProgress
+
+systems:
+  source:
+    name: Legacy ERP System
+    description: >
+      Stores planned order values and incurred project costs as single
+      postings of a project cost report.
+
+  target:
+    name: Target ERP System
+    description: >
+      Capitalises work in progress per work breakdown structure element and
+      period, loaded through a results analysis upload container.

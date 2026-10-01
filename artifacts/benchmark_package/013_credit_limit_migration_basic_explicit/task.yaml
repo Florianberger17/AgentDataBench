@@ -1,0 +1,291 @@
+task_id: 013_CREDIT_LIMIT_MIGRATION_BASIC_EXPLICIT
+
+objective: >
+  Derive the credit master data of the new ERP system from the sales order
+  history of the legacy ERP system and produce a CSV file that conforms
+  exactly to the target schema. The legacy system holds no credit limits at
+  all; the order history is the only record they can be derived from. Every
+  order a customer placed is one record of the source dataset, while the
+  target system expects one record per customer, so the realised revenue of a
+  customer has to be accumulated over its orders first. The credit limit
+  follows from that historical revenue, and the risk class follows from the
+  limit together with the payment behaviour recorded in the central customer
+  cross reference list. The business partner numbers of the target ERP system
+  are not contained in the source dataset either and shall be resolved via
+  the same list.
+
+input:
+  source_dataset: data/dataset.csv
+  source_schema: schemas/source_schema.yaml
+  target_schema: schemas/target_schema.yaml
+  reference_data:
+    - name: customer_cross_reference
+      file: data/mapping_list_customers.csv
+      key_field: "customer no. legacy"
+      value_field:
+        - "customer no. new"
+        - "payment behaviour"
+      description: >
+        Assigns the customer numbers of the legacy ERP system to the business
+        partner numbers of the target ERP system and records, per customer,
+        how it has paid in the past. A customer missing from this list is not
+        managed in the target system and receives no credit master record.
+
+required_operations:
+  - schema_mapping
+  - filtering
+  - aggregation
+  - lookup
+  - range_mapping
+  - conditional_assignment
+  - constant_assignment
+
+business_rules:
+
+  filtering:
+    description: >
+      Only orders that have turned into realised revenue of the credit segment
+      being migrated count towards the historical revenue.
+    rules:
+      - field: status
+        operator: "!="
+        value: "open"
+      - field: status
+        operator: "!="
+        value: "cancelled"
+      - field: currency
+        operator: "=="
+        value: "EUR"
+      - field: customer no.
+        operator: in
+        reference: customer_cross_reference
+        key_field: "customer no. legacy"
+
+  aggregation:
+    description: >
+      The target system keeps one credit master record per customer, not one
+      per order. The orders of a customer are therefore accumulated into a
+      single record before any target field is derived.
+    key_fields:
+      - customer no.
+    aggregates:
+      - name: historical revenue
+        source_field: order value
+        function: sum
+        decimals: 2
+        description: >
+          Total order value a customer has placed across the whole order
+          history that survived filtering.
+
+  record_order:
+    description: >
+      The credit master records are delivered in ascending order of the legacy
+      customer number.
+    fields:
+      - customer no.
+    direction: ascending
+
+  mappings:
+
+    - source_field: customer no.
+      target_field: PARTNER
+      transformation:
+        type: lookup
+        reference: customer_cross_reference
+        lookup_key: "customer no. legacy"
+        return_field: "customer no. new"
+      description: >
+        Resolve the legacy customer number via the central cross reference
+        list.
+
+    - target_field: CREDIT_SGMNT
+      transformation:
+        type: constant
+        value: "454"
+      description: >
+        All limits of this migration are maintained in the euro credit
+        segment.
+
+    - source_field: historical revenue
+      target_field: CREDIT_LIMIT
+      transformation:
+        type: range_mapping
+        ranges:
+          - to: 5000
+            value: "1"
+          - from: 5000
+            to: 10000
+            value: "3.000"
+          - from: 10000
+            to: 25000
+            value: "10.000"
+          - from: 25000
+            to: 100000
+            value: "50.000"
+          - from: 100000
+            value: "100.000"
+      description: >
+        The credit policy grants one of five limit classes, decided by the
+        historical revenue of the customer. The lower bound of a class is
+        included, the upper bound is not.
+
+    - target_field: Risk Class
+      transformation:
+        type: conditional_value
+        conditions:
+          - when:
+              field: customer no.
+              reference: customer_cross_reference
+              key_field: "customer no. legacy"
+              return_field: "payment behaviour"
+              is: equals
+              to: "poor payer/blocked"
+            value: "C"
+          - all_of:
+              - field: customer no.
+                reference: customer_cross_reference
+                key_field: "customer no. legacy"
+                return_field: "payment behaviour"
+                is: equals
+                to: "good payer"
+              - field: CREDIT_LIMIT
+                is: in
+                to:
+                  - "50.000"
+                  - "100.000"
+            value: "AA"
+          - when:
+              field: customer no.
+              reference: customer_cross_reference
+              key_field: "customer no. legacy"
+              return_field: "payment behaviour"
+              is: equals
+              to: "good payer"
+            value: "A"
+          - all_of:
+              - field: customer no.
+                reference: customer_cross_reference
+                key_field: "customer no. legacy"
+                return_field: "payment behaviour"
+                is: equals
+                to: "poor payer"
+              - field: CREDIT_LIMIT
+                is: in
+                to:
+                  - "50.000"
+                  - "100.000"
+            value: "B"
+          - value: "C"
+      description: >
+        The risk class follows from the payment behaviour of the customer and
+        the credit limit it was granted. A blocked customer is always the
+        worst class. Among the others, a high limit is what distinguishes a
+        good payer as AA from A and a poor payer as B from C. The first
+        matching rule wins.
+
+    - target_field: XBLOCKED
+      transformation:
+        type: conditional_value
+        conditions:
+          - when:
+              field: customer no.
+              reference: customer_cross_reference
+              key_field: "customer no. legacy"
+              return_field: "payment behaviour"
+              is: equals
+              to: "poor payer/blocked"
+            value: "X"
+          - value: ""
+      description: >
+        Only a customer recorded as blocked carries the credit block
+        indicator.
+
+    - target_field: LIMIT_VALID_DATE
+      transformation:
+        type: constant
+        value: "12/31/9999"
+      description: >
+        The limits are migrated without an expiry date.
+
+    - target_field: XCRITICAL
+      transformation:
+        type: conditional_value
+        conditions:
+          - when:
+              field: Risk Class
+              is: in
+              to:
+                - B
+                - C
+            value: "X"
+          - value: ""
+      description: >
+        The two worse risk classes are put under observation by the credit
+        department.
+
+    - target_field: BLOCK_REASON
+      transformation:
+        type: conditional_value
+        conditions:
+          - when:
+              field: customer no.
+              reference: customer_cross_reference
+              key_field: "customer no. legacy"
+              return_field: "payment behaviour"
+              is: equals
+              to: "poor payer/blocked"
+            value: "Poor payment history"
+          - value: ""
+      description: >
+        The reason is recorded for blocked customers only, and is the same for
+        all of them in this migration.
+
+    - target_field: FOLLOW_UP_DT
+      transformation:
+        type: conditional_value
+        conditions:
+          - when:
+              field: Risk Class
+              is: equals
+              to: AA
+            value: "31.03.2028"
+          - when:
+              field: Risk Class
+              is: equals
+              to: A
+            value: "30.09.2027"
+          - when:
+              field: Risk Class
+              is: equals
+              to: B
+            value: "31.03.2027"
+          - when:
+              field: Risk Class
+              is: equals
+              to: C
+            value: "31.12.2026"
+      description: >
+        The review cycle follows the risk class: the worse the class, the
+        sooner the limit has to be reviewed again.
+
+ignored_source_fields:
+  - customer transaction
+  - receipt date
+  - customer name
+  - order type
+  - net value
+
+output:
+  format: csv
+  schema_reference: schemas/target_schema.yaml
+
+constraints:
+  - The output dataset must follow the target schema exactly.
+  - The output column order must match the target schema.
+  - No additional columns may be added.
+  - Each output row shall represent one customer.
+  - PARTNER must be unique.
+  - CREDIT_LIMIT must be one of the five limit classes of the credit policy.
+  - BLOCK_REASON must be filled exactly where XBLOCKED is set.
+  - XCRITICAL must be set exactly for the risk classes B and C.
+  - FOLLOW_UP_DT must not be later than LIMIT_VALID_DATE.

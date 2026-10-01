@@ -306,6 +306,25 @@ class AgentAdapter(ABC):
         lines.append("")
         return lines
 
+    def _render_filter_rule(self, rule) -> str:
+        """One filter condition in words. Shared by the filtering section and
+        by an aggregate restricted with ``where``, so an agent reads the same
+        vocabulary in both places."""
+        if rule.operator in ("is empty", "is not empty"):
+            condition = f"{rule.field} {rule.operator}"
+        elif rule.operator in ("in", "not in"):
+            condition = (
+                f"{rule.field} is {rule.operator} column {rule.key_field!r} of "
+                f"reference table {rule.reference!r}"
+            )
+            if isinstance(rule.field, list):
+                condition += " (the columns pair up in the order given)"
+        else:
+            condition = f"{rule.field} {rule.operator} {rule.value!r}"
+        if rule.field_format:
+            condition += f" (source field format: {rule.field_format})"
+        return condition
+
     def _render_business_rules(self, business_rules: BusinessRules) -> list[str]:
         """Renders task.business_rules into natural language. Without this,
         an agent only sees the schemas and has to guess exact filter cutoffs
@@ -320,22 +339,41 @@ class AgentAdapter(ABC):
             if business_rules.filtering.description:
                 lines.append(f"  {business_rules.filtering.description.strip()}")
             for rule in business_rules.filtering.rules:
-                if rule.operator in ("is empty", "is not empty"):
-                    condition = f"  - Keep rows where {rule.field} {rule.operator}"
-                elif rule.operator in ("in", "not in"):
-                    condition = (
-                        f"  - Keep rows where {rule.field} is {rule.operator} column "
-                        f"{rule.key_field!r} of reference table {rule.reference!r}"
+                lines.append(f"  - Keep rows where {self._render_filter_rule(rule)}")
+            lines.append("")
+
+        if business_rules.aggregation:
+            # Without this an agent would map every source record to one
+            # output record; the whole point of the task can be that many
+            # records collapse into one.
+            aggregation = business_rules.aggregation
+            lines.append(
+                "Aggregation (one output record per group, not per source record):"
+            )
+            if aggregation.description:
+                lines.append(f"  {aggregation.description.strip()}")
+            lines.append(f"  - Group by: {', '.join(aggregation.key_fields)}")
+            for aggregate in aggregation.aggregates:
+                qualifiers = []
+                if aggregate.where:
+                    conditions = ", ".join(
+                        self._render_filter_rule(rule)
+                        for rule in aggregate.where.rules
                     )
-                    if isinstance(rule.field, list):
-                        condition += " (the columns pair up in the order given)"
-                else:
-                    condition = (
-                        f"  - Keep rows where {rule.field} {rule.operator} {rule.value!r}"
+                    qualifiers.append(f"counting only records where {conditions}")
+                if aggregate.factor is not None:
+                    qualifiers.append(f"multiplied by {aggregate.factor:g}")
+                if aggregate.decimals is not None:
+                    qualifiers.append(
+                        f"rounded to {aggregate.decimals} decimal place(s)"
                     )
-                if rule.field_format:
-                    condition += f" (source field format: {rule.field_format})"
-                lines.append(condition)
+                suffix = f", {'; '.join(qualifiers)}" if qualifiers else ""
+                lines.append(
+                    f"  - {aggregate.name}: {aggregate.function} of "
+                    f"{aggregate.source_field} over the group{suffix}"
+                )
+                if aggregate.description:
+                    lines.append(f"    ({aggregate.description.strip()})")
             lines.append("")
 
         if business_rules.grouping:

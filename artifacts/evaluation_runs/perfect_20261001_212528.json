@@ -1,0 +1,157 @@
+{
+  "generated_at": "2026-10-01T21:25:28.376690Z",
+  "results": [
+    {
+      "task_id": "013_CREDIT_LIMIT_MIGRATION_BASIC_EXPLICIT",
+      "agent_name": "perfect",
+      "metrics": [
+        {
+          "name": "schema_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_columns": [
+              "PARTNER",
+              "CREDIT_SGMNT",
+              "CREDIT_LIMIT",
+              "Risk Class",
+              "XBLOCKED",
+              "LIMIT_VALID_DATE",
+              "XCRITICAL",
+              "BLOCK_REASON",
+              "FOLLOW_UP_DT"
+            ],
+            "actual_columns": [
+              "PARTNER",
+              "CREDIT_SGMNT",
+              "CREDIT_LIMIT",
+              "Risk Class",
+              "XBLOCKED",
+              "LIMIT_VALID_DATE",
+              "XCRITICAL",
+              "BLOCK_REASON",
+              "FOLLOW_UP_DT"
+            ]
+          }
+        },
+        {
+          "name": "row_accuracy",
+          "score": 1.0,
+          "details": {
+            "matched_rows": 18,
+            "expected_rows": 18
+          }
+        },
+        {
+          "name": "filtering_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_rows": 18,
+            "actual_rows": 18
+          }
+        },
+        {
+          "name": "field_mapping_accuracy",
+          "score": 1.0,
+          "details": {
+            "populated_fraction_by_column": {
+              "PARTNER": 1.0,
+              "CREDIT_SGMNT": 1.0,
+              "CREDIT_LIMIT": 1.0,
+              "Risk Class": 1.0,
+              "XBLOCKED": 0.1111111111111111,
+              "LIMIT_VALID_DATE": 1.0,
+              "XCRITICAL": 0.6666666666666666,
+              "BLOCK_REASON": 0.1111111111111111,
+              "FOLLOW_UP_DT": 1.0
+            },
+            "expected_fraction_by_column": {
+              "PARTNER": 1.0,
+              "CREDIT_SGMNT": 1.0,
+              "CREDIT_LIMIT": 1.0,
+              "Risk Class": 1.0,
+              "XBLOCKED": 0.1111111111111111,
+              "LIMIT_VALID_DATE": 1.0,
+              "XCRITICAL": 0.6666666666666666,
+              "BLOCK_REASON": 0.1111111111111111,
+              "FOLLOW_UP_DT": 1.0
+            },
+            "score_by_column": {
+              "PARTNER": 1.0,
+              "CREDIT_SGMNT": 1.0,
+              "CREDIT_LIMIT": 1.0,
+              "Risk Class": 1.0,
+              "XBLOCKED": 1.0,
+              "LIMIT_VALID_DATE": 1.0,
+              "XCRITICAL": 1.0,
+              "BLOCK_REASON": 1.0,
+              "FOLLOW_UP_DT": 1.0
+            }
+          }
+        },
+        {
+          "name": "transformation_accuracy",
+          "score": 1.0,
+          "details": {
+            "matched_cells": 162,
+            "total_cells": 162
+          }
+        },
+        {
+          "name": "record_accuracy",
+          "score": 1.0,
+          "details": {
+            "near_matches": 18,
+            "total_records": 18,
+            "threshold": 0.8
+          }
+        },
+        {
+          "name": "error_correction_accuracy",
+          "score": 1.0,
+          "details": {
+            "applicable": false,
+            "reason": "no noise_configuration.yaml"
+          }
+        }
+      ],
+      "passed": true,
+      "timestamp": "2026-10-01T21:25:28.376445Z",
+      "error": null,
+      "reproducibility": {
+        "name": "reproducibility",
+        "score": 0.0,
+        "details": {
+          "reason": "solution.py ran but did not produce solution.csv"
+        }
+      },
+      "duration_seconds": 0.01122279989067465,
+      "metadata": {
+        "steps": 0
+      }
+    }
+  ],
+  "summaries": [
+    {
+      "agent_name": "perfect",
+      "total_tasks": 1,
+      "passed_tasks": 1,
+      "failed_tasks": 0,
+      "pass_rate": 1.0,
+      "success_rate": 1.0,
+      "average_duration_seconds": 0.01122279989067465,
+      "average_metric_scores": {
+        "schema_accuracy": 1.0,
+        "row_accuracy": 1.0,
+        "filtering_accuracy": 1.0,
+        "field_mapping_accuracy": 1.0,
+        "transformation_accuracy": 1.0,
+        "record_accuracy": 1.0,
+        "error_correction_accuracy": 1.0,
+        "reproducibility": 0.0
+      },
+      "average_metadata": {
+        "steps": 0.0
+      }
+    }
+  ]
+}

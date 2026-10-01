@@ -1,0 +1,214 @@
+task_id: 012_INVOICE_MIGRATION_BASIC_EXPLICIT
+
+objective: >
+  Transform the provided outgoing invoice dataset from the source schema to
+  the target schema and produce a CSV file that conforms exactly to the
+  target schema. The account numbers of the target ERP system are not
+  contained in the source dataset and shall be resolved via the central
+  customer cross reference list. The payment term of the target ERP system is
+  not recorded in the source dataset either and shall be derived from the due
+  date.
+
+input:
+  source_dataset: data/dataset.csv
+  source_schema: schemas/source_schema.yaml
+  target_schema: schemas/target_schema.yaml
+  reference_data:
+    - name: customer_cross_reference
+      file: data/mapping_list_customers.csv
+      key_field: "customer no."
+      value_field: "KUNNR"
+      description: >
+        Assigns the customer numbers of the legacy ERP system to the account
+        numbers of the target ERP system.
+
+required_operations:
+  - schema_mapping
+  - lookup
+  - value_mapping
+  - date_conversion
+  - date_difference
+  - field_concatenation
+  - rounding
+  - constant_assignment
+
+business_rules:
+
+  mappings:
+
+    - target_field: ANWID
+      transformation:
+        type: constant
+        value: "NEWGL"
+
+    - target_field: VORG1
+      transformation:
+        type: constant
+        value: "UK"
+
+    - target_field: VORG2
+      transformation:
+        type: constant
+        value: "K"
+
+    - source_field: document type
+      target_field: SHKZG
+      transformation:
+        type: value_mapping
+        mapping:
+          "outgoing invoice": "S"
+          "outgoing credit note": "H"
+      description: >
+        An invoice is posted as a debit, a credit note as a credit.
+
+    - target_field: BUKRS
+      transformation:
+        type: constant
+        value: "4170"
+
+    - source_field: invoice date
+      target_field: BLDAT
+      transformation:
+        type: date_format
+        input_format: DD.MM.YY
+        output_format: DD.MM.YYYY
+
+    - source_field: posting date
+      target_field: BUDAT
+      transformation:
+        type: date_format
+        input_format: DD.MM.YY
+        output_format: DD.MM.YYYY
+
+    - source_field: document type
+      target_field: BSCHL
+      transformation:
+        type: value_mapping
+        mapping:
+          "outgoing invoice": "01"
+          "outgoing credit note": "11"
+      description: >
+        Convert the document type of the legacy system to the posting key of
+        the target ERP system.
+
+    - target_field: BKTXT
+      transformation:
+        type: constant
+        value: "Invoice migration"
+
+    - source_field: customer no.
+      target_field: KONTO
+      transformation:
+        type: lookup
+        reference: customer_cross_reference
+        lookup_key: "customer no."
+        return_field: "KUNNR"
+      description: >
+        Resolve the legacy customer number via the central cross reference
+        list.
+
+    - source_field: currency
+      target_field: WAERS
+      transformation:
+        type: copy
+
+    - source_field: invoice value
+      target_field: WRBTR
+      transformation:
+        type: round
+        decimals: 2
+        decimal_separator: ","
+
+    - source_field: invoice value
+      target_field: DMBTR
+      transformation:
+        type: round
+        decimals: 2
+        decimal_separator: ","
+      description: >
+        Every invoice is issued in the local currency, so the amount in local
+        currency equals the amount in the document currency.
+
+    - source_field: invoice value
+      target_field: DMBE2
+      transformation:
+        type: round
+        decimals: 2
+        decimal_separator: ","
+      description: >
+        The group currency is the local currency, so the amount is adopted
+        unchanged here as well.
+
+    - source_field: due date
+      target_field: ZFBDT
+      transformation:
+        type: date_format
+        input_format: DD.MM.YY
+        output_format: DD.MM.YYYY
+
+    - source_field: invoice no.
+      target_field: XBLNR
+      transformation:
+        type: copy
+
+    - source_fields:
+        - customer transaction
+        - customer name
+      target_field: SGTXT
+      transformation:
+        type: concatenate
+        separator: " "
+      description: >
+        The item text names the customer transaction of the legacy system
+        followed by the name of the invoiced customer, separated by a single
+        blank character.
+
+    - source_field: customer group
+      target_field: ZLSCH
+      transformation:
+        type: value_mapping
+        mapping:
+          "01": "M"
+          "11": "U"
+      description: >
+        Customers of the domestic group are paid by SEPA direct debit, all
+        others by bank transfer.
+
+    - source_fields:
+        - invoice date
+        - due date
+      target_field: ZTERM
+      transformation:
+        type: date_difference
+        from_field: invoice date
+        to_field: due date
+        input_format: DD.MM.YY
+        unit: days
+        value_mapping:
+          14: "14 days net"
+          30: "30 days net"
+      description: >
+        The legacy system records only the due date. The payment term of the
+        target ERP system follows from the number of days between the invoice
+        date and the due date.
+
+ignored_source_fields:
+  - status
+  - plant
+  - fiscal year
+  - posting period
+  - order type
+  - net value
+
+output:
+  format: csv
+  schema_reference: schemas/target_schema.yaml
+
+constraints:
+  - The output dataset must follow the target schema exactly.
+  - The output column order must match the target schema.
+  - No additional columns may be added.
+  - Each output row shall represent one financial document.
+  - XBLNR must be unique.
+  - WRBTR, DMBTR and DMBE2 must be identical.
+  - ZFBDT must not be earlier than BLDAT.

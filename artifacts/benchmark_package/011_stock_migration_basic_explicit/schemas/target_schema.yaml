@@ -1,0 +1,113 @@
+table: material_valuation
+
+entity: MaterialValuation
+
+description: >
+  Target schema for stock balances and valuation data in the new ERP system.
+  Each record represents the valuated stock of one material in one plant for
+  one accounting period.
+
+attributes:
+
+  - name: WERKS
+    type: string
+    required: true
+    description: >
+      Plant the stock is held in.
+
+  - name: MATNR
+    type: string
+    required: true
+    unique: true
+    description: >
+      Material number, consisting of 13 digits.
+
+  - name: LGORT
+    type: string
+    required: true
+    description: >
+      Storage location.
+
+  - name: LFGJA
+    type: integer
+    required: true
+    description: >
+      Year of the accounting period.
+
+  - name: LFMON
+    type: string
+    required: true
+    description: >
+      Month of the accounting period, as two digits with a leading zero.
+
+  - name: LBKUM
+    type: decimal
+    required: true
+    description: >
+      Total valuated stock in the base unit of the target ERP system, with
+      three decimal places.
+
+  - name: MEINS
+    type: string
+    required: true
+    description: >
+      Base unit of measure.
+
+  - name: VERPR
+    type: decimal
+    required: true
+    description: >
+      Moving average price, referring to the price unit, with two decimal
+      places.
+
+  - name: PEINH
+    type: integer
+    required: true
+    description: >
+      Number of base units the moving average price refers to.
+
+  - name: SALK3
+    type: decimal
+    required: true
+    description: >
+      Value of the valuated stock, with two decimal places.
+
+  - name: VPRSV
+    type: string
+    required: true
+    description: >
+      Price control indicator.
+
+  - name: BWTAR
+    type: string
+    required: true
+    description: >
+      Valuation type.
+
+  - name: BUKRS
+    type: string
+    required: true
+    description: >
+      Company code, consisting of four digits.
+
+  - name: WAERS
+    type: string
+    required: true
+    format: ISO-4217
+    description: >
+      Local currency.
+
+constraints:
+
+  - id: CON-TGT-001
+    description: MATNR must be unique
+
+  - id: CON-TGT-002
+    description: >
+      SALK3 must equal LBKUM multiplied by VERPR and divided by PEINH
+
+  - id: CON-TGT-003
+    description: MEINS must equal the base unit of the material cross reference
+
+  - id: CON-TGT-004
+    description: LBKUM and SALK3 must be greater than zero

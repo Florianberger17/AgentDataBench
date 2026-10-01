@@ -1,0 +1,129 @@
+table: outgoing_invoice
+
+entity: OutgoingInvoice
+
+description: >
+  Source schema containing posted outgoing invoices exported from the legacy
+  ERP system. Each record represents one invoice or credit note, identified by
+  its invoice number. The export carries the complete billing document of the
+  legacy system; most of its fields are not relevant for the migration.
+
+attributes:
+
+  - name: document type
+    type: string
+    required: true
+    allowed_values:
+      - outgoing invoice
+      - outgoing credit note
+    description: >
+      Document type of the billing document.
+
+  - name: invoice no.
+    type: string
+    required: true
+    unique: true
+    description: >
+      Invoice number in the legacy ERP system.
+
+  - name: status
+    type: string
+    required: true
+    description: >
+      Processing status of the billing document.
+
+  - name: plant
+    type: string
+    required: true
+    description: >
+      Plant the order was processed in.
+
+  - name: invoice date
+    type: date
+    required: true
+    format: DD.MM.YY
+    description: >
+      Date of the invoice.
+
+  - name: posting date
+    type: date
+    required: true
+    format: DD.MM.YY
+    description: >
+      Date the billing document was posted.
+
+  - name: fiscal year
+    type: integer
+    required: true
+    description: >
+      Fiscal year of the posting.
+
+  - name: posting period
+    type: integer
+    required: true
+    description: >
+      Posting period within the fiscal year.
+
+  - name: customer transaction
+    type: string
+    required: true
+    description: >
+      Identifier of the customer transaction the invoice belongs to.
+
+  - name: order type
+    type: string
+    required: true
+    description: >
+      Order type of the underlying sales order.
+
+  - name: customer no.
+    type: string
+    required: true
+    description: >
+      Customer number in the legacy ERP system.
+
+  - name: customer name
+    type: string
+    required: true
+    description: >
+      Name of the invoiced customer.
+
+  - name: customer group
+    type: string
+    required: true
+    description: >
+      Customer group of the legacy ERP system.
+
+  - name: net value
+    type: decimal
+    required: true
+    description: >
+      Net value of the invoice.
+
+  - name: invoice value
+    type: decimal
+    required: true
+    description: >
+      Total value of the invoice in the invoice currency.
+
+  - name: currency
+    type: string
+    required: true
+    format: ISO-4217
+    description: >
+      Currency of the invoice.
+
+  - name: due date
+    type: date
+    required: true
+    format: DD.MM.YY
+    description: >
+      Date the invoice is due for payment.
+
+constraints:
+
+  - id: CON-SRC-001
+    description: invoice no. must be unique
+
+  - id: CON-SRC-002
+    description: due date must not be earlier than invoice date

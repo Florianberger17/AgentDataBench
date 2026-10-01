@@ -1,0 +1,31 @@
+scenario_id: 012_INVOICE_MIGRATION_BASIC_EXPLICIT
+
+name: ERP Invoice Migration
+
+domain: ERP Data Integration
+
+description: >
+  Posted outgoing invoices are migrated from a legacy ERP system to a new ERP
+  system as part of a system modernization project. The legacy system exports
+  its complete billing document, of which only a small part is relevant for
+  the financial posting in the target system. The target system does not
+  accept the billing document itself but a financial document upload
+  container, in which an invoice and a credit note differ only by their
+  posting key and their debit or credit indicator. Account numbers are not
+  carried over and must be resolved via a central customer cross reference
+  list. The legacy system records only the due date of an invoice, while the
+  target system expects the payment term it was derived from.
+
+business_objects:
+  - FinancialDocument
+
+systems:
+  source:
+    name: Legacy ERP System
+    description: >
+      Stores posted outgoing invoices as billing documents.
+
+  target:
+    name: Target ERP System
+    description: >
+      Accepts financial documents through an upload container.

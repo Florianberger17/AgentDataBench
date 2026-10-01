@@ -12,8 +12,19 @@ handler exposing ``excluded_rows`` removes records that cannot be mapped (a
 reference table). Both run before the first column is built, so every column
 is derived from the same set of surviving rows.
 
-``business_rules.record_order`` then sorts what survives. It has to run after
-the two dropping steps and before any column is built, because a
+Target columns are then built in dependency order rather than schema order:
+a field derived from other target fields (a valuation price from a converted
+quantity) is deferred until those exist - see _build_columns.
+
+``business_rules.aggregation`` then collapses what survives, where the target
+system keeps one record per group rather than per source record (one credit
+master record per customer, from every order that customer placed). It runs
+after both dropping steps so that a record the migration does not carry over
+never contributes to a sum, and before record_order, which has to sort the
+records that actually end up in the output.
+
+``business_rules.record_order`` sorts what survives. It has to run after the
+dropping and collapsing steps and before any column is built, because a
 ``sequential_number`` target field numbers the rows in exactly this order - a
 row removed later would leave a gap, and numbering an unsorted frame would
 make the expected result depend on the source file's arbitrary row order.
@@ -21,6 +32,7 @@ make the expected result depend on the source file's arbitrary row order.
 
 from __future__ import annotations
 
+from dataclasses import replace
 from pathlib import Path
 
 import pandas as pd
@@ -28,9 +40,11 @@ import pandas as pd
 from agentdatabench.domain.dataset import Dataset
 from agentdatabench.domain.schema import Schema
 from agentdatabench.domain.task import MappingRule, RecordOrder, Task
+from agentdatabench.generator.aggregation import apply_aggregation
 from agentdatabench.generator.filtering import apply_filtering
 from agentdatabench.generator.transformations import (
     DEFAULT_TRANSFORMATION_HANDLERS,
+    MissingTargetColumn,
     TransformationContext,
     TransformationHandler,
 )
@@ -81,28 +95,69 @@ class GroundTruthCreator:
         filtered = self._drop_unmappable_records(
             filtered, list(mappings_by_target.values()), context
         )
+        filtered = apply_aggregation(
+            filtered, task.business_rules.aggregation, context.reference_data
+        )
         filtered = self._apply_record_order(filtered, task.business_rules.record_order)
 
-        columns: dict[str, pd.Series] = {}
+        pending = []
         for attribute in target_schema.attributes:
             mapping = mappings_by_target.get(attribute.name)
-
             if mapping is None:
                 if attribute.required:
                     raise ValueError(
                         f"No mapping rule for required target field '{attribute.name}'"
                     )
                 continue
-
-            handler = self._handlers.get(mapping.transformation.type)
-            if handler is None:
+            if mapping.transformation.type not in self._handlers:
                 raise ValueError(
                     f"No transformation handler registered for type "
                     f"'{mapping.transformation.type}'"
                 )
-            columns[attribute.name] = handler.apply(filtered, mapping, context)
+            pending.append((attribute.name, mapping))
 
-        return pd.DataFrame(columns)
+        columns = self._build_columns(filtered, pending, context)
+        # Column order follows the target schema, not the order the fields
+        # happened to become resolvable in.
+        return pd.DataFrame({name: columns[name] for name, _ in pending})
+
+    def _build_columns(
+        self,
+        df: pd.DataFrame,
+        pending: list[tuple[str, MappingRule]],
+        context: TransformationContext,
+    ) -> dict[str, pd.Series]:
+        """Builds the target columns, deferring any field that turns out to
+        need another target field not built yet (MissingTargetColumn) and
+        retrying it once that one exists.
+
+        A field can depend on one that comes *later* in the target schema - a
+        valuation price on a price unit, say - so a single pass in schema
+        order is not enough, and requiring the author to order task.yaml by
+        dependency would be a trap.
+        """
+        columns: dict[str, pd.Series] = {}
+        remaining = list(pending)
+        while remaining:
+            deferred: list[tuple[str, MappingRule]] = []
+            blocked: dict[str, str] = {}
+            for name, mapping in remaining:
+                handler = self._handlers[mapping.transformation.type]
+                try:
+                    columns[name] = handler.apply(
+                        df, mapping, replace(context, target_columns=columns)
+                    )
+                except MissingTargetColumn as missing:
+                    deferred.append((name, mapping))
+                    blocked[name] = str(missing)
+
+            if len(deferred) == len(remaining):
+                raise ValueError(
+                    f"Target field(s) {sorted(blocked)} cannot be resolved - each "
+                    f"waits for a field that is never built: {blocked}"
+                )
+            remaining = deferred
+        return columns
 
     def _apply_record_order(
         self, df: pd.DataFrame, record_order: RecordOrder | None

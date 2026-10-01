@@ -102,10 +102,11 @@ def _coerce_column(series: pd.Series, value: Any) -> pd.Series:
         return series
     # Numeric columns arrive as strings in whatever decimal convention the
     # source export wrote; "1234,56" from a German-locale system is a number,
-    # not a parse error.
+    # not a parse error. A comma also means the dot is a thousands separator
+    # and has to go first - "4.028,00" is four thousand, not 4.028.
     text = series.astype(str).str.strip()
     if text.str.contains(",", regex=False).any():
-        text = text.str.replace(",", ".", regex=False)
+        text = text.str.replace(".", "", regex=False).str.replace(",", ".", regex=False)
     return pd.to_numeric(text)
 
 
@@ -119,13 +120,20 @@ def _column_and_value(df: pd.DataFrame, rule: FilterRule) -> tuple[pd.Series, An
     return _coerce_column(df[rule.field], rule.value), rule.value
 
 
-def apply_filtering(
+def filter_mask(
     df: pd.DataFrame,
     filtering: FilteringRules | None,
     reference_data: dict[str, pd.DataFrame] | None = None,
-) -> pd.DataFrame:
+) -> pd.Series:
+    """The rows satisfying every rule, as a boolean mask.
+
+    Exposed separately from ``apply_filtering`` because a condition is not
+    always used to drop rows: an aggregate restricted by ``where`` needs the
+    same rule vocabulary to pick the records of a group it accumulates over,
+    while every other record of that group stays in the frame.
+    """
     if filtering is None:
-        return df
+        return pd.Series(True, index=df.index)
 
     mask = pd.Series(True, index=df.index)
     for rule in filtering.rules:
@@ -143,5 +151,14 @@ def apply_filtering(
             )
         column, value = _column_and_value(df, rule)
         mask &= OPERATORS[rule.operator](column, value)
+    return mask
 
-    return df[mask].reset_index(drop=True)
+
+def apply_filtering(
+    df: pd.DataFrame,
+    filtering: FilteringRules | None,
+    reference_data: dict[str, pd.DataFrame] | None = None,
+) -> pd.DataFrame:
+    if filtering is None:
+        return df
+    return df[filter_mask(df, filtering, reference_data)].reset_index(drop=True)

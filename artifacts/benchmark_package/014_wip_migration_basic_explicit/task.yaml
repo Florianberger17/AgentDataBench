@@ -1,0 +1,222 @@
+task_id: 014_WIP_MIGRATION_BASIC_EXPLICIT
+
+objective: >
+  Determine the work in progress of every project from the cost postings of
+  the legacy ERP system and produce a CSV file that conforms exactly to the
+  target schema. The legacy system holds no work in progress at all; it has to
+  be derived from the single postings the project cost report exports. Every
+  posting is one record of the source dataset, while the target system expects
+  one record per project, so the actual costs and the planned revenue of a
+  project have to be accumulated over its postings first. Both figures come
+  from the same export and are told apart only by the value type. The work in
+  progress then follows from the two of them, capped at the planned revenue,
+  and whatever the planned revenue does not cover becomes an expected loss.
+  The work breakdown structure elements of the target ERP system are not
+  contained in the source dataset and shall be resolved via the central
+  project cross reference list.
+
+input:
+  source_dataset: data/dataset.csv
+  source_schema: schemas/source_schema.yaml
+  target_schema: schemas/target_schema.yaml
+  reference_data:
+    - name: project_cross_reference
+      file: data/mapping_list_projects.csv
+      key_field: "project no. legacy"
+      value_field:
+        - "WBS element"
+        - "description"
+      description: >
+        Assigns the project numbers of the legacy ERP system to the work
+        breakdown structure elements of the target ERP system and carries the
+        description of each project. A project missing from this list is not
+        managed in the target system and receives no work in progress record.
+
+required_operations:
+  - schema_mapping
+  - filtering
+  - aggregation
+  - conditional_aggregation
+  - lookup
+  - value_limitation
+  - calculation
+  - constant_assignment
+
+business_rules:
+
+  filtering:
+    description: >
+      Only postings that still stand, and only projects the target system
+      manages, take part in the determination.
+    rules:
+      - field: production order status
+        operator: "!="
+        value: "cancelled"
+      - field: project no.
+        operator: in
+        reference: project_cross_reference
+        key_field: "project no. legacy"
+
+  aggregation:
+    description: >
+      The target system keeps one work in progress record per project, not one
+      per posting. The postings of a project are therefore accumulated into a
+      single record before any target field is derived. Which postings make up
+      which figure is decided by the value type, so the two figures rest on
+      different records of the same project.
+    key_fields:
+      - project no.
+    aggregates:
+      - name: actual costs
+        source_field: amount
+        function: sum
+        decimals: 2
+        where:
+          rules:
+            - field: value type
+              operator: "=="
+              value: "ISWV"
+        description: >
+          Costs incurred on the project, accumulated over the full actual
+          value of its postings. The fixed-cost records (ISWF) are the same
+          money seen a second time and would double-count it, so they are left
+          out. A project without a single cost posting has costs of zero.
+
+      - name: planned revenue
+        source_field: amount
+        function: sum
+        decimals: 2
+        where:
+          rules:
+            - field: value type
+              operator: "=="
+              value: "KAWV"
+        description: >
+          Planned order value of the project, which is posted as a credit and
+          therefore accumulates to a negative figure. A project without a
+          planned order value has a planned revenue of zero.
+
+      - name: revenue cap
+        source_field: amount
+        function: sum
+        factor: -1
+        decimals: 2
+        where:
+          rules:
+            - field: value type
+              operator: "=="
+              value: "KAWV"
+        description: >
+          The same planned order value read as a positive limit, since that is
+          the form the cap on the work in progress is applied in.
+
+  record_order:
+    description: >
+      The work in progress records are delivered in ascending order of the
+      legacy project number.
+    fields:
+      - project no.
+    direction: ascending
+
+  mappings:
+
+    - source_field: project no.
+      target_field: project no. legacy
+      transformation:
+        type: copy
+      description: >
+        The legacy project number is carried over so the upload can be
+        reconciled against the legacy system.
+
+    - source_field: project no.
+      target_field: WBS element
+      transformation:
+        type: lookup
+        reference: project_cross_reference
+        lookup_key: "project no. legacy"
+        return_field: "WBS element"
+      description: >
+        Resolve the legacy project number via the central cross reference
+        list.
+
+    - source_field: project no.
+      target_field: description
+      transformation:
+        type: lookup
+        reference: project_cross_reference
+        lookup_key: "project no. legacy"
+        return_field: "description"
+      description: >
+        The description is not contained in the cost report either and comes
+        from the same cross reference list.
+
+    - target_field: posting period
+      transformation:
+        type: constant
+        value: "12/2026"
+      description: >
+        The whole upload determines the work in progress as at the end of the
+        2026 fiscal year.
+
+    - target_field: currency
+      transformation:
+        type: constant
+        value: "EUR"
+
+    - source_field: actual costs
+      target_field: actual costs
+      transformation:
+        type: copy
+
+    - source_field: planned revenue
+      target_field: planned revenue
+      transformation:
+        type: copy
+
+    - source_field: actual costs
+      target_field: WIP
+      transformation:
+        type: bounded_value
+        maximum_field: revenue cap
+        minimum: 0
+        decimals: 2
+      description: >
+        The work in progress is the actual costs of the project, but never
+        more than the planned revenue covers and never less than zero. Where
+        no order value was planned at all, the cap is zero and so is the work
+        in progress.
+
+    - source_fields:
+        - actual costs
+        - WIP
+      target_field: expected loss
+      transformation:
+        type: calculation
+        formula: "actual costs - WIP"
+        decimals: 2
+      description: >
+        Whatever the cap cut off the work in progress is a cost the planned
+        revenue does not cover, and is provided for as a loss instead of being
+        capitalised.
+
+ignored_source_fields:
+  - cost object
+  - production order no.
+  - period
+  - cost element
+  - cost element name
+
+output:
+  format: csv
+  schema_reference: schemas/target_schema.yaml
+
+constraints:
+  - The output dataset must follow the target schema exactly.
+  - The output column order must match the target schema.
+  - No additional columns may be added.
+  - Each output row shall represent one project.
+  - project no. legacy must be unique.
+  - WBS element must be unique.
+  - WIP must not be negative.
+  - WIP must not exceed the planned revenue, read as a positive limit.
+  - WIP and expected loss must add up to the actual costs.

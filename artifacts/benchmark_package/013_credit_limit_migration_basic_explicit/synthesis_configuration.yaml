@@ -1,0 +1,66 @@
+seed: 1013
+
+locale: de_DE
+
+columns:
+
+  # Real order numbers; substituted consistently so the uniqueness the source
+  # schema requires survives.
+  - column: customer transaction
+    strategy: numeric_mapping
+    format: "{:06d}"
+    min: 100000
+    max: 999999
+
+  # The status decides which orders count towards the historical revenue, so
+  # resampling it would move every customer to a different credit limit class
+  # and a different risk class. Carried over unchanged - a processing status is
+  # a technical code, not an identifying value.
+  - column: status
+    strategy: identity
+
+  # Not read by any rule of the task, so the dates are free to be redrawn.
+  # They are what dates the order history actually spans, and the only field
+  # of the export that could date a real order.
+  - column: receipt date
+    strategy: date_distribution
+    field_format: "DD.MM.YY"
+
+  # The grouping key of the aggregation and the lookup key into
+  # mapping_list_customers.csv at once. Substituted consistently per distinct
+  # value, so every order of a customer keeps landing in the same group, and
+  # the cross reference list is generated from the result so both sides match.
+  - column: customer no.
+    strategy: numeric_mapping
+    format: "{:07d}"
+    min: 1000000
+    max: 9999999
+
+  # Real company names - must not survive. Paired 1:1 with the customer
+  # number, so the substitution has to be consistent per value: the collapsed
+  # record takes the name of the group's first order and would otherwise
+  # carry a different company than the group it belongs to.
+  - column: customer name
+    strategy: faker_mapping
+    provider: company
+
+  - column: order type
+    strategy: categorical_resample
+
+  # Credit limits are maintained per currency segment, so the currency decides
+  # which orders belong to the segment being migrated at all. Kept as-is for
+  # the same reason as the status.
+  - column: currency
+    strategy: identity
+
+  # Net and order value are tied by a freight and surcharge relation the
+  # generator cannot reproduce, and the order value is the figure the whole
+  # task is built on: it is summed per customer and the sum decides the credit
+  # limit class. Redrawing it would make every expected limit arbitrary. Both
+  # are kept as-is - an order amount is a business figure, not an identifying
+  # one, once the customer beside it has been replaced.
+  - column: net value
+    strategy: identity
+
+  - column: order value
+    strategy: identity

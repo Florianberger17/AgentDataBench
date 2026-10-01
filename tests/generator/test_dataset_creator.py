@@ -656,3 +656,26 @@ def test_faker_mapping_raises_on_a_provider_too_low_cardinality():
     )
     with pytest.raises(ValueError, match="too low-cardinality"):
         DatasetCreator().create_clean_dataset(REPEATED_SUPPLIER_SOURCE_DF, config)
+
+
+def test_constant_strategy_standardises_a_code():
+    """`identity` would carry the real plant through; a benchmark package may
+    want the same code in every row instead."""
+    source = pd.DataFrame({"plant": ["100", "200", "100"]})
+    config = SynthesisConfiguration(
+        seed=1, columns=[{"column": "plant", "strategy": "constant", "value": "4444"}]
+    )
+    result = DatasetCreator().create_clean_dataset(source, config)
+
+    assert list(result["plant"]) == ["4444", "4444", "4444"]
+
+
+def test_constant_strategy_renders_an_unquoted_yaml_integer_as_text():
+    """`value: 2026` must not turn the column numeric - every column is text."""
+    source = pd.DataFrame({"fiscal year": ["2022", "2022"]})
+    config = SynthesisConfiguration(
+        seed=1, columns=[{"column": "fiscal year", "strategy": "constant", "value": 2026}]
+    )
+    result = DatasetCreator().create_clean_dataset(source, config)
+
+    assert list(result["fiscal year"]) == ["2026", "2026"]

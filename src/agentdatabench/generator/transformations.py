@@ -17,6 +17,7 @@ Two handlers need more than the row values themselves:
 
 from __future__ import annotations
 
+import math
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from typing import Protocol
@@ -40,9 +41,22 @@ class TransformationContext:
     # business_rules.grouping.key_fields - the columns identifying one target
     # document, for a field numbered `assigned_per: group`.
     group_keys: list[str] = field(default_factory=list)
+    # Target columns built so far, for a field derived from other target
+    # fields rather than from the source (see MissingTargetColumn).
+    target_columns: dict[str, pd.Series] = field(default_factory=dict)
 
 
 EMPTY_CONTEXT = TransformationContext()
+
+
+class MissingTargetColumn(LookupError):
+    """A handler needs a target column that has not been built yet.
+
+    Raised rather than failing, so GroundTruthCreator can defer the field and
+    retry once its dependencies exist. That keeps the dependency order out of
+    task.yaml: a valuation price derived from a converted quantity works no
+    matter where either field sits in the target schema.
+    """
 
 
 class TransformationHandler(Protocol):
@@ -484,9 +498,23 @@ def _separator(mapping: MappingRule, detected: str) -> str:
 
 
 def _to_numeric(column: pd.Series) -> tuple[pd.Series, str]:
+    """The column as numbers, plus the decimal separator it was written with.
+
+    A comma in the column means the German convention, where the dot is a
+    thousands separator and has to go before parsing - "4.028,000" is four
+    thousand and twenty-eight, not a parse error. Without a comma the dot is
+    the decimal separator and stays.
+    """
     text = column.astype(str).str.strip()
-    separator = "," if text.str.contains(",", regex=False).any() else "."
-    return pd.to_numeric(text.str.replace(",", ".", regex=False), errors="coerce"), separator
+    if text.str.contains(",", regex=False).any():
+        return (
+            pd.to_numeric(
+                text.str.replace(".", "", regex=False).str.replace(",", ".", regex=False),
+                errors="coerce",
+            ),
+            ",",
+        )
+    return pd.to_numeric(text, errors="coerce"), "."
 
 
 def _format_numeric(values: pd.Series, separator: str, decimals: int | None) -> pd.Series:
@@ -542,13 +570,69 @@ class NumericFactorHandler:
         )
 
 
+def evaluate_formula(formula: str, operands: dict[str, pd.Series]) -> pd.Series:
+    """Evaluates an arithmetic formula over named operand columns.
+
+    Operand names are substituted by safe identifiers first, so a formula can
+    name a column the way task.yaml spells it - `"stock value / LBKUM"` -
+    without the backticks pandas would otherwise require. Longest names are
+    replaced first, so one name cannot eat a prefix of another. `^` is
+    accepted for exponentiation and `pi` is available as a constant.
+
+    Evaluation goes through pandas' own expression engine, never `eval`, so a
+    task.yaml cannot reach anything beyond these operands.
+    """
+    frame = {}
+    expression = formula.replace("^", "**")
+    for index, name in enumerate(sorted(operands, key=len, reverse=True)):
+        alias = f"_op{index}"
+        frame[alias] = operands[name]
+        expression = expression.replace(name, alias)
+    frame["pi"] = pd.Series(math.pi, index=next(iter(operands.values())).index)
+    return pd.DataFrame(frame).eval(expression)
+
+
+def _resolve_column(
+    df: pd.DataFrame, name: str, context: TransformationContext
+) -> pd.Series:
+    """The named column, from the source row or - for a field derived from
+    another target field - from the target columns built so far.
+
+    Raises MissingTargetColumn for a name that is neither, so
+    GroundTruthCreator can defer the field and retry it once the one it waits
+    for exists.
+    """
+    if name in df.columns:
+        return df[name]
+    if name in context.target_columns:
+        return context.target_columns[name]
+    raise MissingTargetColumn(name)
+
+
+def _numeric_operands(
+    df: pd.DataFrame, fields: list[str], context: TransformationContext
+) -> tuple[dict[str, pd.Series], str]:
+    """The named fields as numbers, taken from the source row or - for a field
+    derived from another target field - from the target columns built so far."""
+    operands: dict[str, pd.Series] = {}
+    separator = "."
+    for name in fields:
+        column = _resolve_column(df, name, context)
+        numbers, field_separator = _to_numeric(column)
+        operands[name] = numbers
+        if field_separator == ",":
+            separator = ","
+    return operands, separator
+
+
 class CalculationHandler:
     """Evaluates ``formula`` over the ``source_fields`` of the same row (e.g.
     ``"OrderPrice * OpenQuantity"``).
 
-    Only the named source columns are in scope and only arithmetic on them is
-    possible: the formula is evaluated by pandas' own expression engine, not
-    by ``eval``, so a task.yaml cannot reach anything else from here.
+    A name that is not a source column is looked up among the target columns
+    already built, so a field can be derived from other target fields - a
+    valuation price from a converted quantity and a price unit. Those are
+    declared in ``source_fields`` alongside the real source columns.
     """
 
     def apply(
@@ -558,17 +642,8 @@ class CalculationHandler:
         context: TransformationContext = EMPTY_CONTEXT,
     ) -> pd.Series:
         formula = mapping.transformation.formula
-        source_fields = mapping.source_fields or []
-
-        operands = {}
-        separator = "."
-        for field_name in source_fields:
-            numbers, field_separator = _to_numeric(df[field_name])
-            operands[field_name] = numbers
-            if field_separator == ",":
-                separator = ","
-
-        result = pd.DataFrame(operands).eval(formula)
+        operands, separator = _numeric_operands(df, mapping.source_fields or [], context)
+        result = evaluate_formula(formula, operands)
         return _format_numeric(
             result, _separator(mapping, separator), _decimals(mapping)
         )
@@ -610,6 +685,34 @@ class ConditionalValueHandler:
     ``key_field`` is named at the condition rather than taken from the
     ReferenceData declaration, so a condition reads on its own and a table can
     be tested against more than one of its columns.
+
+    A ``when`` may also resolve its field *through* a reference table before
+    testing it, by naming a ``return_field`` beside the ``reference``. The
+    test then reads the resolved value, which is what lets a rule branch on an
+    attribute the dataset does not carry at all::
+
+        - when:
+            field: customer no.
+            reference: customer_cross_reference
+            key_field: "customer no. legacy"
+            return_field: "payment behaviour"
+            is: equals
+            to: "good payer"
+          value: "A"
+
+    ``all_of`` holds several such clauses that all have to hold, for a value
+    that follows from a combination rather than from one field::
+
+        - all_of:
+            - {field: payment behaviour, is: equals, to: "good payer"}
+            - {field: CREDIT_LIMIT, is: in, to: ["50.000", "100.000"]}
+          value: "AA"
+
+    Both ``field`` and ``from_field`` may name a *target* field instead of a
+    source column, so a field can be derived from another field of the output
+    (a risk class from the credit limit above it). The handler raises
+    MissingTargetColumn in that case and GroundTruthCreator retries it once
+    the field it waits for has been built.
     """
 
     _TESTS = {
@@ -641,7 +744,7 @@ class ConditionalValueHandler:
             matches = self._matches(df, condition, context) & unassigned
             if not matches.any():
                 continue
-            result = result.mask(matches, self._values(df, condition))
+            result = result.mask(matches, self._values(df, condition, context))
             unassigned &= ~matches
 
         return result
@@ -649,20 +752,28 @@ class ConditionalValueHandler:
     def _matches(
         self, df: pd.DataFrame, condition: dict, context: TransformationContext
     ) -> pd.Series:
+        clauses = condition.get("all_of")
+        if clauses is not None:
+            matches = pd.Series(True, index=df.index)
+            for clause in clauses:
+                matches &= self._clause_matches(df, clause, context)
+            return matches
+
         when = condition.get("when")
         if when is None:
             return pd.Series(True, index=df.index)
+        return self._clause_matches(df, when, context)
 
-        field_name = when["field"]
-        if field_name not in df.columns:
-            raise ValueError(
-                f"Condition refers to unknown source field '{field_name}' "
-                f"(available: {list(df.columns)})"
-            )
+    def _clause_matches(
+        self, df: pd.DataFrame, when: dict, context: TransformationContext
+    ) -> pd.Series:
+        """One ``when`` clause. Raises MissingTargetColumn where it tests a
+        target field that is not built yet, so the whole rule is deferred."""
+        column = self._tested_column(df, when, context)
 
         test = when.get("is", "not_empty")
         if test in self._REFERENCE_TESTS:
-            contained = self._in_reference(df[field_name], when, context)
+            contained = self._in_reference(column, when, context)
             return contained if test == "in_reference" else ~contained
 
         if test not in self._TESTS:
@@ -670,18 +781,62 @@ class ConditionalValueHandler:
                 f"Unknown condition test '{test}' (supported: "
                 f"{sorted([*self._TESTS, *self._REFERENCE_TESTS])})"
             )
-        return self._TESTS[test](df[field_name], when.get("to"))
+        return self._TESTS[test](column, when.get("to"))
+
+    def _tested_column(
+        self, df: pd.DataFrame, when: dict, context: TransformationContext
+    ) -> pd.Series:
+        """The column the clause tests - the named field, or the value that
+        field resolves to in a reference table when the clause names a
+        ``return_field``."""
+        column = _resolve_column(df, when["field"], context)
+        if when.get("return_field") is None:
+            return column
+        return self._resolved_through_reference(column, when, context)
+
+    def _resolved_through_reference(
+        self, column: pd.Series, when: dict, context: TransformationContext
+    ) -> pd.Series:
+        """Each row's value replaced by what it maps to in a reference table.
+        A value absent from the table resolves to the empty string, so a
+        clause can test for that as well."""
+        reference = self._reference_table(when, context)
+        key_field = when["key_field"]
+        return_field = when["return_field"]
+        for name in (key_field, return_field):
+            if name not in reference.columns:
+                raise ValueError(
+                    f"Reference table '{when['reference']}' has no column "
+                    f"'{name}' (available: {list(reference.columns)})"
+                )
+
+        table = reference[[key_field, return_field]].dropna(subset=[key_field])
+        resolved = (
+            table.assign(
+                _key=table[key_field].astype(str).str.strip(),
+                _value=table[return_field].astype(str).str.strip(),
+            )
+            .drop_duplicates(subset="_key")
+            .set_index("_key")["_value"]
+        )
+        return column.astype(str).str.strip().map(resolved).fillna("")
+
+    def _reference_table(
+        self, when: dict, context: TransformationContext
+    ) -> pd.DataFrame:
+        reference = context.reference_data.get(when["reference"])
+        if reference is None:
+            raise ValueError(
+                f"Reference data '{when['reference']}' is not available - "
+                f"declare it under task.input.reference_data"
+            )
+        return reference
 
     def _in_reference(
         self, column: pd.Series, when: dict, context: TransformationContext
     ) -> pd.Series:
         name = when["reference"]
-        reference = context.reference_data.get(name)
-        if reference is None:
-            raise ValueError(
-                f"Reference data '{name}' is not available - declare it under "
-                f"task.input.reference_data"
-            )
+        reference = self._reference_table(when, context)
 
         key_field = when["key_field"]
         if key_field not in reference.columns:
@@ -693,15 +848,15 @@ class ConditionalValueHandler:
         keys = reference[key_field].dropna().astype(str).str.strip()
         return column.astype(str).str.strip().isin(set(keys))
 
-    def _values(self, df: pd.DataFrame, condition: dict) -> pd.Series:
+    def _values(
+        self,
+        df: pd.DataFrame,
+        condition: dict,
+        context: TransformationContext = EMPTY_CONTEXT,
+    ) -> pd.Series:
         from_field = condition.get("from_field")
         if from_field is not None:
-            if from_field not in df.columns:
-                raise ValueError(
-                    f"Condition refers to unknown source field '{from_field}' "
-                    f"(available: {list(df.columns)})"
-                )
-            return df[from_field].fillna("").astype(str)
+            return _resolve_column(df, from_field, context).fillna("").astype(str)
 
         value = condition.get("value")
         return pd.Series("" if value is None else str(value), index=df.index, dtype="object")
@@ -771,10 +926,328 @@ class SerialDateConversionHandler:
         return result.mask(blank, str(default))
 
 
+class DateDifferenceHandler:
+    """The distance between two dates, optionally translated into a label.
+
+    A legacy system often records only the due date, while the target system
+    expects the payment term that produced it. The difference in days is the
+    bridge; ``value_mapping`` then turns it into the term the target system
+    knows, which is why an unmapped difference is rejected rather than
+    emitted as a bare number.
+
+    Config keys: ``from_field``, ``to_field``, ``input_format``, and
+    optionally ``unit`` (only ``days``) and ``value_mapping``.
+    """
+
+    def apply(
+        self,
+        df: pd.DataFrame,
+        mapping: MappingRule,
+        context: TransformationContext = EMPTY_CONTEXT,
+    ) -> pd.Series:
+        transformation = mapping.transformation
+        source_format = translate_date_format(transformation.input_format)
+
+        def parse(column: pd.Series) -> pd.Series:
+            return column.map(lambda value: datetime.strptime(str(value).strip(), source_format))
+
+        start = parse(df[transformation.from_field])
+        end = parse(df[transformation.to_field])
+        days = (end - start).map(lambda delta: delta.days)
+
+        value_map = getattr(transformation, "value_mapping", None)
+        if value_map is None:
+            return days.astype(str)
+
+        lookup = {str(key): value for key, value in value_map.items()}
+        unmapped = sorted({str(d) for d in days if str(d) not in lookup})
+        if unmapped:
+            raise ValueError(
+                f"No value_mapping entry for a difference of {unmapped} day(s) "
+                f"in target field '{mapping.target_field}'"
+            )
+        return days.astype(str).map(lookup)
+
+
+class UnitConversionHandler:
+    """Converts a quantity from the source unit into the target unit.
+
+    Which conversion applies is decided per row by the pair of units: the
+    source unit comes from ``source_unit_field``, the target unit from
+    ``target_unit_field``, which may name a target column already resolved by
+    a lookup. ``conversions`` lists one ``rule`` per ``from``/``to`` pair; a
+    pair the list does not cover is an authoring error, not a silent pass
+    through.
+
+    A rule may use ``cross_section``, the cross sectional area of a bar, which
+    is itself conditional on the profile - a round bar is computed from its
+    diameter, a square bar from width and depth. It may also use any column of
+    the reference table (``density``), looked up with ``lookup_key`` against
+    ``lookup_source_field``, which is how a stock held in pieces becomes a
+    weight.
+    """
+
+    def apply(
+        self,
+        df: pd.DataFrame,
+        mapping: MappingRule,
+        context: TransformationContext = EMPTY_CONTEXT,
+    ) -> pd.Series:
+        transformation = mapping.transformation
+        source_units = df[transformation.source_unit_field].astype(str).str.strip()
+        target_units = self._target_units(df, transformation, context)
+
+        operands = self._operands(df, mapping, transformation, context)
+        operands["cross_section"] = self._cross_section(df, transformation)
+
+        result = pd.Series(float("nan"), index=df.index, dtype="float64")
+        covered = pd.Series(False, index=df.index)
+        for conversion in transformation.conversions:
+            applies = (source_units == conversion["from"]) & (target_units == conversion["to"])
+            if not applies.any():
+                continue
+            result = result.mask(applies, evaluate_formula(conversion["rule"], operands))
+            covered |= applies
+
+        if not covered.all():
+            pairs = sorted(set(zip(source_units[~covered], target_units[~covered])))
+            raise ValueError(
+                f"No conversion rule for unit pair(s) {pairs} in target field "
+                f"'{mapping.target_field}'"
+            )
+
+        decimals = _decimals(mapping)
+        post_processing = getattr(transformation, "post_processing", None)
+        if post_processing and post_processing.get("type") == "round":
+            decimals = post_processing.get("decimals", decimals)
+            result = result.round(decimals)
+        return _format_numeric(result, _separator(mapping, ","), decimals)
+
+    def _target_units(
+        self, df: pd.DataFrame, transformation, context: TransformationContext
+    ) -> pd.Series:
+        name = transformation.target_unit_field
+        if name in df.columns:
+            return df[name].astype(str).str.strip()
+        if name in context.target_columns:
+            return context.target_columns[name].astype(str).str.strip()
+        raise MissingTargetColumn(name)
+
+    def _operands(
+        self, df: pd.DataFrame, mapping: MappingRule, transformation, context
+    ) -> dict[str, pd.Series]:
+        """The numeric source columns the rules may use, plus every reference
+        table column named in ``reference_fields`` (e.g. the density)."""
+        numeric_fields = [
+            name
+            for name in (mapping.source_fields or [])
+            if name in df.columns and name != transformation.source_unit_field
+        ]
+        operands = {}
+        for name in numeric_fields:
+            numbers, _ = _to_numeric(df[name])
+            operands[name] = numbers
+
+        for name in getattr(transformation, "reference_fields", None) or []:
+            operands[name] = self._reference_column(df, transformation, context, name)
+        return operands
+
+    def _reference_column(
+        self, df: pd.DataFrame, transformation, context, column: str
+    ) -> pd.Series:
+        reference = context.reference_data.get(transformation.reference)
+        if reference is None:
+            raise ValueError(
+                f"Reference data '{transformation.reference}' is not available - "
+                f"declare it under task.input.reference_data"
+            )
+        table = reference[[transformation.lookup_key, column]].dropna().copy()
+        table[transformation.lookup_key] = (
+            table[transformation.lookup_key].astype(str).str.strip()
+        )
+        lookup = table.drop_duplicates(subset=transformation.lookup_key).set_index(
+            transformation.lookup_key
+        )[column]
+        keys = df[transformation.lookup_source_field].astype(str).str.strip()
+        numbers, _ = _to_numeric(keys.map(lookup))
+        return numbers
+
+    def _cross_section(self, df: pd.DataFrame, transformation) -> pd.Series:
+        """Cross sectional area in square millimetres, by profile. Rows whose
+        profile matches no rule keep NaN - harmless unless a conversion rule
+        actually uses the value for that row."""
+        spec = getattr(transformation, "cross_section", None)
+        if not spec:
+            return pd.Series(float("nan"), index=df.index, dtype="float64")
+
+        field_name = spec.get("field", "profile")
+        profiles = df[field_name].fillna("").astype(str).str.strip()
+        operands = {}
+        for name in spec.get("fields", []):
+            numbers, _ = _to_numeric(df[name])
+            operands[name] = numbers
+
+        area = pd.Series(float("nan"), index=df.index, dtype="float64")
+        for rule in spec.get("rules", []):
+            applies = profiles == rule["profile"]
+            if applies.any():
+                area = area.mask(applies, evaluate_formula(rule["formula"], operands))
+        return area
+
+
+class RangeMappingHandler:
+    """Maps a numeric source value to the value of the bracket it falls into.
+
+    The brackets are half-open - ``from`` inclusive, ``to`` exclusive - so
+    adjacent ones can share a boundary without overlapping, and the first
+    matching one wins. An open end is expressed by leaving the bound out::
+
+        ranges:
+          - to: 5000
+            value: "1"
+          - from: 5000
+            to: 10000
+            value: "3.000"
+          - from: 100000
+            value: "100.000"
+
+    This is what ``value_mapping`` cannot do: a credit limit class follows
+    from a revenue no two customers share, so there is no finite table of
+    values to enumerate. ``source_field`` may name a target field as well, so
+    a bracket can be applied to a figure the output itself carries.
+    """
+
+    def apply(
+        self,
+        df: pd.DataFrame,
+        mapping: MappingRule,
+        context: TransformationContext = EMPTY_CONTEXT,
+    ) -> pd.Series:
+        numbers, _ = _to_numeric(
+            _resolve_column(df, mapping.source_field, context)
+        )
+        ranges = mapping.transformation.ranges
+        if not ranges:
+            raise ValueError(
+                f"range_mapping for '{mapping.target_field}' declares no ranges"
+            )
+
+        result = pd.Series("", index=df.index, dtype="object")
+        unassigned = numbers.notna()
+        for bracket in ranges:
+            if "value" not in bracket:
+                raise ValueError(
+                    f"Range {bracket} of '{mapping.target_field}' has no 'value'"
+                )
+            lower, upper = bracket.get("from"), bracket.get("to")
+            if lower is None and upper is None:
+                raise ValueError(
+                    f"Range {bracket} of '{mapping.target_field}' bounds nothing - "
+                    f"give it a 'from', a 'to', or both"
+                )
+            matches = unassigned.copy()
+            if lower is not None:
+                matches &= numbers >= lower
+            if upper is not None:
+                matches &= numbers < upper
+            if not matches.any():
+                continue
+            result = result.mask(matches, str(bracket["value"]))
+            unassigned &= ~matches
+
+        if unassigned.any():
+            uncovered = sorted(set(numbers[unassigned]))
+            raise ValueError(
+                f"range_mapping for '{mapping.target_field}' covers no bracket for "
+                f"value(s) {uncovered[:5]} of '{mapping.source_field}'"
+            )
+        return result
+
+
+class BoundedValueHandler:
+    """Keeps a numeric value inside a bound the business rules impose.
+
+    Each bound is either a literal (``minimum``/``maximum``) or another
+    column's value per row (``minimum_field``/``maximum_field``), optionally
+    scaled by ``minimum_factor``/``maximum_factor`` for a field carried with
+    the opposite sign. A bound may be left out; at least one has to be given,
+    or there is nothing to bound::
+
+        - source_field: actual costs
+          target_field: WIP
+          transformation:
+            type: bounded_value
+            maximum_field: planned revenue
+            maximum_factor: -1          # posted as a credit
+            minimum: 0
+            decimals: 2
+
+    The maximum is applied before the minimum, so the floor wins where the
+    two cross: work in progress capped at a planned revenue of zero is zero,
+    never a negative figure.
+
+    The value and either bound may name a *target* field as well, so a figure
+    can be bounded by another field of the output.
+    """
+
+    def apply(
+        self,
+        df: pd.DataFrame,
+        mapping: MappingRule,
+        context: TransformationContext = EMPTY_CONTEXT,
+    ) -> pd.Series:
+        values, separator = _to_numeric(
+            _resolve_column(df, mapping.source_field, context)
+        )
+
+        upper = self._bound(df, mapping, context, "maximum")
+        lower = self._bound(df, mapping, context, "minimum")
+        if upper is None and lower is None:
+            raise ValueError(
+                f"bounded_value for '{mapping.target_field}' declares neither a "
+                f"minimum nor a maximum - there is nothing to bound"
+            )
+
+        if upper is not None:
+            values = values.clip(upper=upper)
+        if lower is not None:
+            values = values.clip(lower=lower)
+        return _format_numeric(
+            values, _separator(mapping, separator), _decimals(mapping)
+        )
+
+    def _bound(
+        self,
+        df: pd.DataFrame,
+        mapping: MappingRule,
+        context: TransformationContext,
+        edge: str,
+    ) -> pd.Series | float | None:
+        transformation = mapping.transformation
+        literal = getattr(transformation, edge, None)
+        field_name = getattr(transformation, f"{edge}_field", None)
+        if literal is not None and field_name is not None:
+            raise ValueError(
+                f"bounded_value for '{mapping.target_field}' gives both a "
+                f"'{edge}' and a '{edge}_field' - it reads one of them"
+            )
+
+        factor = getattr(transformation, f"{edge}_factor", None)
+        if field_name is None:
+            if literal is None:
+                return None
+            return literal if factor is None else literal * factor
+
+        bound, _ = _to_numeric(_resolve_column(df, field_name, context))
+        return bound if factor is None else bound * factor
+
+
 DEFAULT_TRANSFORMATION_HANDLERS: dict[str, TransformationHandler] = {
     "copy": CopyHandler(),
     "concatenate": ConcatenateHandler(),
     "value_mapping": ValueMappingHandler(),
+    "range_mapping": RangeMappingHandler(),
+    "bounded_value": BoundedValueHandler(),
     "date_format": DateFormatHandler(),
     "sequential_number": SequentialNumberHandler(),
     "sequence": SequenceHandler(),
@@ -792,4 +1265,6 @@ DEFAULT_TRANSFORMATION_HANDLERS: dict[str, TransformationHandler] = {
     "truncate": TruncateHandler(),
     "round": RoundHandler(),
     "serial_date_conversion": SerialDateConversionHandler(),
+    "unit_conversion": UnitConversionHandler(),
+    "date_difference": DateDifferenceHandler(),
 }

@@ -1,0 +1,111 @@
+table: stock_balance
+
+entity: StockBalance
+
+description: >
+  Source schema containing stock balances and valuation prices exported from
+  the legacy ERP system. Each record represents the stock of one part at the
+  end of one accounting period.
+
+attributes:
+
+  - name: part no.
+    type: string
+    required: true
+    unique: true
+    description: >
+      Legacy part number of the stocked part.
+
+  - name: description
+    type: string
+    required: true
+    description: >
+      Designation of the part.
+
+  - name: material category
+    type: string
+    required: true
+    description: >
+      Material category of the legacy ERP system.
+
+  - name: profile
+    type: string
+    required: false
+    description: >
+      Cross sectional shape of a bar shaped part.
+
+  - name: length
+    type: decimal
+    required: false
+    description: >
+      Length of the part in millimetres.
+
+  - name: width
+    type: decimal
+    required: false
+    description: >
+      Width of a square bar or diameter of a round bar in millimetres.
+
+  - name: depth
+    type: decimal
+    required: false
+    description: >
+      Depth of a square bar or thickness of a sheet in millimetres.
+
+  - name: storage location
+    type: string
+    required: true
+    description: >
+      Storage location the stock is held in.
+
+  - name: year
+    type: integer
+    required: true
+    description: >
+      Year of the accounting period.
+
+  - name: month
+    type: integer
+    required: true
+    description: >
+      Month of the accounting period.
+
+  - name: quantity
+    type: decimal
+    required: true
+    description: >
+      Stock quantity in the stock unit of the legacy ERP system.
+
+  - name: stock unit
+    type: string
+    required: true
+    description: >
+      Unit of measure the stock quantity is recorded in.
+
+  - name: price
+    type: decimal
+    required: true
+    description: >
+      Valuation price of the part, referring to the price unit.
+
+  - name: price unit
+    type: decimal
+    required: true
+    description: >
+      Number of stock units the valuation price refers to.
+
+  - name: stock value
+    type: decimal
+    required: true
+    description: >
+      Value of the stock.
+
+constraints:
+
+  - id: CON-SRC-001
+    description: part no. must be unique
+
+  - id: CON-SRC-002
+    description: >
+      stock value equals quantity multiplied by price and divided by price
+      unit

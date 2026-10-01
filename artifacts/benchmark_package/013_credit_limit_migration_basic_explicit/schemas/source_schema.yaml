@@ -1,0 +1,88 @@
+table: sales_order_header
+
+entity: SalesOrderHeader
+
+description: >
+  Source schema containing the sales order headers exported from the legacy
+  ERP system. Each record represents one customer order, identified by its
+  customer transaction number. The export spans several years of order
+  history, so a customer appears in as many records as orders were placed.
+  The dataset is the only record of the historical revenue a credit limit has
+  to be derived from.
+
+attributes:
+
+  - name: customer transaction
+    type: string
+    required: true
+    unique: true
+    description: >
+      Identifier of the customer transaction the order was recorded under.
+
+  - name: status
+    type: string
+    required: true
+    allowed_values:
+      - completed
+      - invoiced
+      - open
+      - cancelled
+    description: >
+      Processing status of the sales order. Only completed and invoiced orders
+      have turned into realised revenue; open orders are not yet delivered and
+      cancelled ones never will be.
+
+  - name: receipt date
+    type: date
+    required: true
+    format: DD.MM.YY
+    description: >
+      Date the order was received from the customer.
+
+  - name: customer no.
+    type: string
+    required: true
+    description: >
+      Customer number in the legacy ERP system.
+
+  - name: customer name
+    type: string
+    required: true
+    description: >
+      Name of the ordering customer.
+
+  - name: order type
+    type: string
+    required: true
+    description: >
+      Order type of the sales order.
+
+  - name: currency
+    type: string
+    required: true
+    format: ISO-4217
+    description: >
+      Currency the order was placed in.
+
+  - name: net value
+    type: decimal
+    required: true
+    description: >
+      Net value of the order, before freight and surcharges.
+
+  - name: order value
+    type: decimal
+    required: true
+    description: >
+      Total value of the order in the order currency. This is the figure the
+      historical revenue of a customer is accumulated from.
+
+constraints:
+
+  - id: CON-SRC-001
+    description: customer transaction must be unique
+
+  - id: CON-SRC-002
+    description: >
+      customer no. and customer name are paired, so every record of a customer
+      carries the same name

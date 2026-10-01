@@ -1,0 +1,96 @@
+table: wip_upload
+
+entity: WorkInProgress
+
+description: >
+  Target schema of the results analysis upload container of the new ERP
+  system. Each record carries the work in progress of exactly one project for
+  one posting period, together with the two figures it was derived from, so
+  that the upload can be reconciled against the legacy system.
+
+attributes:
+
+  - name: project no. legacy
+    type: string
+    required: true
+    unique: true
+    description: >
+      Project number of the legacy ERP system, carried over for
+      reconciliation.
+
+  - name: WBS element
+    type: string
+    required: true
+    unique: true
+    description: >
+      Work breakdown structure element the work in progress is posted to in
+      the target ERP system.
+
+  - name: description
+    type: string
+    required: true
+    description: >
+      Short description of the project.
+
+  - name: posting period
+    type: string
+    required: true
+    format: MM/YYYY
+    description: >
+      Period the work in progress is determined and posted for.
+
+  - name: currency
+    type: string
+    required: true
+    format: ISO-4217
+    description: >
+      Currency of all amounts of the record.
+
+  - name: actual costs
+    type: decimal
+    required: true
+    description: >
+      Actual costs incurred on the project, with two decimal places.
+
+  - name: planned revenue
+    type: decimal
+    required: true
+    description: >
+      Planned revenue of the project, carried as a credit and therefore
+      negative. Zero where no order value was ever planned.
+
+  - name: WIP
+    type: decimal
+    required: true
+    description: >
+      Work in progress to be capitalised, with two decimal places. It is the
+      part of the actual costs that the planned revenue still covers.
+
+  - name: expected loss
+    type: decimal
+    required: true
+    description: >
+      The part of the actual costs the planned revenue does not cover and that
+      has to be provided for as a loss instead of being capitalised. Zero for
+      a project whose costs stay within its planned revenue.
+
+constraints:
+
+  - id: CON-TGT-001
+    description: project no. legacy must be unique
+
+  - id: CON-TGT-002
+    description: WBS element must be unique
+
+  - id: CON-TGT-003
+    description: WIP must not be negative
+
+  - id: CON-TGT-004
+    description: >
+      WIP must not exceed the planned revenue of the project, read as a
+      positive limit
+
+  - id: CON-TGT-005
+    description: >
+      WIP and expected loss must add up to the actual costs, since every euro
+      of cost is either capitalised or provided for

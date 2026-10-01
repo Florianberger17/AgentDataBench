@@ -128,8 +128,61 @@ class Grouping(StrictBaseModel):
     key_fields: list[str]
 
 
+class Aggregate(StrictBaseModel):
+    """One figure accumulated over the records of a group.
+
+    ``name`` is the source column the result is written to, so a mapping rule
+    reads it like any other field of the dataset. It is deliberately not a
+    target field: a credit limit derived from a historical revenue needs that
+    revenue as an intermediate, and the target schema has no column for it.
+
+    ``where`` restricts the records the figure is accumulated over, using the
+    same rule vocabulary as ``business_rules.filtering``. Filtering cannot do
+    this job: two figures of the same group can rest on *different* records -
+    actual costs on the cost postings, the planned revenue on the order-value
+    postings - so a rule that dropped either set would destroy the other
+    figure. A group in which no record matches contributes nothing, which for
+    ``sum`` and ``count`` is zero rather than an empty cell.
+
+    ``factor`` is multiplied into the result, for the sign and unit
+    conventions two systems rarely share - a revenue posted as a credit read
+    back as a positive limit.
+    """
+
+    name: str
+    source_field: str
+    function: Literal["sum", "count", "min", "max", "first", "last"]
+    # Decimal places of the result. Without it a summed amount is rendered
+    # with whatever precision the addition happened to produce.
+    decimals: int | None = None
+    where: FilteringRules | None = None
+    factor: float | None = None
+    description: str | None = None
+
+
+class Aggregation(StrictBaseModel):
+    """Collapses the records of a group into one record.
+
+    Unlike ``Grouping``, which only names what belongs together while every
+    source row still becomes one target row, aggregation changes the
+    cardinality: many source records become one target record. A credit master
+    record per customer is derived from every order that customer ever placed.
+
+    Columns that are neither a key nor an aggregate keep the value of the
+    group's first record - they are constant within the group by construction
+    (a customer's name) or irrelevant to the mapping.
+    """
+
+    description: str | None = None
+    key_fields: list[str]
+    aggregates: list[Aggregate]
+
+
 class BusinessRules(StrictBaseModel):
     filtering: FilteringRules | None = None
+    # Applied after filtering and after unmappable records are dropped, and
+    # before record_order - see GroundTruthCreator.
+    aggregation: Aggregation | None = None
     record_order: RecordOrder | None = None
     grouping: Grouping | None = None
     mappings: list[MappingRule] | None = None

@@ -8,19 +8,25 @@ from agentdatabench.generator.transformations import (
     ConditionalValueHandler,
     ConstantHandler,
     CopyHandler,
+    DateDifferenceHandler,
     DateFormatHandler,
     LookupHandler,
+    MissingTargetColumn,
     NumericFactorHandler,
+    BoundedValueHandler,
     NumericOffsetHandler,
+    RangeMappingHandler,
     RoundHandler,
     SerialDateConversionHandler,
     TruncateHandler,
+    UnitConversionHandler,
     PrefixAndPadHandler,
     SequenceHandler,
     SequentialNumberHandler,
     TransformationContext,
     UppercaseHandler,
     ValueMappingHandler,
+    _to_numeric,
 )
 
 
@@ -394,7 +400,11 @@ def test_conditional_value_handler_supports_equals_test():
     assert list(ConditionalValueHandler().apply(df, mapping)) == ["X", "-"]
 
 
-def test_conditional_value_handler_raises_on_unknown_field():
+def test_conditional_value_handler_defers_on_unknown_field():
+    """A condition may test a *target* field, which does not exist yet while
+    the earlier fields are being built. The handler cannot tell that from a
+    typo, so it defers either way and GroundTruthCreator reports a name
+    nobody ever builds as an unresolvable dependency."""
     df = pd.DataFrame({"a": ["1"]})
     mapping = MappingRule(
         source_field="a",
@@ -404,8 +414,234 @@ def test_conditional_value_handler_raises_on_unknown_field():
             "conditions": [{"when": {"field": "nope", "is": "empty"}, "value": "y"}],
         },
     )
-    with pytest.raises(ValueError, match="nope"):
+    with pytest.raises(MissingTargetColumn, match="nope"):
         ConditionalValueHandler().apply(df, mapping)
+
+
+def _range_mapping(ranges, source_field="revenue"):
+    return MappingRule(
+        source_field=source_field,
+        target_field="limit",
+        transformation={"type": "range_mapping", "ranges": ranges},
+    )
+
+
+_LIMIT_RANGES = [
+    {"to": 5000, "value": "1"},
+    {"from": 5000, "to": 10000, "value": "3.000"},
+    {"from": 10000, "value": "10.000"},
+]
+
+
+def test_range_mapping_picks_the_bracket_the_value_falls_into():
+    df = pd.DataFrame({"revenue": ["234,00", "6.441,89", "216.424,12"]})
+    result = RangeMappingHandler().apply(df, _range_mapping(_LIMIT_RANGES))
+    assert list(result) == ["1", "3.000", "10.000"]
+
+
+def test_range_mapping_bounds_are_lower_inclusive_and_upper_exclusive():
+    """Adjacent brackets share a boundary; the value on it belongs to the
+    upper one."""
+    df = pd.DataFrame({"revenue": ["4.999,99", "5.000,00", "9.999,99", "10.000,00"]})
+    result = RangeMappingHandler().apply(df, _range_mapping(_LIMIT_RANGES))
+    assert list(result) == ["1", "3.000", "3.000", "10.000"]
+
+
+def test_range_mapping_reads_a_target_field_too():
+    df = pd.DataFrame({"other": ["x"]})
+    context = TransformationContext(target_columns={"revenue": pd.Series(["7.000,00"])})
+    result = RangeMappingHandler().apply(df, _range_mapping(_LIMIT_RANGES), context)
+    assert list(result) == ["3.000"]
+
+
+def test_range_mapping_defers_until_the_target_field_it_reads_exists():
+    df = pd.DataFrame({"other": ["x"]})
+    with pytest.raises(MissingTargetColumn):
+        RangeMappingHandler().apply(df, _range_mapping(_LIMIT_RANGES))
+
+
+def test_range_mapping_raises_for_a_value_no_bracket_covers():
+    """Brackets closed on both sides leave a gap, and a value falling into it
+    would otherwise come out silently empty."""
+    df = pd.DataFrame({"revenue": ["20,00"]})
+    closed = [{"from": 0, "to": 10, "value": "low"}]
+    with pytest.raises(ValueError, match="covers no bracket"):
+        RangeMappingHandler().apply(df, _range_mapping(closed))
+
+
+def test_range_mapping_raises_for_a_bracket_without_bounds():
+    df = pd.DataFrame({"revenue": ["1,00"]})
+    with pytest.raises(ValueError, match="bounds nothing"):
+        RangeMappingHandler().apply(df, _range_mapping([{"value": "1"}]))
+
+
+def test_range_mapping_leaves_a_non_numeric_value_empty():
+    df = pd.DataFrame({"revenue": [""]})
+    result = RangeMappingHandler().apply(df, _range_mapping(_LIMIT_RANGES))
+    assert list(result) == [""]
+
+
+
+def _bounded(**transformation):
+    return MappingRule(
+        source_field="costs",
+        target_field="WIP",
+        transformation={"type": "bounded_value", "decimals": 2, **transformation},
+    )
+
+
+def test_bounded_value_caps_at_a_bound_read_from_another_column():
+    df = pd.DataFrame({"costs": ["5000,00", "200,00"], "cap": ["1000,00", "900,00"]})
+    result = BoundedValueHandler().apply(df, _bounded(maximum_field="cap"))
+    assert list(result) == ["1000,00", "200,00"]
+
+
+def test_bounded_value_scales_a_bound_carried_with_the_opposite_sign():
+    """The planned revenue is posted as a credit, so the limit it imposes is
+    its negation."""
+    df = pd.DataFrame({"costs": ["5000,00"], "revenue": ["-1000,00"]})
+    mapping = _bounded(maximum_field="revenue", maximum_factor=-1)
+    assert list(BoundedValueHandler().apply(df, mapping)) == ["1000,00"]
+
+
+def test_bounded_value_applies_the_minimum_last_so_the_floor_wins():
+    """A project with no planned revenue has a cap of zero; its work in
+    progress is zero, not a negative figure."""
+    df = pd.DataFrame({"costs": ["142,00"], "cap": ["0,00"]})
+    mapping = _bounded(maximum_field="cap", minimum=0)
+    assert list(BoundedValueHandler().apply(df, mapping)) == ["0,00"]
+
+
+def test_bounded_value_lifts_a_value_to_a_literal_minimum():
+    df = pd.DataFrame({"costs": ["-30,00", "40,00"]})
+    assert list(BoundedValueHandler().apply(df, _bounded(minimum=0))) == [
+        "0,00",
+        "40,00",
+    ]
+
+
+def test_bounded_value_reads_value_and_bound_from_target_fields():
+    df = pd.DataFrame({"other": ["x"]})
+    context = TransformationContext(
+        target_columns={
+            "costs": pd.Series(["900,00"]),
+            "cap": pd.Series(["500,00"]),
+        }
+    )
+    mapping = _bounded(maximum_field="cap")
+    assert list(BoundedValueHandler().apply(df, mapping, context)) == ["500,00"]
+
+
+def test_bounded_value_defers_until_the_bound_it_reads_exists():
+    df = pd.DataFrame({"costs": ["900,00"]})
+    with pytest.raises(MissingTargetColumn):
+        BoundedValueHandler().apply(df, _bounded(maximum_field="cap"))
+
+
+def test_bounded_value_without_any_bound_raises():
+    df = pd.DataFrame({"costs": ["1,00"]})
+    with pytest.raises(ValueError, match="nothing to bound"):
+        BoundedValueHandler().apply(df, _bounded())
+
+
+def test_bounded_value_with_both_a_literal_and_a_field_bound_raises():
+    df = pd.DataFrame({"costs": ["1,00"], "cap": ["2,00"]})
+    mapping = _bounded(maximum=10, maximum_field="cap")
+    with pytest.raises(ValueError, match="reads one of them"):
+        BoundedValueHandler().apply(df, mapping)
+
+
+def _behaviour_clause(**overrides):
+    clause = {
+        "field": "customer no.",
+        "reference": "cross_reference",
+        "key_field": "legacy",
+        "return_field": "behaviour",
+        "is": "equals",
+        "to": "good payer",
+    }
+    clause.update(overrides)
+    return clause
+
+
+def _cross_reference_context(target_columns=None):
+    return TransformationContext(
+        reference_data={
+            "cross_reference": pd.DataFrame(
+                {
+                    "legacy": ["100", "200", "300"],
+                    "behaviour": ["good payer", "poor payer", "poor payer/blocked"],
+                }
+            )
+        },
+        target_columns=target_columns or {},
+    )
+
+
+def test_conditional_value_resolves_the_tested_field_through_a_reference_table():
+    """Branching on an attribute the dataset does not carry at all - the
+    payment behaviour lives only in the cross reference list."""
+    df = pd.DataFrame({"customer no.": ["100", "200", "300", "999"]})
+    mapping = MappingRule(
+        target_field="class",
+        transformation={
+            "type": "conditional_value",
+            "conditions": [
+                {"when": _behaviour_clause(), "value": "A"},
+                {
+                    "when": _behaviour_clause(to="poor payer/blocked"),
+                    "value": "C",
+                },
+                {"value": "B"},
+            ],
+        },
+    )
+    result = ConditionalValueHandler().apply(df, mapping, _cross_reference_context())
+    # "999" is absent from the table, so it resolves to no behaviour at all
+    # and falls through to the fallback.
+    assert list(result) == ["A", "B", "C", "B"]
+
+
+def test_conditional_value_all_of_requires_every_clause_to_hold():
+    df = pd.DataFrame({"customer no.": ["100", "100", "200"]})
+    context = _cross_reference_context(
+        target_columns={"limit": pd.Series(["50.000", "1", "50.000"])}
+    )
+    mapping = MappingRule(
+        target_field="class",
+        transformation={
+            "type": "conditional_value",
+            "conditions": [
+                {
+                    "all_of": [
+                        _behaviour_clause(),
+                        {"field": "limit", "is": "in", "to": ["50.000"]},
+                    ],
+                    "value": "AA",
+                },
+                {"when": _behaviour_clause(), "value": "A"},
+                {"value": "C"},
+            ],
+        },
+    )
+    assert list(ConditionalValueHandler().apply(df, mapping, context)) == [
+        "AA",
+        "A",
+        "C",
+    ]
+
+
+def test_conditional_value_takes_its_value_from_a_target_field():
+    df = pd.DataFrame({"a": ["1", "2"]})
+    context = TransformationContext(target_columns={"b": pd.Series(["x", "y"])})
+    mapping = MappingRule(
+        target_field="c",
+        transformation={
+            "type": "conditional_value",
+            "conditions": [{"when": {"field": "a", "is": "not_empty"}, "from_field": "b"}],
+        },
+    )
+    assert list(ConditionalValueHandler().apply(df, mapping, context)) == ["x", "y"]
 
 
 def test_lookup_handler_leaves_empty_source_values_empty():
@@ -723,3 +959,188 @@ def test_composite_lookup_does_not_collide_on_the_joined_key():
     context = TransformationContext(reference_data={"customers": reference})
 
     assert list(LookupHandler().apply(df, mapping, context)) == ["0000006765"]
+
+
+def _conversion_mapping(**overrides):
+    transformation = {
+        "type": "unit_conversion",
+        "source_unit_field": "stock unit",
+        "target_unit_field": "MEINS",
+        "reference": "materials",
+        "lookup_key": "part no.",
+        "lookup_source_field": "part no.",
+        "reference_fields": ["density"],
+        "conversions": [
+            {"from": "PCS", "to": "ST", "rule": "quantity"},
+            {"from": "CM2", "to": "M2", "rule": "quantity / 10000"},
+            {"from": "PCS", "to": "KG",
+             "rule": "quantity * cross_section * length * density / 1000000"},
+        ],
+        "cross_section": {
+            "field": "profile",
+            "fields": ["width", "depth"],
+            "rules": [
+                {"profile": "round bar", "formula": "pi * (width / 2) ^ 2"},
+                {"profile": "square bar", "formula": "width * depth"},
+            ],
+        },
+    }
+    transformation.update(overrides)
+    return MappingRule(
+        source_fields=["part no.", "quantity", "stock unit", "profile", "length", "width", "depth"],
+        target_field="LBKUM",
+        transformation=transformation,
+    )
+
+
+_CONVERSION_DF = pd.DataFrame(
+    {
+        "part no.": ["P1", "P2", "P3"],
+        "quantity": ["29", "395", "48"],
+        "stock unit": ["PCS", "CM2", "PCS"],
+        "profile": [None, None, "round bar"],
+        "length": [None, None, "500"],
+        "width": [None, None, "8"],
+        "depth": [None, None, None],
+    }
+)
+_CONVERSION_REF = pd.DataFrame({"part no.": ["P1", "P2", "P3"], "density": ["7,85", "7,85", "1,14"]})
+
+
+def _conversion_context(target_units):
+    return TransformationContext(
+        reference_data={"materials": _CONVERSION_REF},
+        target_columns={"MEINS": pd.Series(target_units)},
+    )
+
+
+def test_unit_conversion_adopts_the_quantity_when_the_units_match():
+    result = UnitConversionHandler().apply(
+        _CONVERSION_DF, _conversion_mapping(), _conversion_context(["ST", "M2", "ST"])
+    )
+    assert result.iloc[0] == "29"
+
+
+def test_unit_conversion_scales_between_related_units():
+    result = UnitConversionHandler().apply(
+        _CONVERSION_DF, _conversion_mapping(), _conversion_context(["ST", "M2", "ST"])
+    )
+    assert result.iloc[1] == "0,0395"
+
+
+def test_unit_conversion_derives_a_weight_from_geometry_and_density():
+    """48 round bars of 8 mm diameter and 500 mm length in polyamide:
+    48 * pi * 4^2 * 500 * 1.14 / 1e6 kg."""
+    mapping = _conversion_mapping(post_processing={"type": "round", "decimals": 3})
+    result = UnitConversionHandler().apply(
+        _CONVERSION_DF, mapping, _conversion_context(["ST", "M2", "KG"])
+    )
+    assert result.iloc[2] == "1,375"
+
+
+def test_unit_conversion_rejects_an_uncovered_unit_pair():
+    """A pair the table does not cover is an authoring error, not a silent
+    pass-through."""
+    with pytest.raises(ValueError, match="No conversion rule"):
+        UnitConversionHandler().apply(
+            _CONVERSION_DF, _conversion_mapping(), _conversion_context(["ST", "M2", "M"])
+        )
+
+
+def test_unit_conversion_defers_an_unresolved_target_unit():
+    with pytest.raises(MissingTargetColumn):
+        UnitConversionHandler().apply(
+            _CONVERSION_DF, _conversion_mapping(), TransformationContext(
+                reference_data={"materials": _CONVERSION_REF}
+            )
+        )
+
+
+def test_calculation_handler_reads_already_built_target_columns():
+    """A valuation price derived from a converted quantity and a price unit -
+    neither of which is a source column."""
+    df = pd.DataFrame({"stock value": ["860,14"]})
+    mapping = MappingRule(
+        source_fields=["stock value", "LBKUM", "PEINH"],
+        target_field="VERPR",
+        transformation={"type": "calculation", "formula": "stock value / LBKUM * PEINH",
+                        "decimals": 2},
+    )
+    context = TransformationContext(
+        target_columns={"LBKUM": pd.Series(["29,000"]), "PEINH": pd.Series(["1"])}
+    )
+    assert list(CalculationHandler().apply(df, mapping, context)) == ["29,66"]
+
+
+def test_calculation_handler_defers_a_target_column_not_built_yet():
+    df = pd.DataFrame({"stock value": ["860,14"]})
+    mapping = MappingRule(
+        source_fields=["stock value", "LBKUM"],
+        target_field="VERPR",
+        transformation={"type": "calculation", "formula": "stock value / LBKUM"},
+    )
+    with pytest.raises(MissingTargetColumn, match="LBKUM"):
+        CalculationHandler().apply(df, mapping)
+
+
+def test_to_numeric_strips_the_thousands_separator():
+    """A German-locale export writes "4.028,000" - four thousand and
+    twenty-eight, not a parse error (regression: the dot survived and the
+    whole column became NaN)."""
+    numbers, separator = _to_numeric(pd.Series(["4.028,000", "540,860", "30.975,200"]))
+
+    assert list(numbers) == [4028.0, 540.86, 30975.2]
+    assert separator == ","
+
+
+def test_to_numeric_keeps_a_dot_decimal_when_no_comma_is_present():
+    numbers, separator = _to_numeric(pd.Series(["2.5", "10"]))
+
+    assert list(numbers) == [2.5, 10.0]
+    assert separator == "."
+
+
+def test_date_difference_handler_translates_a_due_date_into_a_payment_term():
+    """The legacy system records only the due date; the target system expects
+    the term it was derived from."""
+    df = pd.DataFrame(
+        {"Rechnungsdatum": ["12.04.22", "04.05.22"], "Zahlungstermin": ["26.04.22", "03.06.22"]}
+    )
+    mapping = MappingRule(
+        source_fields=["Rechnungsdatum", "Zahlungstermin"],
+        target_field="ZTERM",
+        transformation={
+            "type": "date_difference",
+            "from_field": "Rechnungsdatum",
+            "to_field": "Zahlungstermin",
+            "input_format": "DD.MM.YY",
+            "value_mapping": {14: "14 days net", 30: "30 days net"},
+        },
+    )
+    result = DateDifferenceHandler().apply(df, mapping)
+    assert list(result) == ["14 days net", "30 days net"]
+
+
+def test_date_difference_handler_returns_the_day_count_without_a_mapping():
+    df = pd.DataFrame({"a": ["12.04.22"], "b": ["26.04.22"]})
+    mapping = MappingRule(
+        source_fields=["a", "b"],
+        target_field="days",
+        transformation={"type": "date_difference", "from_field": "a", "to_field": "b",
+                        "input_format": "DD.MM.YY"},
+    )
+    assert list(DateDifferenceHandler().apply(df, mapping)) == ["14"]
+
+
+def test_date_difference_handler_rejects_an_unmapped_difference():
+    """An unexpected term must surface, not be emitted as a bare number."""
+    df = pd.DataFrame({"a": ["12.04.22"], "b": ["19.04.22"]})
+    mapping = MappingRule(
+        source_fields=["a", "b"],
+        target_field="ZTERM",
+        transformation={"type": "date_difference", "from_field": "a", "to_field": "b",
+                        "input_format": "DD.MM.YY",
+                        "value_mapping": {14: "14 days net"}},
+    )
+    with pytest.raises(ValueError, match="difference of"):
+        DateDifferenceHandler().apply(df, mapping)
