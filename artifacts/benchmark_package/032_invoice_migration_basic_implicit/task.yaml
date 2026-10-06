@@ -1,0 +1,41 @@
+task_id: 032_INVOICE_MIGRATION_BASIC_IMPLICIT
+
+objective: >
+  Transform the provided outgoing invoice dataset into the structure and
+  format shown by the target example. The account number of the target
+  system is not contained in the source dataset and shall be resolved via
+  the central customer cross reference list. The payment term is not
+  recorded in the source dataset either and shall be derived from the
+  number of days between the invoice date and the due date. An outgoing
+  invoice is posted as a debit with posting key 01, an outgoing credit
+  note as a credit with posting key 11. The payment method follows from
+  the customer group, where group 01 becomes M and group 11 becomes U. The
+  invoice value is stated three times, since every invoice is issued in
+  the local currency and no translation is needed. Every document belongs
+  to company code 4170, carries the header text Invoice migration, the
+  application NEWGL and the transaction UK with activity K. No formal
+  source or target schema is given - infer the required structure, the
+  field mapping and the value formats yourself by comparing the input
+  dataset against the target example.
+
+input:
+  source_dataset: data/dataset.csv
+  target_example: data/target_example.csv
+  reference_data:
+    - name: customer_cross_reference
+      file: data/mapping_list_customers.csv
+      key_field: "customer no."
+      value_field: "KUNNR"
+      description: >
+        Assigns the customer numbers of the legacy ERP system to the account
+        numbers of the target ERP system.
+
+business_rules: {}
+
+output:
+  format: csv
+
+constraints:
+  - Each output row shall represent one financial document.
+  - No additional columns beyond those shown in the target example may be added.
+  - The column order must match the target example.

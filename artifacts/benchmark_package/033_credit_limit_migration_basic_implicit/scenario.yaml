@@ -1,0 +1,35 @@
+scenario_id: 033_CREDIT_LIMIT_MIGRATION_BASIC_IMPLICIT
+
+name: ERP Credit Limit Migration
+
+domain: ERP Data Integration
+
+description: >
+  Credit master data is set up in a new ERP system as part of a system
+  modernization project. The legacy ERP system never managed credit limits,
+  so there is nothing to carry over: the limits have to be derived from the
+  sales order history, which is the only record of what each customer has
+  actually bought. The legacy system exports one record per order, while the
+  target system keeps one credit master record per customer, so the realised
+  revenue of a customer has to be accumulated over its orders before any
+  credit figure can be derived. The credit policy of the new system does not
+  accept arbitrary amounts but five limit classes, each covering a band of
+  historical revenue. The risk class of a customer follows from that limit
+  together with the payment behaviour recorded in the central customer cross
+  reference list, which also holds the business partner numbers of the target
+  system.
+
+business_objects:
+  - CreditAccount
+
+systems:
+  source:
+    name: Legacy ERP System
+    description: >
+      Stores the sales order history as order headers, one record per order.
+
+  target:
+    name: Target ERP System
+    description: >
+      Manages credit limits and risk classes per business partner and credit
+      segment, loaded through a credit master upload container.

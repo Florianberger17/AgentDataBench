@@ -1,0 +1,86 @@
+seed: 1020
+
+locale: de_DE
+
+columns:
+
+  # The asset number of the legacy register. Substituted consistently per
+  # distinct value and drawn without replacement, since two assets sharing a
+  # number would merge into one in the new register. The legacy range spans
+  # four to ten digits, which the drawn range reproduces.
+  - column: asset no.
+    strategy: numeric_mapping
+    format: "{:d}"
+    min: 1000
+    max: 9999999999
+
+  # Names a machine, a fitting or a licence in ordinary trade language, with
+  # no model designation, vehicle registration or vendor in it, so it
+  # identifies nothing once the asset number and cost center beside it have
+  # been replaced. Carried over because the fifty-character limit of the
+  # target field depends on its exact length.
+  - column: description
+    strategy: identity
+
+  # Decides both the asset class and the location of the new system, and it is
+  # paired with the description - a vehicle description under a software
+  # category would be nonsense. Carried over so that pairing survives.
+  - column: asset category
+    strategy: identity
+
+  # The lookup key into mapping_list_cost_centers.csv, and with it the field
+  # that decides whether an asset can be created at all. Substituted
+  # consistently per distinct value, and the cost center list is generated
+  # from the result so both sides match.
+  - column: cost center
+    strategy: numeric_mapping
+    format: "4444-{:04d}"
+    min: 2000
+    max: 9999
+
+  # Spreadsheet day numbers the target dates are converted from. Both are
+  # carried over unchanged: the expected dates rest on them exactly, and the
+  # source schema requires depreciation not to start before capitalisation,
+  # which redrawing them independently would break. A serial day number is a
+  # technical value.
+  - column: capitalisation serial
+    strategy: identity
+
+  - column: depreciation start serial
+    strategy: identity
+
+  # The two figures the net book value and the memo value follow from.
+  # Redrawing either would make both arbitrary and could put the accumulated
+  # depreciation above the acquisition value. A book value is a business
+  # figure, not an identifying one.
+  - column: acquisition value
+    strategy: identity
+
+  - column: accumulated depreciation
+    strategy: identity
+
+  # Split into years and periods by the target, and paired with the
+  # depreciation state beside it: an asset written down to nil has no life
+  # left. Carried over so that pairing survives.
+  - column: remaining life months
+    strategy: identity
+
+  # Decides the depreciation key of the new system but carries no figure
+  # another column depends on, so it is redrawn from its own frequency
+  # distribution.
+  - column: depreciation method
+    strategy: categorical_resample
+
+  - column: quantity
+    strategy: categorical_resample
+
+  # One unit throughout this register. Replaced by a constant so nothing of
+  # the real export travels with the package.
+  - column: unit of measure
+    strategy: constant
+    value: "ST"
+
+  # Decides which assets are taken over at all, so it is carried over
+  # unchanged: resampling it would move the retired assets.
+  - column: status
+    strategy: identity

@@ -1,0 +1,100 @@
+seed: 1012
+
+locale: de_DE
+
+columns:
+
+  # Exactly one of the 100 records is a credit note, and the posting key and
+  # the debit/credit indicator both hinge on it. A weighted redraw loses a
+  # one-in-a-hundred label about as often as not, so it is guaranteed here.
+  - column: document type
+    strategy: categorical_resample
+    ensure_all_values: true
+
+  # Real document numbers; substituted consistently so the uniqueness the
+  # source schema requires survives.
+  - column: invoice no.
+    strategy: numeric_mapping
+    format: "{:08d}"
+    min: 20000000
+    max: 29999999
+
+  - column: status
+    strategy: identity
+
+  # Standardised for the benchmark rather than carried over from the export.
+  - column: plant
+    strategy: constant
+    value: "4444"
+
+  # The three dates are tied to each other: the posting date follows the
+  # invoice date, and the due date is the invoice date plus the payment term
+  # the target system has to infer. Drawing them independently would destroy
+  # both relations, so only the invoice date is drawn and the other two are
+  # offset from it by an offset observed in the real data.
+  - column: invoice date
+    strategy: date_distribution
+    field_format: "DD.MM.YY"
+
+  - column: posting date
+    strategy: date_offset
+    reference_column: invoice date
+    field_format: "DD.MM.YY"
+    min_offset_days: 0
+
+  # The document dates in source_data.csv were moved to 2026 with it, so the
+  # fiscal year and the dates it covers stay consistent.
+  - column: fiscal year
+    strategy: constant
+    value: "2026"
+
+  - column: posting period
+    strategy: categorical_resample
+
+  - column: customer transaction
+    strategy: numeric_mapping
+    format: "{:06d}"
+    min: 100000
+    max: 999999
+
+  - column: order type
+    strategy: categorical_resample
+
+  # The lookup key into mapping_list_customers.csv. Substituted here, and the
+  # cross reference list is generated from the result, so both sides match.
+  - column: customer no.
+    strategy: numeric_mapping
+    format: "{:07d}"
+    min: 1000000
+    max: 9999999
+
+  # Real company names - must not survive. Paired 1:1 with the customer
+  # number, so the substitution has to be consistent per value.
+  - column: customer name
+    strategy: faker_mapping
+    provider: company
+
+  - column: customer group
+    strategy: categorical_resample
+
+  # Net and total value are tied by a tax and freight relation the generator
+  # cannot reproduce, and no rule of the task reads the net value. Both are
+  # kept as-is: an amount is a business figure, not an identifying one, once
+  # the customer beside it has been replaced.
+  - column: net value
+    strategy: identity
+
+  - column: invoice value
+    strategy: identity
+
+  - column: currency
+    strategy: identity
+
+  # The payment term the target system expects is the distance between this
+  # date and the invoice date, so the offsets observed in the real data - 14
+  # and 30 days - have to survive exactly.
+  - column: due date
+    strategy: date_offset
+    reference_column: invoice date
+    field_format: "DD.MM.YY"
+    min_offset_days: 1

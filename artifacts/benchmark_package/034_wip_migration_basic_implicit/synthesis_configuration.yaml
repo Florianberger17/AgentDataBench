@@ -1,0 +1,65 @@
+seed: 1014
+
+locale: de_DE
+
+columns:
+
+  # The grouping key of the aggregation and the lookup key into
+  # mapping_list_projects.csv at once. Substituted consistently per distinct
+  # value, so every posting of a project keeps landing in the same group, and
+  # the cross reference list is generated from the result so both sides match.
+  - column: project no.
+    strategy: numeric_mapping
+    format: "P{:07d}"
+    min: 2000000
+    max: 9999999
+
+  - column: cost object
+    strategy: numeric_mapping
+    format: "{:012d}"
+    min: 1000000
+    max: 99999999
+
+  # Empty wherever the posting was made directly on the project; those stay
+  # empty, which is what keeps the status column consistent with this one.
+  - column: production order no.
+    strategy: numeric_mapping
+    format: "{:05d}"
+    min: 10000
+    max: 99999
+
+  # The status decides which postings are reversed and therefore which costs
+  # the project carries at all. Resampling it would move the costs of every
+  # project, so it is carried over unchanged - a processing status is a
+  # technical code, not an identifying value.
+  - column: production order status
+    strategy: identity
+
+  # The value type is what tells a planned order value from an incurred cost
+  # and from the fixed-cost view of that same cost. Every figure of the task
+  # rests on it, so it is kept as-is for the same reason as the status.
+  - column: value type
+    strategy: identity
+
+  # Not read by any rule of the task. Resampled rather than carried over,
+  # since the period is the one field that could date a real posting.
+  - column: period
+    strategy: categorical_resample
+    max_cardinality: 40
+
+  # Cost element and its name are paired 1:1, and both are standard values of
+  # the chart of accounts rather than anything identifying. Resampling either
+  # one on its own would break the pairing, so both are carried over.
+  - column: cost element
+    strategy: identity
+
+  - column: cost element name
+    strategy: identity
+
+  # The amount is the figure the whole task is built on: it is summed per
+  # project and decides the work in progress and the expected loss. Redrawing
+  # it would make every expected figure arbitrary. An amount is a business
+  # figure, not an identifying one, once the project beside it has been
+  # replaced.
+  - column: amount
+    strategy: identity

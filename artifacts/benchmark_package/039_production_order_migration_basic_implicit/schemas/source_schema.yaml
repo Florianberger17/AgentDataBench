@@ -1,0 +1,130 @@
+table: production_order
+
+entity: ProductionOrder
+
+description: >
+  Source schema of the production order list exported from the legacy ERP
+  system. Each record is one order, identified by the confirmation number the
+  shop floor books against. The export is taken as it stands and therefore
+  still holds orders that were never released and orders whose material the
+  legacy system itself no longer recognises. The material numbers are the
+  grown legacy range: plain digits of differing lengths alongside
+  letter-prefixed and alphanumeric numbers, with no rule connecting them to
+  the numbers of the new system.
+
+attributes:
+
+  - name: confirmation no.
+    type: string
+    required: true
+    unique: true
+    description: >
+      Confirmation number of the order in the legacy system, which is what
+      the shop floor booked its hours and quantities against.
+
+  - name: material no.
+    type: string
+    required: true
+    description: >
+      Material the order produces, in the legacy numbering. The range grew
+      over decades and mixes several shapes - fourteen, nine and eight digit
+      numbers, numbers prefixed with a letter, and alphanumeric numbers with
+      a dash - so the number of the new system cannot be derived from it and
+      has to be resolved through the material cross reference.
+
+  - name: material description
+    type: string
+    required: true
+    description: >
+      Designation of that material.
+
+  - name: material validity
+    type: string
+    required: true
+    allowed_values:
+      - valid
+      - does not exist
+    description: >
+      Whether the legacy system still holds a material master behind the
+      number. An order whose material does not exist any more cannot be
+      produced and is not migrated.
+
+  - name: start date
+    type: string
+    required: true
+    format: DD.MM.YYYY
+    description: >
+      Scheduled start of the order.
+
+  - name: end date
+    type: string
+    required: true
+    format: DD.MM.YYYY
+    description: >
+      Scheduled finish of the order.
+
+  - name: confirmation status
+    type: string
+    required: true
+    allowed_values:
+      - activated
+      - started
+      - partly finished
+    description: >
+      How far the order has got on the shop floor. An activated order has not
+      been touched, a started one is being worked on, and a partly finished
+      one has already delivered part of its quantity.
+
+  - name: release flag
+    type: string
+    required: true
+    allowed_values:
+      - released
+      - not released
+    description: >
+      Whether the order is released for production. One that is not released
+      is still being planned and is not carried into the new system.
+
+  - name: order quantity
+    type: decimal
+    required: true
+    description: >
+      Quantity the order was placed for.
+
+  - name: good quantity
+    type: decimal
+    required: true
+    description: >
+      Quantity already delivered to stock as good parts. Zero for an order
+      that has not delivered yet.
+
+  - name: scrap quantity
+    type: decimal
+    required: true
+    description: >
+      Quantity already written off as scrap. Zero wherever nothing was
+      scrapped.
+
+  - name: unit of measure
+    type: string
+    required: true
+    description: >
+      Unit the quantities are stated in, identical on every record of this
+      export.
+
+  - name: planner
+    type: string
+    required: true
+    description: >
+      Planner group responsible for the order.
+
+constraints:
+
+  - id: CON-SRC-002
+    description: start date must not be later than end date
+
+  - id: CON-SRC-003
+    description: >
+      good quantity and scrap quantity together must stay below the order
+      quantity, since an order that has delivered its full quantity is closed
+      and would no longer appear in this export

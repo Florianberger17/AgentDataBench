@@ -30,8 +30,7 @@ business_rules:
 
   mappings:
 
-    - source_field: part no.
-      target_field: erp no
+    - target_field: erp no
       transformation:
         type: sequential_number
         start: 30000000000

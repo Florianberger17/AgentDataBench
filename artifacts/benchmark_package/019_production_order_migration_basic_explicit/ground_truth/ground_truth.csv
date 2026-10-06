@@ -1,0 +1,68 @@
+﻿confirmation no.,confirmation no. legacy,material no.,material description,order quantity,delivered quantity,scrap quantity,open quantity,unit of measure,start date,end date,order status,planner,plant,order category
+1,403114,1000-7748,dipstick 300 mm,"8,000","0,000","0,000","8,000",PCE,20260608,20261117,in process,E06,4444,stock order
+2,404569,1001-2294,clamping screw m12x60 mm,"8,000","7,000","0,000","1,000",PCE,20260415,20260909,partly confirmed,E00,4444,stock order
+3,405559,1001-2294,clamping screw m12x60 mm,"125,000","0,000","0,000","125,000",PCE,20260401,20260810,in process,E07,4444,stock order
+4,405748,1001-9867,locking bracket 50x50 mm,"90,000","0,000","0,000","90,000",PCE,20260210,20260727,in process,E00,4444,stock order
+5,406374,1003-3511,worm wheel complete z=30 m1.5,"48,000","0,000","0,000","48,000",PCE,20260323,20260702,in process,E08,4444,stock order
+6,406968,1001-3925,cutting nut m20x1.5,"12,000","0,000","0,000","12,000",PCE,20260504,20260904,created,E07,4444,stock order
+7,407118,1003-1457,contour strip 300 mm,"5,000","0,000","0,000","5,000",PCE,20260316,20261103,in process,E05,4444,stock order
+8,410948,1003-4815,wall cover 1000x500 mm,"20,000","17,000","1,000","2,000",PCE,20260417,20261221,in process,E00,4444,stock order
+9,413364,1001-1361,locking plate 60x60 mm,"100,000","0,000","0,000","100,000",PCE,20260315,20260714,created,E05,4444,stock order
+10,413412,1002-1474,journal bushing d25/d20x25 mm,"5,000","0,000","0,000","5,000",PCE,20260124,20260822,partly confirmed,E07,4444,stock order
+11,413648,1003-7294,linear motor 200n,"100,000","84,000","14,000","2,000",PCE,20260508,20261119,partly confirmed,E07,4444,stock order
+12,413955,1003-4815,wall cover 1000x500 mm,"30,000","0,000","0,000","30,000",PCE,20260125,20260719,created,E08,4444,stock order
+13,415529,1003-7294,linear motor 200n,"5,000","4,000","0,000","1,000",PCE,20260417,20260804,partly confirmed,E07,4444,stock order
+14,415811,1000-7860,adjustment 0-20 mm,"2,000","0,000","0,000","2,000",PCE,20260315,20260801,in process,E00,4444,stock order
+15,416205,1001-5699,adapter piece 50 mm,"1,000","0,000","0,000","1,000",PCE,20260623,20261220,in process,E06,4444,stock order
+16,420536,1003-2191,carrier strip 400 mm,"1,000","0,000","0,000","1,000",PCE,20260404,20260906,in process,E07,4444,stock order
+17,422131,1000-9858,conveyor frame 1500 mm,"160,000","122,000","15,000","23,000",PCE,20260120,20261205,in process,E06,4444,stock order
+18,423094,1000-7860,adjustment 0-20 mm,"60,000","0,000","0,000","60,000",PCE,20260524,20260918,created,E00,4444,stock order
+19,424224,1003-4815,wall cover 1000x500 mm,"30,000","0,000","0,000","30,000",PCE,20260410,20261015,partly confirmed,E06,4444,stock order
+20,424895,1002-7571,brake complete 24v 10nm,"10,000","0,000","0,000","10,000",PCE,20260116,20260927,in process,E07,4444,stock order
+21,425945,1003-2623,gripper unit parallel,"120,000","0,000","0,000","120,000",PCE,20260408,20261110,created,E00,4444,stock order
+22,427261,1003-2191,carrier strip 400 mm,"90,000","56,000","0,000","34,000",PCE,20260304,20260907,created,E05,4444,stock order
+23,429547,1001-2995,transport shaft d25x600 mm,"2,000","0,000","0,000","2,000",PCE,20260608,20260812,in process,E08,4444,stock order
+24,429907,1002-1474,journal bushing d25/d20x25 mm,"10,000","1,000","0,000","9,000",PCE,20260619,20260906,in process,E07,4444,stock order
+25,431491,1002-5246,gear block 80x80 mm,"48,000","0,000","0,000","48,000",PCE,20260511,20260711,partly confirmed,E00,4444,stock order
+26,434039,1000-4445,reinforcement 3.0 mm,"120,000","71,000","0,000","49,000",PCE,20260224,20261221,in process,E00,4444,stock order
+27,434214,1001-5699,adapter piece 50 mm,"2,000","0,000","0,000","2,000",PCE,20260204,20261103,created,E00,4444,stock order
+28,437582,1003-5171,support piece complete 60 mm,"6,000","0,000","0,000","6,000",PCE,20260626,20260826,in process,E00,4444,stock order
+29,437803,1001-9867,locking bracket 50x50 mm,"10,000","0,000","0,000","10,000",PCE,20260503,20260816,created,E08,4444,stock order
+30,437820,1001-7036,storage 100x100 mm,"40,000","0,000","0,000","40,000",PCE,20260523,20260822,in process,E07,4444,stock order
+31,438633,1001-2294,clamping screw m12x60 mm,"5,000","2,000","1,000","2,000",PCE,20260527,20261227,in process,E00,4444,stock order
+32,438879,1002-5246,gear block 80x80 mm,"20,000","0,000","0,000","20,000",PCE,20260514,20261224,created,E08,4444,stock order
+33,445310,1000-8942,gripper arm 100 mm,"12,000","0,000","0,000","12,000",PCE,20260401,20261120,in process,E00,4444,stock order
+34,449330,1002-1963,cam piece 30 mm,"5,000","0,000","0,000","5,000",PCE,20260215,20261008,in process,E05,4444,stock order
+35,450090,1003-5875,support lever 250 mm,"72,000","0,000","0,000","72,000",PCE,20260402,20260805,created,E07,4444,stock order
+36,450717,1001-1361,locking plate 60x60 mm,"50,000","0,000","0,000","50,000",PCE,20260611,20260914,in process,E06,4444,stock order
+37,451164,1002-5543,straightening block 100x60 mm,"8,000","0,000","0,000","8,000",PCE,20260312,20261016,created,E07,4444,stock order
+38,453638,1001-7036,storage 100x100 mm,"100,000","0,000","0,000","100,000",PCE,20260125,20260728,in process,E07,4444,stock order
+39,457329,1000-5682,inlet d25 mm,"48,000","0,000","0,000","48,000",PCE,20260223,20261126,in process,E00,4444,stock order
+40,457731,1003-7260,feed 100 mm,"40,000","0,000","0,000","40,000",PCE,20260224,20260907,in process,E00,4444,stock order
+41,457966,1000-2305,wheel d100 mm,"20,000","18,000","1,000","1,000",PCE,20260608,20260902,in process,E08,4444,stock order
+42,458273,1002-5543,straightening block 100x60 mm,"12,000","0,000","0,000","12,000",PCE,20260128,20261122,in process,E00,4444,stock order
+43,458793,1003-1457,contour strip 300 mm,"120,000","0,000","0,000","120,000",PCE,20260617,20261219,in process,E00,4444,stock order
+44,460944,1002-7571,brake complete 24v 10nm,"30,000","0,000","0,000","30,000",PCE,20260615,20260713,created,E05,4444,stock order
+45,461930,1000-4992,sensor pin d6x25 mm,"48,000","0,000","0,000","48,000",PCE,20260222,20261104,in process,E00,4444,stock order
+46,462103,1003-1457,contour strip 300 mm,"20,000","0,000","0,000","20,000",PCE,20260302,20260713,in process,E00,4444,stock order
+47,462553,1003-7260,feed 100 mm,"90,000","0,000","0,000","90,000",PCE,20260521,20260816,created,E07,4444,stock order
+48,462614,1000-9493,connecting cable 1.5 m,"8,000","0,000","0,000","8,000",PCE,20260404,20261208,in process,E08,4444,stock order
+49,464769,1001-1572,tool piece 50 mm,"12,000","0,000","0,000","12,000",PCE,20260113,20260802,in process,E06,4444,stock order
+50,466447,1000-1575,sealing flange dn40,"5,000","0,000","0,000","5,000",PCE,20260126,20261218,created,E00,4444,stock order
+51,467218,1001-1296,motor support 150 mm,"20,000","0,000","0,000","20,000",PCE,20260128,20260706,created,E05,4444,stock order
+52,474350,1003-2191,carrier strip 400 mm,"3,000","1,000","0,000","2,000",PCE,20260310,20261125,in process,E06,4444,stock order
+53,474844,1001-5768,journal guide 200 mm,"60,000","0,000","0,000","60,000",PCE,20260226,20260827,in process,E00,4444,stock order
+54,479003,1001-8393,slide handle 120 mm,"4,000","0,000","0,000","4,000",PCE,20260405,20260717,created,E00,4444,stock order
+55,479880,1002-2476,oil level indicator g1/2,"48,000","1,000","0,000","47,000",PCE,20260223,20260917,created,E06,4444,stock order
+56,479943,1000-7013,transport bracket 100x100 mm,"2,000","0,000","0,000","2,000",PCE,20260609,20260826,in process,E00,4444,stock order
+57,481293,1002-2078,driver d20 mm,"5,000","3,000","1,000","1,000",PCE,20260322,20260807,in process,E00,4444,stock order
+58,482897,1001-3925,cutting nut m20x1.5,"160,000","0,000","0,000","160,000",PCE,20260102,20260806,in process,E08,4444,stock order
+59,485644,1002-2078,driver d20 mm,"6,000","0,000","0,000","6,000",PCE,20260223,20260926,partly confirmed,E00,4444,stock order
+60,486177,1001-1296,motor support 150 mm,"120,000","119,000","0,000","1,000",PCE,20260228,20261026,created,E07,4444,stock order
+61,488471,1001-1120,end stop 100 mm,"180,000","135,000","0,000","45,000",PCE,20260507,20260810,in process,E07,4444,stock order
+62,488679,1001-8393,slide handle 120 mm,"3,000","0,000","0,000","3,000",PCE,20260221,20261020,in process,E08,4444,stock order
+63,488775,1001-5768,journal guide 200 mm,"125,000","0,000","0,000","125,000",PCE,20260624,20261219,partly confirmed,E00,4444,stock order
+64,488866,1002-3697,push disc d60 mm,"160,000","0,000","0,000","160,000",PCE,20260525,20261011,in process,E00,4444,stock order
+65,491938,1002-5246,gear block 80x80 mm,"90,000","0,000","0,000","90,000",PCE,20260423,20261226,partly confirmed,E08,4444,stock order
+66,493228,1003-3511,worm wheel complete z=30 m1.5,"40,000","14,000","23,000","3,000",PCE,20260208,20260828,created,E06,4444,stock order
+67,498132,1002-3697,push disc d60 mm,"90,000","0,000","0,000","90,000",PCE,20260516,20260911,in process,E08,4444,stock order

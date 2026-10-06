@@ -1,0 +1,143 @@
+table: fixed_asset_register
+
+entity: FixedAsset
+
+description: >
+  Source schema of the fixed asset register exported from the legacy ERP
+  system. Each record is one asset with its takeover values: what it cost, how
+  much of that has been written off, and how much useful life is left. Most of
+  the register is written down to nil, which is normal for a register grown
+  over fifteen years. Dates are exported as spreadsheet day numbers rather
+  than as dates, and the useful life is held as a single figure in months. The
+  register still contains assets that were retired or blocked and assets
+  booked on cost centers the controlling migration has since retired.
+
+attributes:
+
+  - name: asset no.
+    type: string
+    required: true
+    unique: true
+    description: >
+      Asset number in the legacy register. The range grew over the years and
+      runs from four to ten digits.
+
+  - name: description
+    type: string
+    required: true
+    description: >
+      Description of the asset. Longer than the field the new system offers
+      for part of the register.
+
+  - name: asset category
+    type: string
+    required: true
+    allowed_values:
+      - MACH
+      - EDP
+      - VEH
+      - FIXT
+      - SOFT
+      - BLDG
+    description: >
+      Category of the asset: machinery, data processing equipment, vehicles,
+      fixtures and fittings, software, and buildings or building work. It
+      decides both the asset class and the location the asset is created
+      under in the new system.
+
+  - name: cost center
+    type: string
+    required: true
+    description: >
+      Cost center the asset is assigned to, in the legacy numbering. An asset
+      on a cost center the new controlling assignment no longer carries cannot
+      be created.
+
+  - name: capitalisation serial
+    type: integer
+    required: true
+    description: >
+      Date the asset was capitalised, as a spreadsheet day number counted from
+      30 December 1899.
+
+  - name: depreciation start serial
+    type: integer
+    required: true
+    description: >
+      Date depreciation started, in the same notation. It is the
+      capitalisation date for most of the register and the beginning of the
+      following month for the rest, so it never precedes capitalisation.
+
+  - name: acquisition value
+    type: decimal
+    required: true
+    description: >
+      Acquisition cost of the asset.
+
+  - name: accumulated depreciation
+    type: decimal
+    required: true
+    description: >
+      Depreciation written off since the asset was capitalised, carried as a
+      negative figure because it reduces the value of the asset. It never
+      exceeds the acquisition value.
+
+  - name: remaining life months
+    type: integer
+    required: true
+    description: >
+      Useful life still to run, in months. Zero for an asset that is written
+      down to nil, since there is nothing left to depreciate.
+
+  - name: depreciation method
+    type: string
+    required: true
+    allowed_values:
+      - L
+      - D
+      - M
+    description: >
+      Method the asset is depreciated by: straight line, declining balance, or
+      manual.
+
+  - name: quantity
+    type: decimal
+    required: true
+    description: >
+      Number of pieces the asset record covers.
+
+  - name: unit of measure
+    type: string
+    required: true
+    description: >
+      Unit the quantity is stated in, identical on every record of this
+      register.
+
+  - name: status
+    type: string
+    required: true
+    allowed_values:
+      - active
+      - retired
+      - blocked
+    description: >
+      Status of the asset. Only an active asset still belongs to the company;
+      a retired one was disposed of and a blocked one is being written off, so
+      neither is taken over.
+
+constraints:
+
+  - id: CON-SRC-002
+    description: >
+      accumulated depreciation must not exceed the acquisition value, so that
+      the acquisition value and the accumulated depreciation together never
+      give a negative net book value
+
+  - id: CON-SRC-003
+    description: >
+      depreciation start serial must not be earlier than capitalisation serial
+
+  - id: CON-SRC-004
+    description: >
+      remaining life months must be zero exactly for the assets that are
+      written down to nil

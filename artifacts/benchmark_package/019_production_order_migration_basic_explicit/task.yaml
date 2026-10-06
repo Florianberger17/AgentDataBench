@@ -1,0 +1,215 @@
+task_id: 019_PRODUCTION_ORDER_MIGRATION_BASIC_EXPLICIT
+
+objective: >
+  Create the open production orders of the new ERP system from the production
+  order list of the legacy system and produce a CSV file that conforms exactly
+  to the target schema. Three things have to be worked out rather than carried
+  over. The material number is the first: the legacy range grew over decades
+  and mixes plain digits of several lengths with letter-prefixed and
+  alphanumeric numbers, so nothing about a legacy number says what it became -
+  it has to be resolved through the material cross reference, and an order
+  whose material was not carried over at all cannot be created. The
+  confirmation number is the second: the new system numbers from its own
+  range, so the legacy numbers are not taken over but kept beside freshly
+  assigned ones, counted from one upwards in the order the records are
+  delivered. The quantity is the third: what the new system has to schedule
+  is what is still to be produced, not what the order was originally placed
+  for. Only orders that were actually released and whose material still
+  exists are migrated at all.
+
+input:
+  source_dataset: data/dataset.csv
+  source_schema: schemas/source_schema.yaml
+  target_schema: schemas/target_schema.yaml
+  reference_data:
+    - name: material_cross_reference
+      file: data/mapping_list_materials.csv
+      key_field: "material no. legacy"
+      value_field: "material no. new"
+      description: >
+        Assigns the material numbers of the legacy system to those of the new
+        one. There is no rule behind the assignment, so every number has to be
+        read off this list. It covers the whole material master, so it also
+        names materials no open order happens to produce - and a legacy
+        material that was not carried over is absent from it altogether,
+        which means the orders producing it cannot be created in the new
+        system.
+
+required_operations:
+  - schema_mapping
+  - filtering
+  - lookup
+  - sequential_identifier_generation
+  - calculation
+  - date_conversion
+  - rounding
+  - value_mapping
+  - constant_assignment
+
+business_rules:
+
+  filtering:
+    description: >
+      Only orders that are released for production and whose material the
+      legacy system still holds are migrated. An order that is still being
+      planned, or one that points at a material master which no longer
+      exists, is not carried over.
+    rules:
+      - field: release flag
+        operator: "=="
+        value: "released"
+      - field: material validity
+        operator: "=="
+        value: "valid"
+
+  record_order:
+    description: >
+      The orders are delivered in ascending order of their legacy
+      confirmation number, read as a number rather than as text. This is also
+      the order the new confirmation numbers are handed out in, so it decides
+      which order becomes number one.
+    fields:
+      - confirmation no.
+    direction: ascending
+
+  mappings:
+
+    - target_field: confirmation no.
+      transformation:
+        type: sequential_number
+        start: 1
+        increment: 1
+      description: >
+        The new system hands out its confirmation numbers from its own range,
+        counting from one upwards with no gaps, one number per order, in the
+        order the records are delivered. The legacy numbers are not reused.
+
+    - source_field: confirmation no.
+      target_field: confirmation no. legacy
+      transformation:
+        type: copy
+      description: >
+        The legacy number is kept beside the new one so that the hours and
+        quantities the shop floor already booked against it can be traced
+        after the migration.
+
+    - source_field: material no.
+      target_field: material no.
+      transformation:
+        type: lookup
+        reference: material_cross_reference
+        lookup_key: "material no. legacy"
+        return_field: "material no. new"
+        on_missing: exclude_record
+      description: >
+        The legacy material numbers follow no single pattern, so the number of
+        the new system is read off the central cross reference rather than
+        derived. A legacy material the list does not carry was not migrated,
+        and an order producing it cannot be created either - so the whole
+        record is left out rather than loaded without a material.
+
+    - source_field: material description
+      target_field: material description
+      transformation:
+        type: copy
+
+    - source_field: order quantity
+      target_field: order quantity
+      transformation:
+        type: round
+        decimals: 3
+
+    - source_field: good quantity
+      target_field: delivered quantity
+      transformation:
+        type: round
+        decimals: 3
+
+    - source_field: scrap quantity
+      target_field: scrap quantity
+      transformation:
+        type: round
+        decimals: 3
+
+    - source_fields:
+        - order quantity
+        - good quantity
+        - scrap quantity
+      target_field: open quantity
+      transformation:
+        type: calculation
+        formula: "order quantity - good quantity - scrap quantity"
+        decimals: 3
+      description: >
+        The new system schedules what is left to produce, not what was
+        ordered: the quantity already delivered to stock and the quantity
+        scrapped along the way are both finished business and come off the
+        order quantity.
+
+    - source_field: unit of measure
+      target_field: unit of measure
+      transformation:
+        type: value_mapping
+        mapping:
+          "STK": "PCE"
+      description: >
+        The legacy system writes pieces as STK, the new one in the
+        international notation.
+
+    - source_field: start date
+      target_field: start date
+      transformation:
+        type: date_format
+        input_format: DD.MM.YYYY
+        output_format: YYYYMMDD
+
+    - source_field: end date
+      target_field: end date
+      transformation:
+        type: date_format
+        input_format: DD.MM.YYYY
+        output_format: YYYYMMDD
+
+    - source_field: confirmation status
+      target_field: order status
+      transformation:
+        type: value_mapping
+        mapping:
+          "activated": "created"
+          "started": "in process"
+          "partly finished": "partly confirmed"
+      description: >
+        The status the order is created with follows from how far it had got
+        on the shop floor: one that was never touched is simply created, one
+        being worked on is in process, and one that already delivered part of
+        its quantity is partly confirmed.
+
+    - source_field: planner
+      target_field: planner
+      transformation:
+        type: copy
+
+    - target_field: plant
+      transformation:
+        type: constant
+        value: "4444"
+
+    - target_field: order category
+      transformation:
+        type: constant
+        value: "stock order"
+
+output:
+  format: csv
+  schema_reference: schemas/target_schema.yaml
+
+constraints:
+  - The output dataset must follow the target schema exactly.
+  - The output column order must match the target schema.
+  - No additional columns may be added.
+  - Each output row shall represent one production order.
+  - confirmation no. must run from 1 upwards without a gap, one per record.
+  - confirmation no. legacy must be unique.
+  - open quantity must equal the order quantity less the delivered quantity and the scrap quantity.
+  - open quantity must be greater than zero.
+  - start date must not be later than end date.

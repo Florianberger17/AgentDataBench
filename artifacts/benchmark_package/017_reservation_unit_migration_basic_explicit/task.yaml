@@ -1,0 +1,255 @@
+task_id: 017_RESERVATION_UNIT_MIGRATION_BASIC_EXPLICIT
+
+objective: >
+  Create the reservation units of the new production planning system from the
+  work center master of the legacy system and produce a CSV file that conforms
+  exactly to the target schema. Two things have to be worked out rather than
+  carried over. First, which entries are reservation units at all: the legacy
+  number range is also used for production notes, for store movements booked
+  like an operation and for auxiliary units, and none of those are planned
+  against. Second, and this is what the upload turns on, the capacity: the
+  legacy system never held a capacity figure, only the shift arrangement a
+  work center is run under, so the capacity has to be determined from it - the
+  gross shift time less the breaks, taken over every workplace, every shift
+  and every working day of the period. An operation bought in from a
+  subcontractor runs on no workplace of the plant and therefore carries no
+  capacity, which also decides how it is scheduled. The cost element is not
+  held in the work center master either and comes from the central controlling
+  list, which at the same time decides which cost centers still exist.
+
+input:
+  source_dataset: data/dataset.csv
+  source_schema: schemas/source_schema.yaml
+  target_schema: schemas/target_schema.yaml
+  reference_data:
+    - name: cost_center_list
+      file: data/mapping_list_cost_centers.csv
+      key_field: "cost center"
+      value_field: "cost element"
+      description: >
+        The cost centers of the new controlling chart with the cost element
+        the confirmed hours of each are posted under. The list covers the
+        whole plant, so it also names cost centers no work center is booked
+        against. A work center booked against a cost center the list does not
+        carry cannot be created: that cost center was retired and the work
+        center has to be reassigned by hand first.
+
+required_operations:
+  - schema_mapping
+  - filtering
+  - capacity_calculation
+  - calculation
+  - lookup
+  - value_mapping
+  - range_mapping
+  - rounding
+  - constant_assignment
+
+business_rules:
+
+  filtering:
+    description: >
+      Only genuine work centers become reservation units, and only those still
+      in use and still booked against a cost center of the new controlling
+      chart.
+    rules:
+      - field: unit category
+        operator: "=="
+        value: "work center"
+      - field: deletion flag
+        operator: is empty
+      - field: cost center
+        operator: in
+        reference: cost_center_list
+        key_field: "cost center"
+
+  record_order:
+    description: >
+      The reservation units are delivered in ascending order of their number,
+      read as a number rather than as text.
+    fields:
+      - reservation unit no.
+    direction: ascending
+
+  mappings:
+
+    - source_field: reservation unit no.
+      target_field: reservation unit no.
+      transformation:
+        type: copy
+
+    - source_field: designation
+      target_field: designation
+      transformation:
+        type: copy
+
+    - source_field: unit type code
+      target_field: unit type
+      transformation:
+        type: value_mapping
+        mapping:
+          "E": "in-house"
+          "A": "external"
+      description: >
+        The legacy system holds a one-letter code; the target system spells
+        the type out.
+
+    - source_field: bottleneck flag
+      target_field: bottleneck unit
+      transformation:
+        type: value_mapping
+        mapping:
+          "J": "yes"
+          "N": "no"
+
+    - source_fields:
+        - capacity units
+        - shifts per day
+        - hours per shift
+        - break minutes per shift
+        - working days per week
+      target_field: capacity
+      transformation:
+        type: calculation
+        formula: "capacity units * shifts per day * (hours per shift - break minutes per shift / 60) * working days per week"
+        decimals: 3
+        decimal_separator: ","
+      description: >
+        The capacity is the net productive time of the unit over one period.
+        One shift contributes its gross length less its breaks, which are
+        recorded in minutes and therefore have to be brought to hours first;
+        that net shift time applies to every shift of a working day, to every
+        working day of the week and to every workplace the operation is
+        performed on. A bought-in operation has no workplace of its own, so
+        its workplace count is zero and the capacity comes out at zero with
+        it.
+
+    - target_field: time unit
+      transformation:
+        type: constant
+        value: "hours"
+
+    - source_field: capacity units
+      target_field: capacity units
+      transformation:
+        type: round
+        decimals: 4
+        decimal_separator: ","
+      description: >
+        The number of workplaces the capacity was determined over, written
+        with the four decimal places the container expects.
+
+    - source_field: shifts per day
+      target_field: shift factor
+      transformation:
+        type: round
+        decimals: 2
+        decimal_separator: ","
+      description: >
+        The number of shifts is carried into the target system as its shift
+        factor. The capacity already covers every shift, so this is a planning
+        parameter and not a second multiplier on it.
+
+    - source_field: planning profile
+      target_field: rough planning factor
+      transformation:
+        type: value_mapping
+        mapping:
+          "standard": "0,90"
+          "reduced": "0,80"
+          "manual": "1,00"
+      description: >
+        The rough-cut planning run plans a standard work center at ninety per
+        cent of its capacity and a reduced one at eighty, while a manually
+        planned work center is taken at face value.
+
+    - source_field: planning profile
+      target_field: detailed planning factor
+      transformation:
+        type: value_mapping
+        mapping:
+          "standard": "1,00"
+          "reduced": "0,90"
+          "manual": "1,00"
+      description: >
+        The detailed planning run corrects only the reduced profile; the other
+        two are planned at their full capacity.
+
+    - target_field: overload factor
+      transformation:
+        type: constant
+        value: "1,00"
+
+    - source_field: unit type code
+      target_field: scheduling key
+      transformation:
+        type: value_mapping
+        mapping:
+          "E": "capacity scheduling"
+          "A": "lead time scheduling"
+      description: >
+        A unit with capacity of its own is scheduled against that capacity. A
+        bought-in operation has none, so the system can only schedule it by
+        its lead time.
+
+    - target_field: validity indicator
+      transformation:
+        type: constant
+        value: "generally valid"
+
+    - source_field: cost center
+      target_field: cost center
+      transformation:
+        type: copy
+
+    - source_field: cost center
+      target_field: cost element
+      transformation:
+        type: lookup
+        reference: cost_center_list
+        lookup_key: "cost center"
+        return_field: "cost element"
+      description: >
+        The cost element the confirmed hours are posted under follows from the
+        cost center and is resolved via the central controlling list.
+
+    - target_field: confirmation indicator
+      transformation:
+        type: constant
+        value: "confirmation required"
+
+    - source_field: capacity units
+      target_field: unit identifier
+      transformation:
+        type: range_mapping
+        ranges:
+          - to: 2
+            value: ""
+          - from: 2
+            value: "S"
+      description: >
+        A unit holding two or more workplaces is a pooled unit and is marked
+        as one. A unit with a single workplace, and a bought-in operation with
+        none, carries no mark.
+
+    - target_field: period indicator
+      transformation:
+        type: constant
+        value: "week"
+      description: >
+        The capacity of every unit of this migration is stated per week.
+
+output:
+  format: csv
+  schema_reference: schemas/target_schema.yaml
+
+constraints:
+  - The output dataset must follow the target schema exactly.
+  - The output column order must match the target schema.
+  - No additional columns may be added.
+  - Each output row shall represent one reservation unit.
+  - reservation unit no. must be unique.
+  - capacity must not be negative.
+  - capacity must be zero exactly for the units of type external.
+  - scheduling key must be lead time scheduling exactly where the capacity is zero.
+  - unit identifier must be set exactly where capacity units is two or more.

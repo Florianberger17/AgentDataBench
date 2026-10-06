@@ -1,0 +1,39 @@
+scenario_id: 018_WORK_PLAN_MIGRATION_BASIC_EXPLICIT
+
+name: ERP Work Plan Migration
+
+domain: ERP Data Integration
+
+description: >
+  The routings of the shop floor are loaded into a new production planning
+  system as part of a system modernization project. The reservation units
+  they are scheduled against were migrated before them, and the shop floor
+  was reorganised in the process: machines were merged, scrapped or moved to
+  subcontractors, so part of the units the legacy routings still book on no
+  longer exist. An operation booked on one of those has nothing left to be
+  scheduled against and cannot be loaded, which makes the comparison against
+  the new reservation unit master the first thing the migration has to do -
+  and that master is at the same time the only place the designation, the
+  cost center and the minimum booking time of a unit can be read from. The
+  times are the second: the legacy system records them in minutes and over
+  the lot they were measured on, while the new system plans in hours and per
+  piece, so not one time can be carried over as it stands. Labour on top of
+  that is never booked below the minimum booking time of the unit it runs
+  on, which is all an operation that was never timed has to go on.
+
+business_objects:
+  - Operation
+
+systems:
+  source:
+    name: Legacy Production Planning System
+    description: >
+      Holds the routings of the plant as operations booked on reservation
+      units, with setup and operation times in minutes and over the lot they
+      were measured on.
+
+  target:
+    name: Target Production Planning System
+    description: >
+      Schedules operations against the capacity of reservation units and
+      plans in hours per piece, loaded through the routing upload container.

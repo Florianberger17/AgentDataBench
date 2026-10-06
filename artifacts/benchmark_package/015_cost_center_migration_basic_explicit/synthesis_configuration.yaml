@@ -1,0 +1,69 @@
+seed: 1015
+
+locale: de_DE
+
+columns:
+
+  # The join key of the expansion, so every successor of a cost center has to
+  # keep finding it. Substituted consistently per distinct value, and the
+  # cross reference list is generated from the result so both sides match.
+  # Drawn without replacement: two legacy cost centers collapsing onto one
+  # synthetic number would merge two unrelated sets of successors.
+  - column: cost center
+    strategy: numeric_mapping
+    format: "4444-{:04d}"
+    min: 1000
+    max: 9999
+
+  # The description is what the target description falls back to where the
+  # cross reference leaves the new name blank, and the short name is derived
+  # from it in turn. Redrawing it would make both expected values arbitrary.
+  # A cost center name states a business function - purchasing, final
+  # assembly - and identifies nothing on its own.
+  - column: description
+    strategy: identity
+
+  # The category decides the cost center type, the functional area and both
+  # revenue locks at once. Resampling it would move three target fields of
+  # every record; a one-digit category is a technical code, not an
+  # identifying value.
+  - column: cost center category
+    strategy: identity
+
+  # A real person. Replaced by a drawn name, consistently per distinct value
+  # so the same manager stays the same manager across their cost centers.
+  # Not read by any rule - the target system takes its responsible user from
+  # the cross reference list instead.
+  - column: manager
+    strategy: faker_mapping
+    provider: name
+
+  # Not read by any rule. Redrawn rather than carried over, since a creation
+  # date could place a real cost center in time. The real values all precede
+  # the earliest validity end in the column beside it, so a drawn value stays
+  # before it as well.
+  - column: valid from
+    strategy: date_distribution
+    field_format: "DD.MM.YYYY"
+
+  # Decides which cost centers are still valid at the migration date and
+  # becomes the target validity end. Both the filter and the expected value
+  # rest on it exactly, so it is carried over unchanged.
+  - column: valid to
+    strategy: identity
+
+  # Decides which cost centers are migrated at all. Carried over for the same
+  # reason as the validity end.
+  - column: status
+    strategy: identity
+
+  # The legacy plant, identical on every record of this export. Replaced by a
+  # constant so the real plant number does not travel with the package.
+  - column: plant
+    strategy: constant
+    value: "4444"
+
+  # Becomes the target currency. One value throughout and in no way
+  # identifying, so it is carried over.
+  - column: currency
+    strategy: identity

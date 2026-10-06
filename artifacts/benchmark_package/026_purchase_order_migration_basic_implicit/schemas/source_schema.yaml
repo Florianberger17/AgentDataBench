@@ -71,6 +71,3 @@ constraints:
 
   - id: CON-SRC-001
     description: The combination of TransactionNo and ItemNo must be unique
-
-  - id: CON-SRC-002
-    description: Description1 must be provided

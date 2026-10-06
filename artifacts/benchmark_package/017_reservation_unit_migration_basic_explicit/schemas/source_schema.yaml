@@ -1,0 +1,134 @@
+table: work_center_master
+
+entity: WorkCenter
+
+description: >
+  Source schema of the work center master exported from the legacy production
+  planning system. Each record is one entry of the legacy reservation unit
+  number range - which that system uses for a good deal more than work
+  centers: production notes that are printed onto an operation, store
+  movements that are booked like an operation, and auxiliary units carrying
+  technical postings all share the range, and only the genuine work centers
+  are reservation units in the new system. The legacy system holds no
+  capacity figure at all; it records the shift arrangement a work center is
+  run under, from which the capacity has to be determined.
+
+attributes:
+
+  - name: reservation unit no.
+    type: string
+    required: true
+    unique: true
+    description: >
+      Number of the entry in the legacy reservation unit range.
+
+  - name: designation
+    type: string
+    required: true
+    description: >
+      Designation of the entry, naming the operation a work center performs.
+
+  - name: unit category
+    type: string
+    required: true
+    allowed_values:
+      - work center
+      - note
+      - storage
+      - auxiliary
+    description: >
+      What kind of entry the record is. Only a work center is an operation
+      that capacity is planned for; a note is text printed onto a routing, a
+      storage entry is a store movement booked through the range, and an
+      auxiliary unit exists for technical postings alone.
+
+  - name: unit type code
+    type: string
+    required: true
+    allowed_values:
+      - E
+      - A
+    description: >
+      Whether the operation is run in house (E) or bought in from a
+      subcontractor (A). A bought-in operation occupies no workplace of the
+      plant, which is why its workplace count is zero.
+
+  - name: cost center
+    type: string
+    required: true
+    description: >
+      Cost center the work center is booked against. A cost center the new
+      controlling chart no longer carries has to be reassigned by hand before
+      the work center can be created.
+
+  - name: capacity units
+    type: integer
+    required: true
+    description: >
+      Number of identical workplaces the operation is performed on - machines
+      of the same kind, or staff working in parallel. Zero for a bought-in
+      operation.
+
+  - name: hours per shift
+    type: decimal
+    required: true
+    description: >
+      Gross length of one shift in hours, before the breaks are deducted.
+
+  - name: shifts per day
+    type: integer
+    required: true
+    description: >
+      Number of shifts the operation is run in per working day.
+
+  - name: break minutes per shift
+    type: integer
+    required: true
+    description: >
+      Paid break time per shift in minutes, during which the workplace does
+      not produce and which therefore does not count towards the capacity.
+
+  - name: working days per week
+    type: decimal
+    required: true
+    description: >
+      Number of working days per week the operation is run on.
+
+  - name: planning profile
+    type: string
+    required: true
+    allowed_values:
+      - standard
+      - reduced
+      - manual
+    description: >
+      Planning arrangement of the work center. It sets both correction factors
+      the target system plans the work center with.
+
+  - name: bottleneck flag
+    type: string
+    required: true
+    allowed_values:
+      - J
+      - N
+    description: >
+      Whether the work center is a bottleneck that production scheduling has
+      to plan around.
+
+  - name: deletion flag
+    type: string
+    required: false
+    description: >
+      Set to X where the entry is flagged for deletion in the legacy master.
+      Empty for every entry still in use.
+
+constraints:
+
+  - id: CON-SRC-002
+    description: >
+      capacity units must be zero for a bought-in operation (unit type code A)
+
+  - id: CON-SRC-003
+    description: >
+      break minutes per shift must be less than the gross shift length, so
+      that a shift always leaves productive time

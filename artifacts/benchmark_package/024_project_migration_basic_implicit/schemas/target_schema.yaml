@@ -68,14 +68,5 @@ attributes:
 
 constraints:
 
-  - id: CON-TGT-001
-    description: Project Definition must be unique
-
-  - id: CON-TGT-002
-    description: Short Description must not be empty
-
-  - id: CON-TGT-003
-    description: Project Currency must follow ISO 4217 format
-
   - id: CON-TGT-004
     description: Finish Date, if provided, must not be earlier than Start Date

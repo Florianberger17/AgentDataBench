@@ -1,101 +1,101 @@
-﻿document type;invoice no.;status;plant;invoice date;posting date;fiscal year;posting period;customer transaction;order type;customer no.;customer name;customer group;net value;invoice value;currency;due date
-outgoing invoice;27492309;invoice posted;4444;15.05.26;15.05.26;2026;5;355137;ERS;4391995;Freudenberger Fiebig GmbH;01;4.028,000;4.028,000;EUR;14.06.26
-outgoing invoice;25132951;invoice posted;4444;16.05.26;16.05.26;2026;4;398400;ERS;5612074;auch Schlauchin AG;11;2.784,000;3.347,470;EUR;15.06.26
-outgoing invoice;25497213;invoice posted;4444;04.05.26;04.05.26;2026;4;128648;ERS;2657518;Hertrampf Siering GmbH & Co. KG;11;454,500;540,860;EUR;03.06.26
-outgoing invoice;25967513;invoice posted;4444;30.04.26;30.04.26;2026;4;896095;ERS;5612074;auch Schlauchin AG;01;9.408,000;11.230,030;EUR;30.05.26
-outgoing invoice;26998945;invoice posted;4444;19.04.26;19.04.26;2026;4;667639;ERS;9317421;Schäfer;11;1.664,400;1.725,400;EUR;19.05.26
-outgoing invoice;29604752;invoice posted;4444;11.05.26;11.05.26;2026;4;149305;ERS;7801352;Seidel AG & Co. KG;11;1.743,250;2.097,080;EUR;25.05.26
-outgoing invoice;23450608;invoice posted;4444;04.05.26;04.05.26;2026;5;127374;ERS;3875514;Liebelt Albers GmbH;11;177,600;177,600;EUR;18.05.26
-outgoing invoice;25474010;invoice posted;4444;22.04.26;22.04.26;2026;4;645631;ERS;3875514;Liebelt Albers GmbH;11;360,000;360,000;EUR;06.05.26
-outgoing invoice;20175930;invoice posted;4444;06.05.26;06.05.26;2026;4;346122;ERS;3875514;Liebelt Albers GmbH;01;190,000;190,000;EUR;20.05.26
-outgoing invoice;20230679;invoice posted;4444;08.05.26;08.05.26;2026;5;262059;ERS;3875514;Liebelt Albers GmbH;11;129,200;129,200;EUR;07.06.26
-outgoing invoice;23138722;invoice posted;4444;23.04.26;23.04.26;2026;4;838238;ERS;3875514;Liebelt Albers GmbH;11;344,000;344,000;EUR;23.05.26
-outgoing invoice;21687996;invoice posted;4444;20.04.26;20.04.26;2026;5;706501;ERS;3875514;Liebelt Albers GmbH;11;1.072,000;1.072,000;EUR;04.05.26
-outgoing invoice;21743353;invoice posted;4444;27.04.26;27.04.26;2026;4;545922;ERS;3875514;Liebelt Albers GmbH;11;1.892,000;1.892,000;EUR;27.05.26
-outgoing invoice;29376445;invoice posted;4444;14.04.26;14.04.26;2026;5;354085;ERS;3875514;Liebelt Albers GmbH;11;232,000;232,000;EUR;14.05.26
-outgoing invoice;25102624;invoice posted;4444;25.04.26;25.04.26;2026;5;848111;ERS;3875514;Liebelt Albers GmbH;11;30.975,200;30.975,200;EUR;25.05.26
-outgoing invoice;25573865;invoice posted;4444;08.05.26;08.05.26;2026;5;421929;ERS;5612074;auch Schlauchin AG;01;1.267,200;1.532,960;EUR;07.06.26
-outgoing invoice;21419864;invoice posted;4444;05.05.26;05.05.26;2026;5;498974;ERS;5612074;auch Schlauchin AG;11;6.240,000;7.466,060;EUR;04.06.26
-outgoing invoice;21391211;invoice posted;4444;13.05.26;13.05.26;2026;5;514176;ERS;7588423;Döhn Müller KG;11;825,600;1.005,070;EUR;27.05.26
-outgoing invoice;28647977;invoice posted;4444;12.05.26;12.05.26;2026;4;851299;KSE;9225301;Krebs GmbH & Co. KGaA;11;1.591,250;1.963,800;EUR;26.05.26
-outgoing invoice;22452078;invoice posted;4444;11.05.26;11.05.26;2026;5;770059;ERS;4652930;Klingelhöfer;11;743,850;907,790;EUR;25.05.26
-outgoing invoice;29768156;invoice posted;4444;23.04.26;23.04.26;2026;5;424714;ERS;7881462;Hänel KG;11;1.778,400;2.138,910;EUR;23.05.26
-outgoing invoice;24236188;invoice posted;4444;18.04.26;18.04.26;2026;5;949518;ERS;5612074;auch Schlauchin AG;11;25.224,000;30.095,100;EUR;18.05.26
-outgoing invoice;24470467;invoice posted;4444;02.05.26;02.05.26;2026;5;169972;ERS;3009343;Römer Eberth GmbH & Co. KGaA;11;249,600;319,630;EUR;01.06.26
-outgoing invoice;27193719;invoice posted;4444;16.05.26;16.05.26;2026;5;898010;ERS;5612074;auch Schlauchin AG;11;176,640;232,810;EUR;15.06.26
-outgoing invoice;28259070;invoice posted;4444;18.05.26;18.05.26;2026;4;582681;ERS;8717568;Riehl;01;2.529,100;3.009,630;EUR;01.06.26
-outgoing invoice;24187266;invoice posted;4444;04.05.26;07.05.26;2026;4;941645;ERS;5612074;auch Schlauchin AG;11;940,800;1.119,550;EUR;18.05.26
-outgoing credit note;28856912;invoice posted;4444;24.04.26;24.04.26;2026;5;421676;ERS;6056001;Hecker Dörr Stiftung & Co. KGaA;11;2.479,500;2.479,500;EUR;08.05.26
-outgoing invoice;29328851;invoice posted;4444;13.04.26;13.04.26;2026;5;612429;ERS;5887369;Ackermann GbR;11;4.436,640;4.436,640;EUR;13.05.26
-outgoing invoice;25127738;invoice posted;4444;09.05.26;09.05.26;2026;5;421129;ERS;5887369;Ackermann GbR;01;6.006,000;6.006,000;EUR;23.05.26
-outgoing invoice;26134046;invoice posted;4444;19.04.26;19.04.26;2026;4;752378;ERS;9225301;Krebs GmbH & Co. KGaA;11;660,250;876,140;EUR;19.05.26
-outgoing invoice;24378743;invoice posted;4444;16.05.26;16.05.26;2026;4;688959;ERS;6056001;Hecker Dörr Stiftung & Co. KGaA;11;9.800,000;9.891,000;EUR;15.06.26
-outgoing invoice;28367921;invoice posted;4444;29.04.26;29.04.26;2026;5;886682;ERS;7588423;Döhn Müller KG;11;604,800;742,320;EUR;13.05.26
-outgoing invoice;23044800;invoice posted;4444;27.04.26;27.04.26;2026;4;756332;ERS;5612074;auch Schlauchin AG;11;11.232,000;13.406,540;EUR;27.05.26
-outgoing invoice;20903085;invoice posted;4444;13.04.26;13.04.26;2026;5;547432;ERS;5612074;auch Schlauchin AG;01;1.152,000;1.370,880;EUR;13.05.26
-outgoing invoice;28872934;invoice posted;4444;26.04.26;26.04.26;2026;4;985991;ERS;3875514;Liebelt Albers GmbH;01;1.152,000;1.152,000;EUR;26.05.26
-outgoing invoice;24334856;invoice posted;4444;23.04.26;23.04.26;2026;5;537245;ERS;3875514;Liebelt Albers GmbH;01;1.520,000;1.520,000;EUR;07.05.26
-outgoing invoice;20198908;invoice posted;4444;16.04.26;16.04.26;2026;5;898354;ERS;3875514;Liebelt Albers GmbH;11;302,400;302,400;EUR;16.05.26
-outgoing invoice;24251478;invoice posted;4444;02.05.26;02.05.26;2026;4;719085;KSE;3875514;Liebelt Albers GmbH;11;3.172,000;3.172,000;EUR;01.06.26
-outgoing invoice;22163594;invoice posted;4444;18.05.26;18.05.26;2026;5;917412;ERS;3875514;Liebelt Albers GmbH;01;688,000;688,000;EUR;17.06.26
-outgoing invoice;28340692;invoice posted;4444;07.05.26;07.05.26;2026;5;269016;ERS;3875514;Liebelt Albers GmbH;11;3.172,000;3.172,000;EUR;06.06.26
-outgoing invoice;20890382;invoice posted;4444;09.05.26;09.05.26;2026;4;770998;ERS;3875514;Liebelt Albers GmbH;01;658,000;658,000;EUR;08.06.26
-outgoing invoice;20588183;invoice posted;4444;17.04.26;17.04.26;2026;5;475631;ERS;3875514;Liebelt Albers GmbH;01;748,000;748,000;EUR;01.05.26
-outgoing invoice;22499884;invoice posted;4444;15.04.26;15.04.26;2026;4;560981;ERS;3875514;Liebelt Albers GmbH;11;195,200;195,200;EUR;15.05.26
-outgoing invoice;22672595;invoice posted;4444;17.04.26;17.04.26;2026;4;631759;ERS;3875514;Liebelt Albers GmbH;11;32,000;32,000;EUR;17.05.26
-outgoing invoice;23358233;invoice posted;4444;15.05.26;15.05.26;2026;4;450868;ERS;4391995;Freudenberger Fiebig GmbH;01;4.028,000;4.028,000;EUR;29.05.26
-outgoing invoice;20640679;invoice posted;4444;15.05.26;15.05.26;2026;4;606486;ERS;5612074;auch Schlauchin AG;01;25.224,000;30.095,100;EUR;29.05.26
-outgoing invoice;24370422;invoice posted;4444;07.05.26;07.05.26;2026;5;836325;ERS;3875514;Liebelt Albers GmbH;11;344,000;344,000;EUR;06.06.26
-outgoing invoice;27395608;invoice posted;4444;18.04.26;18.04.26;2026;5;741390;ERS;3875514;Liebelt Albers GmbH;11;129,200;129,200;EUR;02.05.26
-outgoing invoice;21571441;invoice posted;4444;12.04.26;12.04.26;2026;5;633872;ERS;5612074;auch Schlauchin AG;01;940,800;1.119,550;EUR;12.05.26
-outgoing invoice;29302423;invoice posted;4444;26.04.26;26.04.26;2026;5;419461;ERS;3875514;Liebelt Albers GmbH;11;232,000;232,000;EUR;10.05.26
-outgoing invoice;29212284;invoice posted;4444;24.04.26;24.04.26;2026;4;665976;KSE;3875514;Liebelt Albers GmbH;01;688,000;688,000;EUR;08.05.26
-outgoing invoice;24269817;invoice posted;4444;04.05.26;04.05.26;2026;4;799725;ERS;5612074;auch Schlauchin AG;11;2.784,000;3.347,470;EUR;03.06.26
-outgoing invoice;20026260;invoice posted;4444;09.05.26;09.05.26;2026;4;900080;ERS;3009343;Römer Eberth GmbH & Co. KGaA;11;249,600;319,630;EUR;08.06.26
-outgoing invoice;20408450;invoice posted;4444;15.04.26;15.04.26;2026;5;460728;ERS;5612074;auch Schlauchin AG;11;6.240,000;7.466,060;EUR;15.05.26
-outgoing invoice;20203878;invoice posted;4444;29.04.26;29.04.26;2026;4;961042;ERS;3875514;Liebelt Albers GmbH;11;748,000;748,000;EUR;29.05.26
-outgoing invoice;28354574;invoice posted;4444;08.05.26;08.05.26;2026;5;357652;ERS;5887369;Ackermann GbR;01;4.436,640;4.436,640;EUR;22.05.26
-outgoing invoice;23661555;invoice posted;4444;16.05.26;16.05.26;2026;4;414338;ERS;3875514;Liebelt Albers GmbH;01;1.152,000;1.152,000;EUR;15.06.26
-outgoing invoice;27064660;invoice posted;4444;19.04.26;19.04.26;2026;5;401122;ERS;3875514;Liebelt Albers GmbH;11;3.172,000;3.172,000;EUR;19.05.26
-outgoing invoice;25371686;invoice posted;4444;15.05.26;15.05.26;2026;5;395213;ERS;3875514;Liebelt Albers GmbH;11;1.892,000;1.892,000;EUR;14.06.26
-outgoing invoice;22832677;invoice posted;4444;19.04.26;19.04.26;2026;4;452890;ERS;3875514;Liebelt Albers GmbH;11;748,000;748,000;EUR;19.05.26
-outgoing invoice;20353228;invoice posted;4444;14.04.26;14.04.26;2026;5;209229;KSE;3875514;Liebelt Albers GmbH;01;129,200;129,200;EUR;28.04.26
-outgoing invoice;26343497;invoice posted;4444;06.05.26;06.05.26;2026;5;766458;ERS;5887369;Ackermann GbR;01;6.006,000;6.006,000;EUR;05.06.26
-outgoing invoice;21828748;invoice posted;4444;12.04.26;15.04.26;2026;4;870327;ERS;6056001;Hecker Dörr Stiftung & Co. KGaA;01;2.479,500;2.479,500;EUR;26.04.26
-outgoing invoice;29856793;invoice posted;4444;16.04.26;16.04.26;2026;4;697233;ERS;4391995;Freudenberger Fiebig GmbH;11;4.028,000;4.028,000;EUR;30.04.26
-outgoing invoice;23075277;invoice posted;4444;15.04.26;15.04.26;2026;4;783504;ERS;5612074;auch Schlauchin AG;01;940,800;1.119,550;EUR;15.05.26
-outgoing invoice;20229267;invoice posted;4444;13.04.26;13.04.26;2026;4;132531;ERS;9225301;Krebs GmbH & Co. KGaA;01;660,250;876,140;EUR;13.05.26
-outgoing invoice;29371504;invoice posted;4444;02.05.26;02.05.26;2026;4;865174;ERS;3875514;Liebelt Albers GmbH;11;177,600;177,600;EUR;01.06.26
-outgoing invoice;26249691;invoice posted;4444;01.05.26;01.05.26;2026;4;988952;ERS;6056001;Hecker Dörr Stiftung & Co. KGaA;11;9.800,000;9.891,000;EUR;31.05.26
-outgoing invoice;26377006;invoice posted;4444;06.05.26;06.05.26;2026;5;748032;ERS;3875514;Liebelt Albers GmbH;11;3.172,000;3.172,000;EUR;05.06.26
-outgoing invoice;29896647;invoice posted;4444;17.05.26;17.05.26;2026;4;525742;ERS;3875514;Liebelt Albers GmbH;11;30.975,200;30.975,200;EUR;16.06.26
-outgoing invoice;25995102;invoice posted;4444;14.05.26;14.05.26;2026;4;177948;ERS;8717568;Riehl;11;2.529,100;3.009,630;EUR;13.06.26
-outgoing invoice;28423477;invoice posted;4444;19.04.26;19.04.26;2026;5;961946;ERS;6056001;Hecker Dörr Stiftung & Co. KGaA;11;9.800,000;9.891,000;EUR;19.05.26
-outgoing invoice;23456048;invoice posted;4444;18.04.26;18.04.26;2026;4;491881;ERS;5612074;auch Schlauchin AG;11;176,640;232,810;EUR;18.05.26
-outgoing invoice;20913986;invoice posted;4444;14.04.26;14.04.26;2026;5;124426;ERS;3875514;Liebelt Albers GmbH;11;344,000;344,000;EUR;28.04.26
-outgoing invoice;25105276;invoice posted;4444;18.04.26;18.04.26;2026;5;878251;ERS;3875514;Liebelt Albers GmbH;01;232,000;232,000;EUR;18.05.26
-outgoing invoice;23736067;invoice posted;4444;02.05.26;02.05.26;2026;4;743646;ERS;3875514;Liebelt Albers GmbH;11;3.172,000;3.172,000;EUR;01.06.26
-outgoing invoice;28982616;invoice posted;4444;29.04.26;29.04.26;2026;4;870882;ERS;8717568;Riehl;01;2.529,100;3.009,630;EUR;29.05.26
-outgoing invoice;29730109;invoice posted;4444;13.05.26;13.05.26;2026;4;252289;ERS;3875514;Liebelt Albers GmbH;11;1.520,000;1.520,000;EUR;12.06.26
-outgoing invoice;29057018;invoice posted;4444;12.04.26;12.04.26;2026;5;500150;ERS;3875514;Liebelt Albers GmbH;11;190,000;190,000;EUR;12.05.26
-outgoing invoice;28109923;invoice posted;4444;25.04.26;25.04.26;2026;4;723219;ERS;6056001;Hecker Dörr Stiftung & Co. KGaA;01;9.800,000;9.891,000;EUR;09.05.26
-outgoing invoice;24086328;invoice posted;4444;24.04.26;24.04.26;2026;5;592636;ERS;3875514;Liebelt Albers GmbH;11;658,000;658,000;EUR;24.05.26
-outgoing invoice;24454777;invoice posted;4444;06.05.26;06.05.26;2026;5;440593;ERS;3875514;Liebelt Albers GmbH;11;1.152,000;1.152,000;EUR;20.05.26
-outgoing invoice;24095369;invoice posted;4444;09.05.26;09.05.26;2026;5;896933;ERS;9225301;Krebs GmbH & Co. KGaA;11;1.591,250;1.963,800;EUR;08.06.26
-outgoing invoice;27146309;invoice posted;4444;27.04.26;27.04.26;2026;5;939178;ERS;3875514;Liebelt Albers GmbH;01;30.975,200;30.975,200;EUR;27.05.26
-outgoing invoice;26432026;invoice posted;4444;02.05.26;02.05.26;2026;4;720100;ERS;3875514;Liebelt Albers GmbH;11;177,600;177,600;EUR;01.06.26
-outgoing invoice;20915115;invoice posted;4444;13.04.26;13.04.26;2026;5;428890;ERS;3875514;Liebelt Albers GmbH;01;1.072,000;1.072,000;EUR;13.05.26
-outgoing invoice;27463494;invoice posted;4444;12.04.26;12.04.26;2026;5;434597;ERS;4391995;Freudenberger Fiebig GmbH;11;4.028,000;4.028,000;EUR;12.05.26
-outgoing invoice;23111020;invoice posted;4444;18.04.26;18.04.26;2026;5;564394;ERS;7588423;Döhn Müller KG;11;825,600;1.005,070;EUR;18.05.26
-outgoing invoice;29144594;invoice posted;4444;11.05.26;11.05.26;2026;5;836531;ERS;9317421;Schäfer;11;1.664,400;1.725,400;EUR;25.05.26
-outgoing invoice;24210565;invoice posted;4444;23.04.26;23.04.26;2026;5;422700;ERS;5612074;auch Schlauchin AG;01;11.232,000;13.406,540;EUR;23.05.26
-outgoing invoice;29287019;invoice posted;4444;26.04.26;29.04.26;2026;4;604133;KSE;5612074;auch Schlauchin AG;01;9.408,000;11.230,030;EUR;10.05.26
-outgoing credit note;24125548;invoice posted;4444;19.04.26;19.04.26;2026;5;554009;ERS;3875514;Liebelt Albers GmbH;01;30.975,200;30.975,200;EUR;19.05.26
-outgoing invoice;23727923;invoice posted;4444;26.04.26;26.04.26;2026;4;483820;ERS;5612074;auch Schlauchin AG;01;11.232,000;13.406,540;EUR;26.05.26
-outgoing invoice;20980133;invoice posted;4444;15.05.26;15.05.26;2026;5;814251;ERS;3875514;Liebelt Albers GmbH;11;1.072,000;1.072,000;EUR;14.06.26
-outgoing invoice;27847419;invoice posted;4444;21.04.26;21.04.26;2026;4;101754;ERS;5612074;auch Schlauchin AG;11;176,640;232,810;EUR;05.05.26
-outgoing credit note;26660898;invoice posted;4444;15.05.26;15.05.26;2026;5;874999;ERS;3875514;Liebelt Albers GmbH;11;1.892,000;1.892,000;EUR;14.06.26
-outgoing invoice;20337710;invoice posted;4444;21.04.26;21.04.26;2026;4;868329;ERS;3875514;Liebelt Albers GmbH;11;30.975,200;30.975,200;EUR;21.05.26
-outgoing invoice;29624780;invoice posted;4444;10.05.26;10.05.26;2026;4;366755;ERS;5612074;auch Schlauchin AG;01;9.408,000;11.230,030;EUR;24.05.26
-outgoing invoice;22514673;invoice posted;4444;03.05.26;03.05.26;2026;5;589763;ERS;3875514;Liebelt Albers GmbH;01;1.072,000;1.072,000;EUR;17.05.26
-outgoing invoice;24107946;invoice posted;4444;10.05.26;10.05.26;2026;5;639595;ERS;3875514;Liebelt Albers GmbH;11;748,000;748,000;EUR;24.05.26
+﻿document type,invoice no.,status,plant,invoice date,posting date,fiscal year,posting period,customer transaction,order type,customer no.,customer name,customer group,net value,invoice value,currency,due date
+outgoing invoice,27492309,invoice posted,4444,15.05.26,15.05.26,2026,5,355137,ERS,4391995,Freudenberger Fiebig GmbH,01,"4.028,000","4.028,000",EUR,14.06.26
+outgoing invoice,25132951,invoice posted,4444,16.05.26,16.05.26,2026,4,398400,ERS,5612074,auch Schlauchin AG,11,"2.784,000","3.347,470",EUR,15.06.26
+outgoing invoice,25497213,invoice posted,4444,04.05.26,04.05.26,2026,4,128648,ERS,2657518,Hertrampf Siering GmbH & Co. KG,11,"454,500","540,860",EUR,03.06.26
+outgoing invoice,25967513,invoice posted,4444,30.04.26,30.04.26,2026,4,896095,ERS,5612074,auch Schlauchin AG,01,"9.408,000","11.230,030",EUR,30.05.26
+outgoing invoice,26998945,invoice posted,4444,19.04.26,19.04.26,2026,4,667639,ERS,9317421,Schäfer,11,"1.664,400","1.725,400",EUR,19.05.26
+outgoing invoice,29604752,invoice posted,4444,11.05.26,11.05.26,2026,4,149305,ERS,7801352,Seidel AG & Co. KG,11,"1.743,250","2.097,080",EUR,25.05.26
+outgoing invoice,23450608,invoice posted,4444,04.05.26,04.05.26,2026,5,127374,ERS,3875514,Liebelt Albers GmbH,11,"177,600","177,600",EUR,18.05.26
+outgoing invoice,25474010,invoice posted,4444,22.04.26,22.04.26,2026,4,645631,ERS,3875514,Liebelt Albers GmbH,11,"360,000","360,000",EUR,06.05.26
+outgoing invoice,20175930,invoice posted,4444,06.05.26,06.05.26,2026,4,346122,ERS,3875514,Liebelt Albers GmbH,01,"190,000","190,000",EUR,20.05.26
+outgoing invoice,20230679,invoice posted,4444,08.05.26,08.05.26,2026,5,262059,ERS,3875514,Liebelt Albers GmbH,11,"129,200","129,200",EUR,07.06.26
+outgoing invoice,23138722,invoice posted,4444,23.04.26,23.04.26,2026,4,838238,ERS,3875514,Liebelt Albers GmbH,11,"344,000","344,000",EUR,23.05.26
+outgoing invoice,21687996,invoice posted,4444,20.04.26,20.04.26,2026,5,706501,ERS,3875514,Liebelt Albers GmbH,11,"1.072,000","1.072,000",EUR,04.05.26
+outgoing invoice,21743353,invoice posted,4444,27.04.26,27.04.26,2026,4,545922,ERS,3875514,Liebelt Albers GmbH,11,"1.892,000","1.892,000",EUR,27.05.26
+outgoing invoice,29376445,invoice posted,4444,14.04.26,14.04.26,2026,5,354085,ERS,3875514,Liebelt Albers GmbH,11,"232,000","232,000",EUR,14.05.26
+outgoing invoice,25102624,invoice posted,4444,25.04.26,25.04.26,2026,5,848111,ERS,3875514,Liebelt Albers GmbH,11,"30.975,200","30.975,200",EUR,25.05.26
+outgoing invoice,25573865,invoice posted,4444,08.05.26,08.05.26,2026,5,421929,ERS,5612074,auch Schlauchin AG,01,"1.267,200","1.532,960",EUR,07.06.26
+outgoing invoice,21419864,invoice posted,4444,05.05.26,05.05.26,2026,5,498974,ERS,5612074,auch Schlauchin AG,11,"6.240,000","7.466,060",EUR,04.06.26
+outgoing invoice,21391211,invoice posted,4444,13.05.26,13.05.26,2026,5,514176,ERS,7588423,Döhn Müller KG,11,"825,600","1.005,070",EUR,27.05.26
+outgoing invoice,28647977,invoice posted,4444,12.05.26,12.05.26,2026,4,851299,KSE,9225301,Krebs GmbH & Co. KGaA,11,"1.591,250","1.963,800",EUR,26.05.26
+outgoing invoice,22452078,invoice posted,4444,11.05.26,11.05.26,2026,5,770059,ERS,4652930,Klingelhöfer,11,"743,850","907,790",EUR,25.05.26
+outgoing invoice,29768156,invoice posted,4444,23.04.26,23.04.26,2026,5,424714,ERS,7881462,Hänel KG,11,"1.778,400","2.138,910",EUR,23.05.26
+outgoing invoice,24236188,invoice posted,4444,18.04.26,18.04.26,2026,5,949518,ERS,5612074,auch Schlauchin AG,11,"25.224,000","30.095,100",EUR,18.05.26
+outgoing invoice,24470467,invoice posted,4444,02.05.26,02.05.26,2026,5,169972,ERS,3009343,Römer Eberth GmbH & Co. KGaA,11,"249,600","319,630",EUR,01.06.26
+outgoing invoice,27193719,invoice posted,4444,16.05.26,16.05.26,2026,5,898010,ERS,5612074,auch Schlauchin AG,11,"176,640","232,810",EUR,15.06.26
+outgoing invoice,28259070,invoice posted,4444,18.05.26,18.05.26,2026,4,582681,ERS,8717568,Riehl,01,"2.529,100","3.009,630",EUR,01.06.26
+outgoing invoice,24187266,invoice posted,4444,04.05.26,07.05.26,2026,4,941645,ERS,5612074,auch Schlauchin AG,11,"940,800","1.119,550",EUR,18.05.26
+outgoing credit note,28856912,invoice posted,4444,24.04.26,24.04.26,2026,5,421676,ERS,6056001,Hecker Dörr Stiftung & Co. KGaA,11,"2.479,500","2.479,500",EUR,08.05.26
+outgoing invoice,29328851,invoice posted,4444,13.04.26,13.04.26,2026,5,612429,ERS,5887369,Ackermann GbR,11,"4.436,640","4.436,640",EUR,13.05.26
+outgoing invoice,25127738,invoice posted,4444,09.05.26,09.05.26,2026,5,421129,ERS,5887369,Ackermann GbR,01,"6.006,000","6.006,000",EUR,23.05.26
+outgoing invoice,26134046,invoice posted,4444,19.04.26,19.04.26,2026,4,752378,ERS,9225301,Krebs GmbH & Co. KGaA,11,"660,250","876,140",EUR,19.05.26
+outgoing invoice,24378743,invoice posted,4444,16.05.26,16.05.26,2026,4,688959,ERS,6056001,Hecker Dörr Stiftung & Co. KGaA,11,"9.800,000","9.891,000",EUR,15.06.26
+outgoing invoice,28367921,invoice posted,4444,29.04.26,29.04.26,2026,5,886682,ERS,7588423,Döhn Müller KG,11,"604,800","742,320",EUR,13.05.26
+outgoing invoice,23044800,invoice posted,4444,27.04.26,27.04.26,2026,4,756332,ERS,5612074,auch Schlauchin AG,11,"11.232,000","13.406,540",EUR,27.05.26
+outgoing invoice,20903085,invoice posted,4444,13.04.26,13.04.26,2026,5,547432,ERS,5612074,auch Schlauchin AG,01,"1.152,000","1.370,880",EUR,13.05.26
+outgoing invoice,28872934,invoice posted,4444,26.04.26,26.04.26,2026,4,985991,ERS,3875514,Liebelt Albers GmbH,01,"1.152,000","1.152,000",EUR,26.05.26
+outgoing invoice,24334856,invoice posted,4444,23.04.26,23.04.26,2026,5,537245,ERS,3875514,Liebelt Albers GmbH,01,"1.520,000","1.520,000",EUR,07.05.26
+outgoing invoice,20198908,invoice posted,4444,16.04.26,16.04.26,2026,5,898354,ERS,3875514,Liebelt Albers GmbH,11,"302,400","302,400",EUR,16.05.26
+outgoing invoice,24251478,invoice posted,4444,02.05.26,02.05.26,2026,4,719085,KSE,3875514,Liebelt Albers GmbH,11,"3.172,000","3.172,000",EUR,01.06.26
+outgoing invoice,22163594,invoice posted,4444,18.05.26,18.05.26,2026,5,917412,ERS,3875514,Liebelt Albers GmbH,01,"688,000","688,000",EUR,17.06.26
+outgoing invoice,28340692,invoice posted,4444,07.05.26,07.05.26,2026,5,269016,ERS,3875514,Liebelt Albers GmbH,11,"3.172,000","3.172,000",EUR,06.06.26
+outgoing invoice,20890382,invoice posted,4444,09.05.26,09.05.26,2026,4,770998,ERS,3875514,Liebelt Albers GmbH,01,"658,000","658,000",EUR,08.06.26
+outgoing invoice,20588183,invoice posted,4444,17.04.26,17.04.26,2026,5,475631,ERS,3875514,Liebelt Albers GmbH,01,"748,000","748,000",EUR,01.05.26
+outgoing invoice,22499884,invoice posted,4444,15.04.26,15.04.26,2026,4,560981,ERS,3875514,Liebelt Albers GmbH,11,"195,200","195,200",EUR,15.05.26
+outgoing invoice,22672595,invoice posted,4444,17.04.26,17.04.26,2026,4,631759,ERS,3875514,Liebelt Albers GmbH,11,"32,000","32,000",EUR,17.05.26
+outgoing invoice,23358233,invoice posted,4444,15.05.26,15.05.26,2026,4,450868,ERS,4391995,Freudenberger Fiebig GmbH,01,"4.028,000","4.028,000",EUR,29.05.26
+outgoing invoice,20640679,invoice posted,4444,15.05.26,15.05.26,2026,4,606486,ERS,5612074,auch Schlauchin AG,01,"25.224,000","30.095,100",EUR,29.05.26
+outgoing invoice,24370422,invoice posted,4444,07.05.26,07.05.26,2026,5,836325,ERS,3875514,Liebelt Albers GmbH,11,"344,000","344,000",EUR,06.06.26
+outgoing invoice,27395608,invoice posted,4444,18.04.26,18.04.26,2026,5,741390,ERS,3875514,Liebelt Albers GmbH,11,"129,200","129,200",EUR,02.05.26
+outgoing invoice,21571441,invoice posted,4444,12.04.26,12.04.26,2026,5,633872,ERS,5612074,auch Schlauchin AG,01,"940,800","1.119,550",EUR,12.05.26
+outgoing invoice,29302423,invoice posted,4444,26.04.26,26.04.26,2026,5,419461,ERS,3875514,Liebelt Albers GmbH,11,"232,000","232,000",EUR,10.05.26
+outgoing invoice,29212284,invoice posted,4444,24.04.26,24.04.26,2026,4,665976,KSE,3875514,Liebelt Albers GmbH,01,"688,000","688,000",EUR,08.05.26
+outgoing invoice,24269817,invoice posted,4444,04.05.26,04.05.26,2026,4,799725,ERS,5612074,auch Schlauchin AG,11,"2.784,000","3.347,470",EUR,03.06.26
+outgoing invoice,20026260,invoice posted,4444,09.05.26,09.05.26,2026,4,900080,ERS,3009343,Römer Eberth GmbH & Co. KGaA,11,"249,600","319,630",EUR,08.06.26
+outgoing invoice,20408450,invoice posted,4444,15.04.26,15.04.26,2026,5,460728,ERS,5612074,auch Schlauchin AG,11,"6.240,000","7.466,060",EUR,15.05.26
+outgoing invoice,20203878,invoice posted,4444,29.04.26,29.04.26,2026,4,961042,ERS,3875514,Liebelt Albers GmbH,11,"748,000","748,000",EUR,29.05.26
+outgoing invoice,28354574,invoice posted,4444,08.05.26,08.05.26,2026,5,357652,ERS,5887369,Ackermann GbR,01,"4.436,640","4.436,640",EUR,22.05.26
+outgoing invoice,23661555,invoice posted,4444,16.05.26,16.05.26,2026,4,414338,ERS,3875514,Liebelt Albers GmbH,01,"1.152,000","1.152,000",EUR,15.06.26
+outgoing invoice,27064660,invoice posted,4444,19.04.26,19.04.26,2026,5,401122,ERS,3875514,Liebelt Albers GmbH,11,"3.172,000","3.172,000",EUR,19.05.26
+outgoing invoice,25371686,invoice posted,4444,15.05.26,15.05.26,2026,5,395213,ERS,3875514,Liebelt Albers GmbH,11,"1.892,000","1.892,000",EUR,14.06.26
+outgoing invoice,22832677,invoice posted,4444,19.04.26,19.04.26,2026,4,452890,ERS,3875514,Liebelt Albers GmbH,11,"748,000","748,000",EUR,19.05.26
+outgoing invoice,20353228,invoice posted,4444,14.04.26,14.04.26,2026,5,209229,KSE,3875514,Liebelt Albers GmbH,01,"129,200","129,200",EUR,28.04.26
+outgoing invoice,26343497,invoice posted,4444,06.05.26,06.05.26,2026,5,766458,ERS,5887369,Ackermann GbR,01,"6.006,000","6.006,000",EUR,05.06.26
+outgoing invoice,21828748,invoice posted,4444,12.04.26,15.04.26,2026,4,870327,ERS,6056001,Hecker Dörr Stiftung & Co. KGaA,01,"2.479,500","2.479,500",EUR,26.04.26
+outgoing invoice,29856793,invoice posted,4444,16.04.26,16.04.26,2026,4,697233,ERS,4391995,Freudenberger Fiebig GmbH,11,"4.028,000","4.028,000",EUR,30.04.26
+outgoing invoice,23075277,invoice posted,4444,15.04.26,15.04.26,2026,4,783504,ERS,5612074,auch Schlauchin AG,01,"940,800","1.119,550",EUR,15.05.26
+outgoing invoice,20229267,invoice posted,4444,13.04.26,13.04.26,2026,4,132531,ERS,9225301,Krebs GmbH & Co. KGaA,01,"660,250","876,140",EUR,13.05.26
+outgoing invoice,29371504,invoice posted,4444,02.05.26,02.05.26,2026,4,865174,ERS,3875514,Liebelt Albers GmbH,11,"177,600","177,600",EUR,01.06.26
+outgoing invoice,26249691,invoice posted,4444,01.05.26,01.05.26,2026,4,988952,ERS,6056001,Hecker Dörr Stiftung & Co. KGaA,11,"9.800,000","9.891,000",EUR,31.05.26
+outgoing invoice,26377006,invoice posted,4444,06.05.26,06.05.26,2026,5,748032,ERS,3875514,Liebelt Albers GmbH,11,"3.172,000","3.172,000",EUR,05.06.26
+outgoing invoice,29896647,invoice posted,4444,17.05.26,17.05.26,2026,4,525742,ERS,3875514,Liebelt Albers GmbH,11,"30.975,200","30.975,200",EUR,16.06.26
+outgoing invoice,25995102,invoice posted,4444,14.05.26,14.05.26,2026,4,177948,ERS,8717568,Riehl,11,"2.529,100","3.009,630",EUR,13.06.26
+outgoing invoice,28423477,invoice posted,4444,19.04.26,19.04.26,2026,5,961946,ERS,6056001,Hecker Dörr Stiftung & Co. KGaA,11,"9.800,000","9.891,000",EUR,19.05.26
+outgoing invoice,23456048,invoice posted,4444,18.04.26,18.04.26,2026,4,491881,ERS,5612074,auch Schlauchin AG,11,"176,640","232,810",EUR,18.05.26
+outgoing invoice,20913986,invoice posted,4444,14.04.26,14.04.26,2026,5,124426,ERS,3875514,Liebelt Albers GmbH,11,"344,000","344,000",EUR,28.04.26
+outgoing invoice,25105276,invoice posted,4444,18.04.26,18.04.26,2026,5,878251,ERS,3875514,Liebelt Albers GmbH,01,"232,000","232,000",EUR,18.05.26
+outgoing invoice,23736067,invoice posted,4444,02.05.26,02.05.26,2026,4,743646,ERS,3875514,Liebelt Albers GmbH,11,"3.172,000","3.172,000",EUR,01.06.26
+outgoing invoice,28982616,invoice posted,4444,29.04.26,29.04.26,2026,4,870882,ERS,8717568,Riehl,01,"2.529,100","3.009,630",EUR,29.05.26
+outgoing invoice,29730109,invoice posted,4444,13.05.26,13.05.26,2026,4,252289,ERS,3875514,Liebelt Albers GmbH,11,"1.520,000","1.520,000",EUR,12.06.26
+outgoing invoice,29057018,invoice posted,4444,12.04.26,12.04.26,2026,5,500150,ERS,3875514,Liebelt Albers GmbH,11,"190,000","190,000",EUR,12.05.26
+outgoing invoice,28109923,invoice posted,4444,25.04.26,25.04.26,2026,4,723219,ERS,6056001,Hecker Dörr Stiftung & Co. KGaA,01,"9.800,000","9.891,000",EUR,09.05.26
+outgoing invoice,24086328,invoice posted,4444,24.04.26,24.04.26,2026,5,592636,ERS,3875514,Liebelt Albers GmbH,11,"658,000","658,000",EUR,24.05.26
+outgoing invoice,24454777,invoice posted,4444,06.05.26,06.05.26,2026,5,440593,ERS,3875514,Liebelt Albers GmbH,11,"1.152,000","1.152,000",EUR,20.05.26
+outgoing invoice,24095369,invoice posted,4444,09.05.26,09.05.26,2026,5,896933,ERS,9225301,Krebs GmbH & Co. KGaA,11,"1.591,250","1.963,800",EUR,08.06.26
+outgoing invoice,27146309,invoice posted,4444,27.04.26,27.04.26,2026,5,939178,ERS,3875514,Liebelt Albers GmbH,01,"30.975,200","30.975,200",EUR,27.05.26
+outgoing invoice,26432026,invoice posted,4444,02.05.26,02.05.26,2026,4,720100,ERS,3875514,Liebelt Albers GmbH,11,"177,600","177,600",EUR,01.06.26
+outgoing invoice,20915115,invoice posted,4444,13.04.26,13.04.26,2026,5,428890,ERS,3875514,Liebelt Albers GmbH,01,"1.072,000","1.072,000",EUR,13.05.26
+outgoing invoice,27463494,invoice posted,4444,12.04.26,12.04.26,2026,5,434597,ERS,4391995,Freudenberger Fiebig GmbH,11,"4.028,000","4.028,000",EUR,12.05.26
+outgoing invoice,23111020,invoice posted,4444,18.04.26,18.04.26,2026,5,564394,ERS,7588423,Döhn Müller KG,11,"825,600","1.005,070",EUR,18.05.26
+outgoing invoice,29144594,invoice posted,4444,11.05.26,11.05.26,2026,5,836531,ERS,9317421,Schäfer,11,"1.664,400","1.725,400",EUR,25.05.26
+outgoing invoice,24210565,invoice posted,4444,23.04.26,23.04.26,2026,5,422700,ERS,5612074,auch Schlauchin AG,01,"11.232,000","13.406,540",EUR,23.05.26
+outgoing invoice,29287019,invoice posted,4444,26.04.26,29.04.26,2026,4,604133,KSE,5612074,auch Schlauchin AG,01,"9.408,000","11.230,030",EUR,10.05.26
+outgoing credit note,24125548,invoice posted,4444,19.04.26,19.04.26,2026,5,554009,ERS,3875514,Liebelt Albers GmbH,01,"30.975,200","30.975,200",EUR,19.05.26
+outgoing invoice,23727923,invoice posted,4444,26.04.26,26.04.26,2026,4,483820,ERS,5612074,auch Schlauchin AG,01,"11.232,000","13.406,540",EUR,26.05.26
+outgoing invoice,20980133,invoice posted,4444,15.05.26,15.05.26,2026,5,814251,ERS,3875514,Liebelt Albers GmbH,11,"1.072,000","1.072,000",EUR,14.06.26
+outgoing invoice,27847419,invoice posted,4444,21.04.26,21.04.26,2026,4,101754,ERS,5612074,auch Schlauchin AG,11,"176,640","232,810",EUR,05.05.26
+outgoing credit note,26660898,invoice posted,4444,15.05.26,15.05.26,2026,5,874999,ERS,3875514,Liebelt Albers GmbH,11,"1.892,000","1.892,000",EUR,14.06.26
+outgoing invoice,20337710,invoice posted,4444,21.04.26,21.04.26,2026,4,868329,ERS,3875514,Liebelt Albers GmbH,11,"30.975,200","30.975,200",EUR,21.05.26
+outgoing invoice,29624780,invoice posted,4444,10.05.26,10.05.26,2026,4,366755,ERS,5612074,auch Schlauchin AG,01,"9.408,000","11.230,030",EUR,24.05.26
+outgoing invoice,22514673,invoice posted,4444,03.05.26,03.05.26,2026,5,589763,ERS,3875514,Liebelt Albers GmbH,01,"1.072,000","1.072,000",EUR,17.05.26
+outgoing invoice,24107946,invoice posted,4444,10.05.26,10.05.26,2026,5,639595,ERS,3875514,Liebelt Albers GmbH,11,"748,000","748,000",EUR,24.05.26

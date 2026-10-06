@@ -1,0 +1,135 @@
+table: routing_operation
+
+entity: RoutingOperation
+
+description: >
+  Source schema of the routing export of the legacy production planning
+  system. Each record is one operation of one routing, so a routing appears
+  in as many records as it has operations. Every operation is booked on a
+  reservation unit of the legacy work center master - including units that
+  have since been retired, because the export is a running register and was
+  never cleaned up after the shop floor was reorganised. The legacy system
+  records its times in minutes and against the lot they were measured over,
+  not per piece, so no time of this export can be loaded as it stands.
+
+attributes:
+
+  - name: routing no.
+    type: string
+    required: true
+    description: >
+      Number of the routing the operation belongs to. It repeats across the
+      operations of one routing, so only together with the operation number
+      does it identify a record.
+
+  - name: operation no.
+    type: string
+    required: true
+    description: >
+      Position of the operation within its routing, which is also the order
+      the operations are carried out in.
+
+  - name: operation text 1
+    type: string
+    required: true
+    description: >
+      First line of the shop floor instruction printed onto the operation.
+
+  - name: operation text 2
+    type: string
+    required: false
+    description: >
+      Second line of the instruction. Empty wherever the first line says
+      everything.
+
+  - name: reservation unit no.
+    type: string
+    required: true
+    description: >
+      Reservation unit the operation is carried out on. It is what the new
+      reservation unit master is checked against: an operation booked on a
+      unit that master no longer carries cannot be loaded at all.
+
+  - name: operation type
+    type: string
+    required: true
+    allowed_values:
+      - E
+      - A
+    description: >
+      Whether the operation is carried out in house (E) or bought in from a
+      subcontractor (A).
+
+  - name: setup minutes
+    type: decimal
+    required: true
+    description: >
+      Setup time of the operation in minutes. It is incurred once per
+      production order, irrespective of the quantity.
+
+  - name: operation minutes
+    type: decimal
+    required: true
+    description: >
+      Time the operation itself takes, in minutes, measured over the lot
+      stated in the base quantity rather than per piece. Zero for an
+      operation the legacy system never timed.
+
+  - name: base quantity
+    type: integer
+    required: true
+    description: >
+      Number of pieces the operation time was measured over. One wherever the
+      time is already a per-piece time; a larger lot wherever it was taken
+      over a batch.
+
+  - name: lead time days
+    type: decimal
+    required: true
+    description: >
+      Days that have to pass after the operation before the next one can
+      start, for instance while a part cools down.
+
+  - name: material no.
+    type: string
+    required: false
+    description: >
+      Part the routing produces. Empty for a routing that is not assigned to
+      any part.
+
+  - name: material description
+    type: string
+    required: false
+    description: >
+      Designation of that part. Empty wherever the part number is.
+
+  - name: status
+    type: string
+    required: true
+    allowed_values:
+      - released
+      - in process
+      - locked
+    description: >
+      Processing status of the operation. Only a released operation is
+      production-ready; one still in process is being worked on by
+      engineering and a locked one may not be used.
+
+constraints:
+
+  - id: CON-SRC-001
+    description: >
+      routing no. and operation no. together must be unique
+
+  - id: CON-SRC-002
+    description: base quantity must be at least one
+
+  - id: CON-SRC-003
+    description: >
+      material no. and material description are either both filled or both
+      empty
+
+  - id: CON-SRC-004
+    description: >
+      setup minutes must be less than sixty, since a setup is recorded in
+      minutes within the hour

@@ -1,0 +1,39 @@
+scenario_id: 017_RESERVATION_UNIT_MIGRATION_BASIC_EXPLICIT
+
+name: ERP Reservation Unit Migration
+
+domain: ERP Data Integration
+
+description: >
+  The reservation units of the shop floor are set up in a new production
+  planning system as part of a system modernization project. The legacy system
+  holds them in a work center master whose number range grew into a catch-all:
+  besides the genuine work centers it carries production notes that are
+  printed onto a routing, store movements that are booked like an operation,
+  and auxiliary units that exist for technical postings alone. None of those
+  are planned against, and some of the real work centers are flagged for
+  deletion or still booked against a cost center the new controlling chart no
+  longer carries. What the legacy system does not hold at all is a capacity:
+  it records only the shift arrangement a work center is run under - how many
+  workplaces, how many shifts, how long a shift is, how much of it is break
+  and how many days a week it runs - so the capacity the new system plans
+  against has to be determined from those. Operations bought in from
+  subcontractors run on no workplace of the plant and therefore carry no
+  capacity, which in turn decides that the system can only schedule them by
+  their lead time.
+
+business_objects:
+  - ReservationUnit
+
+systems:
+  source:
+    name: Legacy Production Planning System
+    description: >
+      Holds the work center master of the plant with the shift arrangement of
+      each work center, but no capacity figure.
+
+  target:
+    name: Target Production Planning System
+    description: >
+      Plans operations against the capacity of reservation units, loaded
+      through the reservation unit upload container.

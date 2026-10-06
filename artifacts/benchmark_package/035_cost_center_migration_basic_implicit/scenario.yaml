@@ -1,0 +1,36 @@
+scenario_id: 035_COST_CENTER_MIGRATION_BASIC_IMPLICIT
+
+name: ERP Cost Center Migration
+
+domain: ERP Data Integration
+
+description: >
+  The cost center master is set up in a new ERP system as part of a system
+  modernization project. The new organisation is not a copy of the old one:
+  it is cut along a target operating model, in which the units are defined
+  afresh and a cost center of the legacy system can end up in more than one of
+  them. A legacy cost center whose work was divided between two or three of
+  the new units therefore becomes two or three cost centers, each with its own
+  number, name, department and responsible user. None of that can be read from
+  the legacy master, which knows nothing of the new organisation; it is held
+  in the central cost center cross reference list, where a legacy cost center
+  appears once per successor it has. The legacy master in turn is a snapshot
+  grown over the years and still holds cost centers that were locked or closed
+  long ago, as well as some that expire before the new system goes live -
+  none of which are carried over.
+
+business_objects:
+  - CostCenterMaster
+
+systems:
+  source:
+    name: Legacy ERP System
+    description: >
+      Holds the cost centers of one plant with their names, categories and
+      validity periods, exported as a cost center master list.
+
+  target:
+    name: Target ERP System
+    description: >
+      Creates cost centers of the target operating model in one controlling
+      area, loaded through a cost center master upload container.

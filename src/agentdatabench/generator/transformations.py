@@ -864,7 +864,14 @@ class ConditionalValueHandler:
 
 class TruncateHandler:
     """Cuts the source value to the target field's maximum length. Values that
-    already fit pass through untouched."""
+    already fit pass through untouched.
+
+    Reads an already built target field as readily as a source column, because
+    the value to shorten is not always in the source: a cost center master
+    carries both the full description and a short name the target system caps
+    at twenty characters, and the short name has to be the cap of *that*
+    description - including where the description itself was derived.
+    """
 
     def apply(
         self,
@@ -873,7 +880,8 @@ class TruncateHandler:
         context: TransformationContext = EMPTY_CONTEXT,
     ) -> pd.Series:
         length = mapping.transformation.length
-        return df[mapping.source_field].astype(str).str.slice(0, length)
+        column = _resolve_column(df, mapping.source_field, context)
+        return column.astype(str).str.slice(0, length)
 
 
 class RoundHandler:

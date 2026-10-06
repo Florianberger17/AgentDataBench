@@ -28,8 +28,7 @@ business_rules:
 
   mappings:
 
-    - source_field: supplier no
-      target_field: bp_no
+    - target_field: bp_no
       transformation:
         type: sequential_number
         start: 20000000
@@ -37,7 +36,8 @@ business_rules:
         digits: 10
       description: >
         Generate consecutive Business Partner numbers beginning with
-        0020000000 for every retained record.
+        0020000000 for every retained record, in the order in which the
+        records appear in the source dataset.
 
     - source_field: name 2
       target_field: name

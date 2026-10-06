@@ -1,0 +1,173 @@
+table: reservation_unit_upload
+
+entity: ReservationUnit
+
+description: >
+  Target schema of the reservation unit upload container of the new
+  production planning system. Each record creates one reservation unit that
+  capacity is planned against. The container is the general one of the
+  system and carries a number of fields that hold the same value for every
+  unit of this migration. The capacity is the field the whole upload turns
+  on: the legacy system never held one, so it is determined from the shift
+  arrangement and has to be stated here per period.
+
+attributes:
+
+  - name: reservation unit no.
+    type: string
+    required: true
+    unique: true
+    description: >
+      Number of the reservation unit, carried over from the legacy range.
+
+  - name: designation
+    type: string
+    required: true
+    description: >
+      Designation of the reservation unit.
+
+  - name: unit type
+    type: string
+    required: true
+    allowed_values:
+      - in-house
+      - external
+    description: >
+      Whether the operation is run on the plant's own workplaces or bought in
+      from a subcontractor.
+
+  - name: bottleneck unit
+    type: string
+    required: true
+    allowed_values:
+      - "yes"
+      - "no"
+    description: >
+      Whether production scheduling has to treat the unit as a bottleneck.
+
+  - name: capacity
+    type: decimal
+    required: true
+    description: >
+      Productive capacity of the reservation unit per period, in the time
+      unit stated beside it, with three decimal places. It is the net time
+      the unit's workplaces are available for production - the gross shift
+      time less the breaks, taken over all shifts, all workplaces and all
+      working days of the period. A bought-in operation has no capacity of
+      its own and therefore none here.
+
+  - name: time unit
+    type: string
+    required: true
+    description: >
+      Time unit the capacity is stated in.
+
+  - name: capacity units
+    type: decimal
+    required: true
+    description: >
+      Number of workplaces the capacity was determined over, carried into the
+      target system with four decimal places so that fractional workplaces can
+      be planned later.
+
+  - name: shift factor
+    type: decimal
+    required: true
+    description: >
+      Number of shifts the unit is run in, which the target system applies on
+      top of the capacity when it plans. The capacity itself already covers
+      every shift, so the factor is a planning parameter rather than a second
+      multiplier on the figure beside it.
+
+  - name: rough planning factor
+    type: decimal
+    required: true
+    description: >
+      Correction factor the rough-cut planning run applies to the capacity.
+      It follows from the planning profile of the work center.
+
+  - name: detailed planning factor
+    type: decimal
+    required: true
+    description: >
+      Correction factor the detailed planning run applies to the capacity. It
+      follows from the same planning profile.
+
+  - name: overload factor
+    type: decimal
+    required: true
+    description: >
+      Factor by which a unit may be loaded beyond its capacity. No unit of
+      this migration is planned to be overloaded.
+
+  - name: scheduling key
+    type: string
+    required: true
+    allowed_values:
+      - capacity scheduling
+      - lead time scheduling
+    description: >
+      How the system schedules operations on the unit. A unit with capacity of
+      its own is scheduled against that capacity; a bought-in operation has
+      none, so it is scheduled by its lead time instead.
+
+  - name: validity indicator
+    type: string
+    required: true
+    description: >
+      Validity of the unit. Every unit of this migration is created without a
+      restriction in time.
+
+  - name: cost center
+    type: string
+    required: true
+    description: >
+      Cost center the unit is booked against.
+
+  - name: cost element
+    type: string
+    required: true
+    description: >
+      Cost element the hours confirmed on the unit are posted under. It
+      follows from the cost center and is not held in the legacy work center
+      master at all.
+
+  - name: confirmation indicator
+    type: string
+    required: true
+    description: >
+      Whether operations on the unit have to be confirmed. Confirmation is
+      required throughout this migration.
+
+  - name: unit identifier
+    type: string
+    required: false
+    description: >
+      Marks a pooled unit, which is one that holds more than a single
+      workplace, since the system schedules those differently from a unit with
+      exactly one. Empty for a unit that is not pooled.
+
+  - name: period indicator
+    type: string
+    required: true
+    description: >
+      Period the capacity refers to.
+
+constraints:
+
+  - id: CON-TGT-002
+    description: capacity must not be negative
+
+  - id: CON-TGT-003
+    description: >
+      capacity must be zero exactly for the units of type external, and
+      greater than zero for every in-house unit
+
+  - id: CON-TGT-004
+    description: >
+      scheduling key must be lead time scheduling exactly where the capacity
+      is zero
+
+  - id: CON-TGT-005
+    description: >
+      unit identifier must be set exactly where capacity units is two or more

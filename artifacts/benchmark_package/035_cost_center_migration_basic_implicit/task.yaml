@@ -1,0 +1,64 @@
+task_id: 035_COST_CENTER_MIGRATION_BASIC_IMPLICIT
+
+objective: >
+  Create the cost centers of the new ERP system from the cost center
+  master of the legacy system and produce a file in the structure and
+  format shown by the target example. Only cost centers that are still in
+  use and still valid when the new system goes live on 1 January 2027 are
+  migrated; a blocked or closed one, and one whose validity ends before
+  that date, is left out. The new organisation is cut along a target
+  operating model the legacy system knows nothing about, so a legacy cost
+  center does not simply become one new cost center: where its work was
+  divided between two or three units of the new organisation it becomes
+  one cost center per unit, and the central cost center cross reference
+  list names every successor it has together with the number, the name,
+  the department and the responsible user of each. A legacy cost center
+  absent from that list has no successor and is not created. Deliver the
+  cost centers in ascending order of their new number. Where the cross
+  reference list states no new name, the cost center keeps the name it had
+  in the legacy system; the short name is that name cut to twenty
+  characters. The standard hierarchy node is the leading six characters of
+  the new cost center number and the company code its leading four, and
+  the profit center follows from that company code. The cost center type
+  and the functional area follow from the legacy category: administration
+  (1) becomes type O in functional area 2016, production (2) type F in
+  2020, sales (3) type V in 3010 and service (4) type H in 2040. Revenue
+  belongs on a sales cost center alone, so every cost center that was not
+  a sales one in the legacy system is locked against posting and against
+  planning revenues. Every cost center is created in controlling area 1000
+  as of 1 January 2027, with the validity end carried over from the legacy
+  master, quantity recording switched on and application CO-001. No formal
+  source or target schema is given - infer the required structure, the
+  field mapping and the value formats yourself by comparing the input
+  dataset against the target example.
+
+input:
+  source_dataset: data/dataset.csv
+  target_example: data/target_example.csv
+  reference_data:
+    - name: cost_center_cross_reference
+      file: data/mapping_list_cost_centers.csv
+      key_field: "cost center legacy"
+      value_field:
+        - "cost center new"
+        - "cost center new description"
+        - "department"
+        - "person in charge"
+      description: >
+        Assigns the cost centers of the legacy ERP system to the cost centers
+        of the target operating model and carries the number, name, department
+        and responsible user of each of them. A legacy cost center appears
+        once per unit of the new organisation its work was divided between, so
+        its number repeats in the list wherever it was split. A legacy cost
+        center missing from the list has no successor in the target operating
+        model and is not created.
+
+business_rules: {}
+
+output:
+  format: csv
+
+constraints:
+  - Each output row shall represent one cost center of the target system.
+  - No additional columns beyond those shown in the target example may be added.
+  - The column order must match the target example.

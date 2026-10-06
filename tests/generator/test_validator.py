@@ -1,14 +1,21 @@
 """Tests for Validator: completeness, schema conformance, CSV structure,
-metadata consistency and reproducibility checks over a built BenchmarkPackage.
+metadata consistency and the two reproducibility checks over a built
+BenchmarkPackage - the one starting at clean_dataset.csv and the one starting
+at source_data/.
 """
 
 import shutil
+from pathlib import Path
 
 import pandas as pd
 import pytest
 import yaml
 
-from agentdatabench.generator.validator import Validator
+from agentdatabench.domain.benchmark_package import BenchmarkPackage
+from agentdatabench.generator.validator import (
+    SynthesisReproducibilityCheck,
+    Validator,
+)
 
 
 def _copy(src_root, dst_root):
@@ -235,3 +242,139 @@ def test_validate_accepts_plain_long_numbers_and_decimal_commas(pkg1_root, tmp_p
 
     codes = [issue.code for issue in Validator().validate(work_root).issues]
     assert "scientific_notation" not in codes
+
+
+def _requires_source_data(root):
+    """source_data/ holds raw input, is gitignored and is purged before a
+    package is published, so it may legitimately be absent."""
+    if not (root / "source_data" / "source_data.csv").is_file():
+        pytest.skip(f"{root} has no source_data/ to re-synthesize from")
+
+
+def test_validate_detects_a_clean_dataset_the_synthesis_no_longer_produces(
+    pkg1_root, tmp_path
+):
+    """The gap ReproducibilityCheck leaves: it starts at clean_dataset.csv and
+    so cannot tell whether synthesis_configuration.yaml still produces it."""
+    _requires_source_data(pkg1_root)
+    work_root = _copy(pkg1_root, tmp_path / "pkg")
+    clean_path = work_root / "ground_truth" / "clean_dataset.csv"
+    df = pd.read_csv(clean_path, dtype=str)
+    df.iloc[0, 1] = "TAMPERED"
+    df.to_csv(clean_path, index=False)
+
+    result = Validator().validate(work_root)
+
+    assert not result.is_valid
+    assert any(i.code == "clean_dataset_not_reproducible" for i in result.issues)
+
+
+def test_synthesis_check_names_the_column_that_diverges(pkg1_root, tmp_path):
+    _requires_source_data(pkg1_root)
+    work_root = _copy(pkg1_root, tmp_path / "pkg")
+    clean_path = work_root / "ground_truth" / "clean_dataset.csv"
+    df = pd.read_csv(clean_path, dtype=str)
+    column = df.columns[1]
+    df[column] = "TAMPERED"
+    df.to_csv(clean_path, index=False)
+
+    issues = SynthesisReproducibilityCheck().check(BenchmarkPackage.load(work_root))
+
+    assert len(issues) == 1
+    assert column in issues[0].message
+
+
+def test_synthesis_check_notices_a_differing_row_count(pkg1_root, tmp_path):
+    _requires_source_data(pkg1_root)
+    work_root = _copy(pkg1_root, tmp_path / "pkg")
+    clean_path = work_root / "ground_truth" / "clean_dataset.csv"
+    df = pd.read_csv(clean_path, dtype=str)
+    df.iloc[:-1].to_csv(clean_path, index=False)
+
+    issues = SynthesisReproducibilityCheck().check(BenchmarkPackage.load(work_root))
+
+    assert len(issues) == 1
+    assert "rows re-synthesized" in issues[0].message
+
+
+def test_synthesis_check_is_silent_once_source_data_is_purged(pkg1_root, tmp_path):
+    """A published package has no source_data/ - that absence is the normal
+    state and must not read as a finding."""
+    _requires_source_data(pkg1_root)
+    work_root = _copy(pkg1_root, tmp_path / "pkg")
+    clean_path = work_root / "ground_truth" / "clean_dataset.csv"
+    df = pd.read_csv(clean_path, dtype=str)
+    df.iloc[0, 1] = "TAMPERED"
+    df.to_csv(clean_path, index=False)
+    shutil.rmtree(work_root / "source_data")
+
+    assert SynthesisReproducibilityCheck().check(BenchmarkPackage.load(work_root)) == []
+
+
+def test_synthesis_check_is_silent_without_a_synthesis_configuration(
+    pkg1_root, tmp_path
+):
+    _requires_source_data(pkg1_root)
+    work_root = _copy(pkg1_root, tmp_path / "pkg")
+    (work_root / "synthesis_configuration.yaml").unlink()
+
+    assert SynthesisReproducibilityCheck().check(BenchmarkPackage.load(work_root)) == []
+
+
+def test_synthesis_check_reports_an_invalid_synthesis_configuration(
+    pkg1_root, tmp_path
+):
+    _requires_source_data(pkg1_root)
+    work_root = _copy(pkg1_root, tmp_path / "pkg")
+    (work_root / "synthesis_configuration.yaml").write_text(
+        "columns: 42\n", encoding="utf-8"
+    )
+
+    issues = SynthesisReproducibilityCheck().check(BenchmarkPackage.load(work_root))
+
+    assert [i.code for i in issues] == ["invalid_synthesis_configuration"]
+
+
+def test_synthesis_check_reports_a_strategy_that_does_not_exist(pkg1_root, tmp_path):
+    _requires_source_data(pkg1_root)
+    work_root = _copy(pkg1_root, tmp_path / "pkg")
+    column = pd.read_csv(
+        work_root / "ground_truth" / "clean_dataset.csv", dtype=str
+    ).columns[0]
+    (work_root / "synthesis_configuration.yaml").write_text(
+        f"seed: 1\ncolumns:\n  - column: {column}\n    strategy: no_such_strategy\n",
+        encoding="utf-8",
+    )
+
+    issues = SynthesisReproducibilityCheck().check(BenchmarkPackage.load(work_root))
+
+    assert [i.code for i in issues] == ["synthesis_failed"]
+
+
+def test_synthesis_check_passes_on_every_real_package_that_still_has_source_data():
+    """The regression guard for the defect this check was built for: a
+    synthesis_configuration.yaml in the repository that no longer reproduces
+    its own clean_dataset.csv."""
+    roots = sorted(
+        path
+        for path in (Path("artifacts") / "benchmark_package").glob("*")
+        if (path / "source_data" / "source_data.csv").is_file()
+        and (path / "synthesis_configuration.yaml").is_file()
+        and (path / "ground_truth" / "clean_dataset.csv").is_file()
+        and (path / "metadata.yaml").is_file()
+    )
+    if not roots:
+        pytest.skip("no package in the working tree still has source_data/")
+
+    check = SynthesisReproducibilityCheck()
+    offenders = {}
+    for root in roots:
+        try:
+            package = BenchmarkPackage.load(root)
+        except Exception:
+            continue  # Covered by CompletenessCheck, not by this check.
+        issues = check.check(package)
+        if issues:
+            offenders[root.name] = issues[0].message
+
+    assert not offenders, offenders

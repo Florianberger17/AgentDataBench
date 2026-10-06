@@ -1,0 +1,77 @@
+seed: 1017
+
+locale: de_DE
+
+columns:
+
+  # The key of the reservation unit. Substituted consistently per distinct
+  # value and drawn without replacement, since the target system creates one
+  # unit per number and two units sharing a number would collide.
+  - column: reservation unit no.
+    strategy: numeric_mapping
+    format: "{:d}"
+    min: 1000
+    max: 99999
+
+  # Names a manufacturing operation - turning, case hardening, gear grinding -
+  # in the standard vocabulary of the trade, so it identifies nothing on its
+  # own. Carried over because the target designation is taken from it
+  # unchanged.
+  - column: designation
+    strategy: identity
+
+  # Decides whether an entry is a work center at all, and therefore which
+  # records the migration carries over. Carried over unchanged: resampling it
+  # would move production notes and store movements into the upload.
+  - column: unit category
+    strategy: identity
+
+  # Tells a work center run in house from an operation bought in, which
+  # decides the unit type and the scheduling key, and goes together with the
+  # zero workplace count that makes the capacity of a bought-in operation come
+  # out at zero. Carried over so that pairing survives.
+  - column: unit type code
+    strategy: identity
+
+  # The lookup key into mapping_list_cost_centers.csv. Substituted
+  # consistently per distinct value, and the controlling list is generated
+  # from the result so both sides match.
+  - column: cost center
+    strategy: numeric_mapping
+    format: "4444-{:04d}"
+    min: 2000
+    max: 9999
+
+  # The four figures the capacity is calculated from. Redrawing any of them
+  # would make every expected capacity arbitrary, and the workplace count in
+  # particular carries the zero that distinguishes a bought-in operation. A
+  # shift model is a plant-wide working-time arrangement, not an identifying
+  # value.
+  - column: capacity units
+    strategy: identity
+
+  - column: hours per shift
+    strategy: identity
+
+  - column: shifts per day
+    strategy: identity
+
+  - column: break minutes per shift
+    strategy: identity
+
+  - column: working days per week
+    strategy: identity
+
+  # Both decide target fields, but neither carries a figure another column
+  # depends on, so both are redrawn from their own frequency distribution
+  # rather than carried over - the expected result follows the redrawn values.
+  - column: planning profile
+    strategy: categorical_resample
+
+  - column: bottleneck flag
+    strategy: categorical_resample
+
+  # Decides which units are still to be created at all, so it is carried over
+  # unchanged for the same reason as the unit category.
+  - column: deletion flag
+    strategy: identity

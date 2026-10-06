@@ -178,10 +178,41 @@ class Aggregation(StrictBaseModel):
     aggregates: list[Aggregate]
 
 
+class Expansion(StrictBaseModel):
+    """Replaces each record by one record per matching entry of a reference
+    table, which is how a reorganisation that re-cuts an object is migrated.
+
+    A ``lookup`` cannot do this job. It resolves one key to one value and
+    rejects a reference table whose key repeats as ambiguous, whereas here the
+    repetition carries the information: a legacy cost center that served two
+    units of the target operating model appears twice in the cross reference
+    and has to become two cost centers in the target system. Neither can the
+    source supply the discriminator, because the unit it names exists only in
+    the target organisation.
+
+    ``carry_fields`` names the reference columns written onto each record. They
+    become ordinary source columns, so a mapping rule reads them like any
+    field of the dataset - the join is done here once rather than repeated as a
+    ``lookup`` per target field.
+
+    The join is an inner one: a record whose key is absent from the reference
+    table has no successor and is dropped, the same way ``filtering`` with an
+    ``in`` rule would drop it.
+    """
+
+    description: str | None = None
+    reference: str
+    source_field: str | list[str]
+    key_field: str | list[str]
+    carry_fields: list[str]
+
+
 class BusinessRules(StrictBaseModel):
     filtering: FilteringRules | None = None
-    # Applied after filtering and after unmappable records are dropped, and
-    # before record_order - see GroundTruthCreator.
+    # Both applied after filtering and after unmappable records are dropped,
+    # and before record_order. Expansion runs first: it refines the granularity
+    # of the frame, aggregation coarsens it - see GroundTruthCreator.
+    expansion: Expansion | None = None
     aggregation: Aggregation | None = None
     record_order: RecordOrder | None = None
     grouping: Grouping | None = None

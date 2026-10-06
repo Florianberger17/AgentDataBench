@@ -1,0 +1,85 @@
+seed: 1018
+
+locale: de_DE
+
+columns:
+
+  # The routing the operation belongs to. Substituted consistently per
+  # distinct value, so the operations of one routing stay together, and drawn
+  # without replacement, since two routings sharing a number would merge into
+  # one.
+  - column: routing no.
+    strategy: numeric_mapping
+    format: "{:d}"
+    min: 11000000000000
+    max: 13999999999999
+
+  # Position of the operation inside its routing. It is part of the key of
+  # every record and of the order the upload is delivered in, so it is
+  # carried over unchanged; a sequence number identifies nothing.
+  - column: operation no.
+    strategy: identity
+
+  # Shop floor instructions - harden to a stated hardness, deburr a groove,
+  # grind to a gauge - in the standard vocabulary of the trade, together with
+  # material grades of the public steel standard. Carried over because the
+  # target texts are taken from them unchanged.
+  - column: operation text 1
+    strategy: identity
+
+  - column: operation text 2
+    strategy: identity
+
+  # The join key into mapping_list_reservation_units.csv, and with it the
+  # field that decides whether an operation can be migrated at all.
+  # Substituted consistently per distinct value, and the unit list is
+  # generated from the result so both sides match.
+  - column: reservation unit no.
+    strategy: numeric_mapping
+    format: "{:d}"
+    min: 1000
+    max: 9999
+
+  # Tells an operation run in house from one bought in, which decides the
+  # reference type and the scheduling key. Carried over so that pairing with
+  # the unit beside it survives.
+  - column: operation type
+    strategy: identity
+
+  # The three figures every time of the upload is calculated from. Redrawing
+  # any of them would make the expected times arbitrary, and the base
+  # quantity in particular carries the lot sizes that bring a per-piece time
+  # under the minimum booking time of its work center. A recorded operation
+  # time is a work study figure, not an identifying value.
+  - column: setup minutes
+    strategy: identity
+
+  - column: operation minutes
+    strategy: identity
+
+  - column: base quantity
+    strategy: identity
+
+  # Carried into the target unchanged but read by no other rule, so it is
+  # redrawn from its own frequency distribution.
+  - column: lead time days
+    strategy: categorical_resample
+
+  # The part the routing produces. Number and designation are paired 1:1, so
+  # both are substituted consistently per distinct value and the pairing
+  # survives. Empty on a routing that is not assigned to any part, and those
+  # stay empty - which is what the target description falls back on.
+  - column: material no.
+    strategy: numeric_mapping
+    format: "1001-{:04d}"
+    min: 1000
+    max: 9999
+
+  - column: material description
+    strategy: part_name_mapping
+    library_path: artifacts/part_name_library/part_name_library.csv
+
+  # Decides which operations are released for migration at all, so it is
+  # carried over unchanged.
+  - column: status
+    strategy: identity

@@ -12,6 +12,7 @@ attributes:
   - name: journal no.
     type: integer
     required: true
+    unique: true
     description: >
       Identifier of the posted stock movement.
 
@@ -68,8 +69,3 @@ attributes:
     required: false
     description: >
       Cost center the movement was charged to.
-
-constraints:
-
-  - id: CON-SRC-001
-    description: journal no. must be unique

@@ -53,11 +53,3 @@ attributes:
     type: string
     required: false
     description: Type of customer entity
-
-constraints:
-
-  - id: CON-SRC-001
-    description: CustNo must be unique
-
-  - id: CON-SRC-002
-    description: CompanyName must be provided

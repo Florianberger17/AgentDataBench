@@ -54,14 +54,3 @@ attributes:
     type: date
     required: true
     description: Date of the last recorded business activity.
-
-constraints:
-
-  - id: CON-SRC-001
-    description: supplier no must be unique.
-
-  - id: CON-SRC-002
-    description: name 1 must be provided.
-
-  - id: CON-SRC-003
-    description: last_activity must contain a valid date.

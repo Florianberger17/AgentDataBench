@@ -1,0 +1,59 @@
+task_id: 037_RESERVATION_UNIT_MIGRATION_BASIC_IMPLICIT
+
+objective: >
+  Create the reservation units of the new production planning system from
+  the work center master of the legacy system and produce a file in the
+  structure and format shown by the target example. The legacy number
+  range is used for a good deal more than work centers - production notes,
+  store movements booked like an operation and auxiliary units share it -
+  and only the genuine work centers become reservation units. An entry
+  flagged for deletion is left out as well, and so is every work center
+  still booked against a cost center the new controlling chart no longer
+  carries: the central cost center list decides that, and it also supplies
+  the cost element the confirmed hours are posted under. Deliver the units
+  in ascending order of their number. The legacy system holds no capacity
+  figure, only the shift arrangement, so the capacity has to be determined
+  from it: one shift contributes its gross length less its breaks, which
+  are recorded in minutes and have to be brought to hours first, and that
+  net shift time applies to every shift of a working day, to every working
+  day of the week and to every workplace the operation is performed on. A
+  bought-in operation runs on no workplace of the plant, so its workplace
+  count is zero and its capacity comes out at zero with it - and having no
+  capacity to schedule against, such a unit is scheduled by its lead time
+  while every other is scheduled against its capacity. A unit holding two
+  or more workplaces is marked as a pooled unit. The number of shifts is
+  carried over as the shift factor, and the two planning correction
+  factors follow from the planning profile: a standard work center is
+  planned at 0,90 in the rough-cut run and 1,00 in the detailed run, a
+  reduced one at 0,80 and 0,90, and a manually planned one at 1,00 and
+  1,00. Every unit is created generally valid, with its capacity stated
+  per week in hours, an overload factor of 1,00 and confirmation required.
+  No formal source or target schema is given - infer the required
+  structure, the field mapping and the value formats yourself by comparing
+  the input dataset against the target example.
+
+input:
+  source_dataset: data/dataset.csv
+  target_example: data/target_example.csv
+  reference_data:
+    - name: cost_center_list
+      file: data/mapping_list_cost_centers.csv
+      key_field: "cost center"
+      value_field: "cost element"
+      description: >
+        The cost centers of the new controlling chart with the cost element
+        the confirmed hours of each are posted under. The list covers the
+        whole plant, so it also names cost centers no work center is booked
+        against. A work center booked against a cost center the list does not
+        carry cannot be created: that cost center was retired and the work
+        center has to be reassigned by hand first.
+
+business_rules: {}
+
+output:
+  format: csv
+
+constraints:
+  - Each output row shall represent one reservation unit.
+  - No additional columns beyond those shown in the target example may be added.
+  - The column order must match the target example.

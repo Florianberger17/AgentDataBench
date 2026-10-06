@@ -3,16 +3,21 @@ task_id: 029_MATERIAL_MOVEMENTS_MIGRATION_BASIC_IMPLICIT
 objective: >
   Transform the provided material movement journal into the structure and
   format shown by the target example. Only movements of materials that
-  exist in the central material cross reference list can be posted: records
-  without a part number, or whose part number is absent from that list,
-  shall not be migrated. The material number of the target system is not
-  contained in the source dataset and shall be resolved via the same list.
-  Process the remaining records in ascending order of posting date and,
-  within one posting date, in ascending order of journal no.; in that order
-  each movement receives a consecutive material document number starting at
-  4900000000. Every movement is posted in plant 4170. Movements without a
-  storage location or without a cost center are posted without one.
-  No formal source or target schema is given - infer the required structure, the field mapping and the value formats yourself by comparing the input dataset against the target example.
+  exist in the central material cross reference list can be posted:
+  records without a part number, or whose part number is absent from that
+  list, shall not be migrated. The material number of the target system is
+  not contained in the source dataset and shall be resolved via the same
+  list. Process the remaining records in ascending order of posting date
+  and, within one posting date, in ascending order of journal no.; in that
+  order each movement receives a consecutive material document number
+  starting at 4900000000. Every movement is posted in plant 4170.
+  Movements without a storage location or without a cost center are posted
+  without one. The movement type follows from the movement code of the
+  legacy journal: WE becomes 101, WA becomes 103, BWA becomes 105, UMW
+  becomes 311, RF becomes 262 and WAS becomes 201. No formal source or
+  target schema is given - infer the required structure, the field mapping
+  and the value formats yourself by comparing the input dataset against
+  the target example.
 
 input:
   source_dataset: data/dataset.csv

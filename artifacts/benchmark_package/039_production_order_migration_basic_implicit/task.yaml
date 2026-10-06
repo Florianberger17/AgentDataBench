@@ -1,0 +1,56 @@
+task_id: 039_PRODUCTION_ORDER_MIGRATION_BASIC_IMPLICIT
+
+objective: >
+  Create the open production orders of the new ERP system from the
+  production order list of the legacy system and produce a file in the
+  structure and format shown by the target example. Only orders that were
+  actually released and whose material the legacy system still holds are
+  migrated. The legacy material range grew over decades and mixes plain
+  digits of several lengths with letter-prefixed and alphanumeric numbers,
+  so nothing about a legacy number says what it became: the material
+  number of the new system has to be resolved through the central material
+  cross reference list, and an order whose material is absent from that
+  list cannot be created either. Deliver the orders in ascending order of
+  their legacy confirmation number. The new system numbers its
+  confirmations from its own range rather than taking the legacy numbers
+  over: in that delivery order the orders are numbered consecutively from
+  one, with no gaps, and the legacy number is kept beside the new one so
+  that the hours and quantities already booked against it can be traced.
+  What the new system has to schedule is the quantity still to be
+  produced, which is the order quantity less what has already been
+  delivered to stock and what was scrapped along the way. The order status
+  follows from how far the order had got on the shop floor: one that was
+  never touched is created, one being worked on is in process, and one
+  that already delivered part of its quantity is partly confirmed. The
+  legacy system writes pieces as STK, the new one in the international
+  notation. Every order belongs to plant 4444 and replenishes stock. No
+  formal source or target schema is given - infer the required structure,
+  the field mapping and the value formats yourself by comparing the input
+  dataset against the target example.
+
+input:
+  source_dataset: data/dataset.csv
+  target_example: data/target_example.csv
+  reference_data:
+    - name: material_cross_reference
+      file: data/mapping_list_materials.csv
+      key_field: "material no. legacy"
+      value_field: "material no. new"
+      description: >
+        Assigns the material numbers of the legacy system to those of the new
+        one. There is no rule behind the assignment, so every number has to be
+        read off this list. It covers the whole material master, so it also
+        names materials no open order happens to produce - and a legacy
+        material that was not carried over is absent from it altogether,
+        which means the orders producing it cannot be created in the new
+        system.
+
+business_rules: {}
+
+output:
+  format: csv
+
+constraints:
+  - Each output row shall represent one production order.
+  - No additional columns beyond those shown in the target example may be added.
+  - The column order must match the target example.

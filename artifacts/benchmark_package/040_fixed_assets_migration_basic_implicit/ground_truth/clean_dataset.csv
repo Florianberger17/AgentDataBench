@@ -1,0 +1,101 @@
+﻿asset no.,description,asset category,cost center,capitalisation serial,depreciation start serial,acquisition value,accumulated depreciation,remaining life months,depreciation method,quantity,unit of measure,status
+484042177,Lamella grinding machine with automatic infeed,MACH,4444-4244,43575,43575,"44530,38","-44530,38",0,L,1,ST,retired
+5066570067,Hydraulic press 250 t with tool changer and safety fence,MACH,4444-7784,44538,44538,"68172,06","-68172,06",0,L,2,ST,active
+3351721118,Air conditioning unit for the server room,BLDG,4444-9390,40383,40383,"65368,06","-35580,56",73,L,1,ST,active
+6877463238,Canteen furniture set of forty seats,FIXT,4444-3551,42667,42667,"72718,58","-8207,94",10,D,1,ST,active
+5860884261,Canteen furniture set of forty seats,FIXT,4444-8401,41582,41582,"65783,74","-30256,70",146,L,4,ST,active
+1758778337,Medium frequency generator with connection cable set,MACH,4444-3494,44050,44050,"44848,46","-44848,46",0,L,2,ST,active
+1926982078,Office decoration of the upper floor including partitions,FIXT,4444-5211,41910,41910,"86467,37","-37631,03",33,L,8,ST,active
+8784396006,Lamella grinding machine with automatic infeed,MACH,4444-3551,40895,40895,"3377477,73","-3377477,73",0,L,1,ST,active
+7492658034,Wire erosion machine with dielectric unit,MACH,4444-7552,41599,41607,"61984,30","-61984,30",0,L,1,ST,active
+5085964992,Heat indicator for the technical department,MACH,4444-9942,43054,43054,"38856,89","-38856,89",0,D,1,ST,retired
+535486722,Canteen furniture set of forty seats,FIXT,4444-3494,44880,44880,"45394,43","-45394,43",0,L,4,ST,retired
+4953301385,Roof gutter work on the training centre in galvanised sheet,BLDG,4444-3847,42906,42910,"83750,15","-83750,15",0,M,2,ST,retired
+7650354464,Sheet metal wall painting of the training centre,FIXT,4444-3551,42591,42591,"29878,24","-29878,24",0,D,1,ST,active
+2252740569,Sheet metal wall painting of the training centre,FIXT,4444-4489,40273,40273,"1804,46","-1804,46",0,L,8,ST,active
+6986472395,Sheet metal wall painting of the training centre,FIXT,4444-8401,45471,45471,"82116,38","-8453,52",116,L,8,ST,active
+4295040083,Heat indicator for the technical department,MACH,4444-2276,45608,45620,"36609,90","-26449,66",131,M,1,ST,active
+1705647682,Sheet metal wall painting of the training centre,FIXT,4444-9390,40256,40264,"86748,72","-86748,72",0,L,8,ST,retired
+5049279549,Plotter DIN A0 for the drawing office,EDP,4444-7184,44080,44110,"6748,42","-6748,42",0,L,1,ST,active
+3811770988,Assembly station for stator mounting complete,MACH,4444-6827,43911,43911,"65267,51","-65267,51",0,L,8,ST,active
+3480103719,ERP interface module for the shop floor terminals,SOFT,4444-3912,45510,45510,"33551,41","-29192,15",56,D,1,ST,active
+8246856354,Profile grinding centre including measuring station,MACH,4444-3494,44501,44531,"17576,84","-17576,84",0,L,2,ST,active
+5290591263,Electronic ledger licence renewal agreement for one year,SOFT,4444-6827,41278,41278,"40488,95","-40488,95",0,L,1,ST,retired
+3752104949,Company car estate model including winter tyre set,VEH,4444-9942,44560,44560,"83120,17","-31293,29",119,L,1,ST,active
+6630613243,Lamella grinding machine with automatic infeed,MACH,4444-4244,42252,42252,"71806,52","-71806,52",0,L,1,ST,active
+4677508036,ERP interface module for the shop floor terminals,SOFT,4444-8401,40553,40553,"80351,24","-80351,24",0,L,2,ST,retired
+2241650192,Canteen furniture set of forty seats,FIXT,4444-3494,45055,45055,"42437,23","-31957,64",169,L,2,ST,active
+6861049656,Assembly station for stator mounting complete,MACH,4444-3912,40882,40882,"87869,51","-87869,51",0,D,1,ST,active
+9358857874,Canteen furniture set of forty seats,FIXT,4444-4489,41359,41359,"29455,83","-29455,83",0,M,2,ST,active
+4243328044,Company car estate model including winter tyre set,VEH,4444-9390,43892,43892,"71553,18","-71553,18",0,L,2,ST,active
+4076065396,ERP interface module for the shop floor terminals,SOFT,4444-4489,41290,41290,"9358,90","-9358,90",0,L,1,ST,active
+3301634236,Assembly station for stator mounting complete,MACH,4444-8401,44557,44565,"3001596,10","-1868411,64",108,L,1,ST,active
+4969861935,Storage cabin for the parts store,FIXT,4444-7184,43727,43727,"62245,99","-62245,99",0,L,8,ST,active
+1410228513,Profile grinding centre including measuring station,MACH,4444-7552,44833,44833,"28395,63","-28395,63",0,L,2,ST,active
+9066278036,Heat indicator for the technical department,MACH,4444-5211,43862,43862,"24800,02","-11905,96",24,L,2,ST,active
+9074093993,CAD workstation licence including maintenance,SOFT,4444-8401,41517,41517,"23289,36","-23289,36",0,L,2,ST,retired
+9288360819,Assembly station for stator mounting complete,MACH,4444-3551,42297,42297,"2462,35","-2462,35",0,L,1,ST,active
+5706078369,Air conditioning unit for the server room,BLDG,4444-3912,41601,41601,"73171,31","-73171,31",0,L,2,ST,active
+6926197938,Wire erosion machine with dielectric unit,MACH,4444-3551,40775,40779,"6890,55","-6890,55",0,L,2,ST,active
+3853430623,Roof gutter work on the training centre in galvanised sheet,BLDG,4444-9942,42001,42020,"47432,62","-47432,62",0,L,1,ST,active
+7700279893,Heat indicator for the technical department,MACH,4444-6827,45876,45876,"71914,67","-36734,10",37,D,2,ST,active
+2155274096,Barcode scanner set for goods receipt,EDP,4444-4489,42686,42686,"32919,11","-25720,91",73,L,2,ST,active
+2229980204,Electric pallet truck with lifting mast,VEH,4444-3847,42765,42765,"6721,11","-6721,11",0,L,2,ST,active
+6425957994,Lamella grinding machine with automatic infeed,MACH,4444-5211,40946,40946,"693,66","-693,66",0,L,1,ST,active
+3582552505,Loading ramp extension with weather protection,BLDG,4444-5211,41263,41266,"34015,76","-34015,76",0,L,1,ST,active
+3853992456,Canteen furniture set of forty seats,FIXT,4444-5211,40320,40335,"89512,74","-36616,67",108,L,1,ST,active
+1891108541,Wire erosion machine with dielectric unit,MACH,4444-2276,44225,44238,"55052,14","-10764,91",8,L,1,ST,active
+2088171175,Heat indicator for the technical department,MACH,4444-3494,41061,41061,"59334,45","-59334,45",0,L,2,ST,active
+1742569405,Lamella grinding machine with automatic infeed,MACH,4444-3494,45520,45521,"73702,61","-73702,61",0,L,2,ST,retired
+6867572842,Lamella grinding machine with automatic infeed,MACH,4444-6827,41268,41268,"29315,92","-29315,92",0,L,1,ST,active
+959502727,Set of four tyres for one of the works vans,VEH,4444-4244,42702,42707,"54695,53","-54695,53",0,L,4,ST,active
+3170282765,Licence renewal agreement reporting computer,SOFT,4444-3494,40810,40830,"15806,54","-13083,18",88,L,1,ST,active
+3839638634,Network port extension for the server room,EDP,4444-8401,44448,44448,"52511,26","-52511,26",0,L,1,ST,active
+1077059087,Sheet metal wall painting of the training centre,FIXT,4444-2276,41805,41814,"34702,24","-14330,64",165,L,2,ST,active
+6385118193,Roof gutter work on the training centre in galvanised sheet,BLDG,4444-9390,45494,45494,"3575637,91","-3575637,91",0,L,1,ST,active
+200919894,Heat indicator for the technical department,MACH,4444-7784,43520,43520,"42666,89","-42666,89",0,L,1,ST,active
+8651449057,Network port extension for the server room,EDP,4444-3551,43958,43958,"52052,83","-52052,83",0,M,1,ST,active
+9729223204,Server cabinet with uninterruptible power supply,EDP,4444-9942,43882,43882,"50008,18","-50008,18",0,D,8,ST,blocked
+7789135957,Eight docking stations and monitors for the engineering office,EDP,4444-3912,44026,44054,"43283,16","-36405,06",101,D,1,ST,active
+9468327638,Plotter DIN A0 for the drawing office,EDP,4444-3551,40304,40304,"75906,91","-75906,91",0,L,1,ST,active
+6387953650,Server cabinet with uninterruptible power supply,EDP,4444-7784,41245,41245,"31837,77","-31837,77",0,L,1,ST,active
+64634767,Set of four tyres for one of the works vans,VEH,4444-3551,43379,43379,"51309,15","-51309,15",0,L,8,ST,active
+8376828722,Winding machine with eight spindles and infeed,MACH,4444-3912,40112,40132,"34843,09","-34843,09",0,D,1,ST,active
+6105384021,Company car estate model including winter tyre set,VEH,4444-5211,40727,40727,"54044,72","-54044,72",0,L,1,ST,active
+6496707418,Network port extension for the server room,EDP,4444-8401,41008,41008,"16744,00","-16744,00",0,L,1,ST,active
+8827569321,Company car estate model including winter tyre set,VEH,4444-3847,44676,44676,"22656,44","-22656,44",0,L,1,ST,active
+6119348234,Lamella grinding machine with automatic infeed,MACH,4444-9390,43022,43022,"5536,64","-5536,64",0,M,8,ST,active
+2870557125,Licence renewal agreement reporting computer,SOFT,4444-8401,45239,45239,"12878,28","-6066,45",158,L,1,ST,active
+2579513485,Electronic ledger licence renewal agreement for one year,SOFT,4444-3494,43860,43860,"81049,66","-70518,50",156,L,1,ST,active
+8731589176,Plotter DIN A0 for the drawing office,EDP,4444-4244,44630,44632,"16828,45","-8068,98",45,D,1,ST,active
+6797430347,Licence renewal agreement reporting computer,SOFT,4444-3494,40028,40028,"49694,58","-43632,42",114,L,1,ST,active
+3143134241,ERP interface module for the shop floor terminals,SOFT,4444-8401,43800,43800,"32691,58","-32691,58",0,L,4,ST,active
+5712082673,Lamella grinding machine with automatic infeed,MACH,4444-3912,41777,41777,"29823,18","-29823,18",0,L,1,ST,blocked
+323311804,Winding machine with eight spindles and infeed,MACH,4444-7784,44362,44362,"40536,13","-40536,13",0,L,2,ST,active
+9237515699,Entrance door glazing with smart film,FIXT,4444-3494,40159,40159,"5550,48","-4810,61",174,L,2,ST,active
+2086530651,Winding machine with eight spindles and infeed,MACH,4444-5211,45153,45153,"53141,74","-12915,46",19,L,1,ST,active
+2352692982,Network port extension for the server room,EDP,4444-4244,44478,44478,"84663,28","-84663,28",0,D,8,ST,active
+5828402468,Office decoration of the upper floor including partitions,FIXT,4444-3536,40123,40123,"762819,07","-762819,07",0,L,1,ST,active
+856860259,ERP interface module for the shop floor terminals,SOFT,4444-3912,40442,40442,"36928,08","-36928,08",0,D,1,ST,active
+8816438876,Canteen furniture set of forty seats,FIXT,4444-9942,45548,45548,"77604,36","-20174,92",169,L,8,ST,active
+3632839875,Roof gutter work on the training centre in galvanised sheet,BLDG,4444-4489,41405,41405,"58614,18","-21669,46",110,L,1,ST,active
+5744725445,Eight docking stations and monitors for the engineering office,EDP,4444-8401,41163,41172,"56957,68","-56957,68",0,D,1,ST,blocked
+523036852,Company car estate model including winter tyre set,VEH,4444-3494,41654,41655,"38546,57","-17108,11",177,L,4,ST,active
+3645337281,Wire erosion machine with dielectric unit,MACH,4444-6827,45075,45078,"88575,71","-88575,71",0,L,1,ST,blocked
+7431948510,Assembly station for stator mounting complete,MACH,4444-8401,40677,40701,"19547,69","-16842,88",117,L,1,ST,active
+1667073174,Barcode scanner set for goods receipt,EDP,4444-9942,43730,43730,"15153,78","-15153,78",0,L,8,ST,active
+7620001969,Server cabinet with uninterruptible power supply,EDP,4444-3494,42472,42472,"40591,45","-27301,12",32,L,1,ST,active
+9060745494,Wire erosion machine with dielectric unit,MACH,4444-3847,42018,42018,"24361,74","-5136,60",96,D,8,ST,active
+9646902441,ERP interface module for the shop floor terminals,SOFT,4444-3912,41916,41916,"68534,78","-68534,78",0,L,8,ST,active
+4561844856,Lamella grinding machine with automatic infeed,MACH,4444-9942,45491,45491,"70402,91","-10277,03",157,D,2,ST,active
+9707159192,Network port extension for the server room,EDP,4444-4489,45084,45084,"15413,45","-15413,45",0,L,1,ST,active
+4389174852,Wire erosion machine with dielectric unit,MACH,4444-2276,42209,42209,"19549,51","-19549,51",0,M,8,ST,blocked
+2003709206,ERP interface module for the shop floor terminals,SOFT,4444-4489,40788,40788,"15153,52","-3915,77",57,L,1,ST,active
+5910292023,Electric pallet truck with lifting mast,VEH,4444-9390,44484,44484,"66920,39","-66920,39",0,L,2,ST,active
+7610299592,Heat indicator for the technical department,MACH,4444-7552,43154,43154,"67002,17","-67002,17",0,D,2,ST,active
+4800451758,Air conditioning unit for the server room,BLDG,4444-4244,44382,44385,"81365,37","-81365,37",0,L,1,ST,active
+3054178476,Electronic ledger licence renewal agreement for one year,SOFT,4444-2276,41635,41635,"37852,70","-37852,70",0,L,1,ST,active
+8307079418,Wire erosion machine with dielectric unit,MACH,4444-3551,44067,44067,"55499,35","-55499,35",0,L,4,ST,active
+7412114942,Server cabinet with uninterruptible power supply,EDP,4444-7784,41988,42014,"81314,04","-81314,04",0,D,1,ST,active
+5252590244,Sheet metal wall painting of the training centre,FIXT,4444-3847,40208,40208,"88865,68","-79653,95",109,L,1,ST,active
+5082393731,Electric pallet truck with lifting mast,VEH,4444-3551,43531,43531,"1487655,35","-95651,64",167,L,8,ST,active

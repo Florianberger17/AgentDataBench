@@ -1,0 +1,54 @@
+task_id: 034_WIP_MIGRATION_BASIC_IMPLICIT
+
+objective: >
+  Determine the work in progress of every project from the cost postings
+  of the legacy ERP system and produce a file in the structure and format
+  shown by the target example. The legacy system holds no work in progress
+  at all; it has to be derived from the single postings the project cost
+  report exports, and a posting on a cancelled production order is
+  reversed and counts for nothing. Every posting is one record of the
+  source dataset, while the target system expects one record per project,
+  so the figures of a project have to be accumulated over its postings
+  first; deliver the projects in ascending order of their legacy project
+  number. Which postings make up which figure is decided by the value
+  type: the actual costs are the sum of the full actual values (ISWV),
+  while the fixed-cost records (ISWF) repeat money an actual value already
+  carries and must not be counted a second time, and the planned revenue
+  is the sum of the planned order values (KAWV), which are posted as
+  credits and therefore accumulate to a negative figure. The work in
+  progress is the actual costs of the project, capped at what the planned
+  revenue covers and never below zero, and whatever the cap cuts off
+  becomes an expected loss, so the two always add up to the actual costs
+  again. The work breakdown structure element and the description of a
+  project come from the central project cross reference list, and a
+  project absent from that list receives no work in progress record. The
+  whole upload is determined as at period 12/2026 and stated in euro. No
+  formal source or target schema is given - infer the required structure,
+  the field mapping and the value formats yourself by comparing the input
+  dataset against the target example.
+
+input:
+  source_dataset: data/dataset.csv
+  target_example: data/target_example.csv
+  reference_data:
+    - name: project_cross_reference
+      file: data/mapping_list_projects.csv
+      key_field: "project no. legacy"
+      value_field:
+        - "WBS element"
+        - "description"
+      description: >
+        Assigns the project numbers of the legacy ERP system to the work
+        breakdown structure elements of the target ERP system and carries the
+        description of each project. A project missing from this list is not
+        managed in the target system and receives no work in progress record.
+
+business_rules: {}
+
+output:
+  format: csv
+
+constraints:
+  - Each output row shall represent one project.
+  - No additional columns beyond those shown in the target example may be added.
+  - The column order must match the target example.

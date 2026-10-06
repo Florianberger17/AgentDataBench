@@ -1,0 +1,290 @@
+task_id: 020_FIXED_ASSETS_MIGRATION_BASIC_EXPLICIT
+
+objective: >
+  Create the fixed assets of the new ERP system from the asset register of the
+  legacy system and produce a CSV file that conforms exactly to the target
+  schema. The takeover values are what the migration turns on. The legacy
+  register states what an asset cost and how much of that has been written
+  off; what the new system has to be told is what is still carried in the
+  books, and - for the greater part of the register, which is written down to
+  nil - the memo value of one cent that keeps the asset visible instead of
+  letting a nil value drop it out altogether. The useful life has to be
+  restated too: the legacy register holds it as a single figure in months,
+  the new system in whole years plus the months beyond them. The dates are
+  exported as spreadsheet day numbers and have to become calendar dates. The
+  controlling assignment of the asset - cost center, profit center and plant -
+  is not in the register at all and comes from the central cost center list,
+  which at the same time decides which assets can be created.
+
+input:
+  source_dataset: data/dataset.csv
+  source_schema: schemas/source_schema.yaml
+  target_schema: schemas/target_schema.yaml
+  reference_data:
+    - name: cost_center_assignment
+      file: data/mapping_list_cost_centers.csv
+      key_field: "cost center legacy"
+      value_field:
+        - "cost center new"
+        - "profit center"
+        - "plant"
+      description: >
+        The controlling assignment of the new system: per legacy cost center
+        the cost center of the new numbering, the profit center it reports into
+        and the plant it belongs to. The list covers the whole company, so it
+        also names cost centers no asset happens to sit on. A legacy cost
+        center the list does not carry was retired during the controlling
+        migration, and an asset still booked on it cannot be created until it
+        has been reassigned by hand.
+
+required_operations:
+  - schema_mapping
+  - filtering
+  - lookup
+  - calculation
+  - value_limitation
+  - serial_date_conversion
+  - truncation
+  - value_mapping
+  - rounding
+  - constant_assignment
+
+business_rules:
+
+  filtering:
+    description: >
+      Only assets the company still holds are taken over. One that was
+      disposed of, or that is being written off, is not created in the new
+      system.
+    rules:
+      - field: status
+        operator: "=="
+        value: "active"
+
+  record_order:
+    description: >
+      The assets are delivered in ascending order of their legacy asset
+      number, read as a number rather than as text.
+    fields:
+      - asset no.
+    direction: ascending
+
+  mappings:
+
+    - target_field: BUKRS
+      transformation:
+        type: constant
+        value: "0454"
+      description: >
+        The whole register belongs to one company.
+
+    - source_field: asset category
+      target_field: ANLKL
+      transformation:
+        type: value_mapping
+        mapping:
+          "MACH": "3200"
+          "EDP": "3500"
+          "VEH": "3300"
+          "FIXT": "3012"
+          "SOFT": "3900"
+          "BLDG": "3600"
+      description: >
+        Each category of the legacy register has its own asset class in the
+        new system, which carries the account determination with it.
+
+    - target_field: GD_MARK
+      transformation:
+        type: constant
+        value: "X"
+      description: >
+        The equipment record of the legacy system is deleted once the asset has
+        been created, on every record of this upload.
+
+    - source_field: asset no.
+      target_field: AIBN1
+      transformation:
+        type: copy
+      description: >
+        The legacy asset number is carried over so the new asset can be
+        reconciled against the register it came from.
+
+    - source_field: unit of measure
+      target_field: MEINS
+      transformation:
+        type: copy
+
+    - source_field: quantity
+      target_field: MENGE
+      transformation:
+        type: round
+        decimals: 3
+        decimal_separator: ","
+
+    - source_field: capitalisation serial
+      target_field: AKTIV
+      transformation:
+        type: serial_date_conversion
+        epoch: "1899-12-30"
+        output_format: YYYYMMDD
+      description: >
+        The legacy register exports its dates as spreadsheet day numbers
+        counted from 30 December 1899; the upload expects calendar dates.
+
+    - source_field: description
+      target_field: TXT50
+      transformation:
+        type: truncate
+        length: 50
+      description: >
+        The description field of the new system holds fifty characters, so a
+        longer legacy description is cut to fit.
+
+    - source_field: cost center
+      target_field: KOSTL
+      transformation:
+        type: lookup
+        reference: cost_center_assignment
+        lookup_key: "cost center legacy"
+        return_field: "cost center new"
+        on_missing: exclude_record
+      description: >
+        The cost center of the new numbering comes from the controlling
+        assignment. A legacy cost center the list does not carry was retired,
+        and an asset still booked on it cannot be created at all - so the whole
+        record is left out rather than loaded without a cost center.
+
+    - source_field: cost center
+      target_field: PRCTR
+      transformation:
+        type: lookup
+        reference: cost_center_assignment
+        lookup_key: "cost center legacy"
+        return_field: "profit center"
+      description: >
+        The profit center follows the cost center and comes from the same list.
+
+    - source_field: cost center
+      target_field: WERKS
+      transformation:
+        type: lookup
+        reference: cost_center_assignment
+        lookup_key: "cost center legacy"
+        return_field: "plant"
+      description: >
+        The plant follows the cost center as well.
+
+    - source_field: asset category
+      target_field: STORT
+      transformation:
+        type: value_mapping
+        mapping:
+          "MACH": "DE400"
+          "EDP": "DE300"
+          "VEH": "DE230"
+          "FIXT": "DE100"
+          "SOFT": "DE000"
+          "BLDG": "DE310"
+      description: >
+        Each category of asset is kept in one place, so the location follows
+        from the category rather than from the cost center.
+
+    - source_field: depreciation method
+      target_field: AFASL01
+      transformation:
+        type: value_mapping
+        mapping:
+          "L": "LINS"
+          "D": "GD25"
+          "M": "MANU"
+      description: >
+        The one-letter method of the legacy register becomes the depreciation
+        key of the new system.
+
+    - source_field: depreciation start serial
+      target_field: AFABG01
+      transformation:
+        type: serial_date_conversion
+        epoch: "1899-12-30"
+        output_format: YYYYMMDD
+      description: >
+        Converted from the same day-number notation as the capitalisation
+        date.
+
+    - source_fields:
+        - remaining life months
+      target_field: NDJAR01
+      transformation:
+        type: calculation
+        formula: "remaining life months // 12"
+        decimals: 0
+      description: >
+        The legacy register holds the remaining useful life as one figure in
+        months. The new system wants the whole years of it, which is that
+        figure divided by twelve with the remainder dropped.
+
+    - source_fields:
+        - remaining life months
+      target_field: NDPER01
+      transformation:
+        type: calculation
+        formula: "remaining life months % 12"
+        decimals: 0
+      description: >
+        And the months left over beyond those whole years, which is the
+        remainder of the same division and therefore always below twelve.
+
+    - source_field: acquisition value
+      target_field: KANSW01
+      transformation:
+        type: round
+        decimals: 2
+
+    - source_field: accumulated depreciation
+      target_field: KNAFA01
+      transformation:
+        type: round
+        decimals: 2
+
+    - source_fields:
+        - KANSW01
+        - KNAFA01
+      target_field: net book value
+      transformation:
+        type: calculation
+        formula: "KANSW01 + KNAFA01"
+        decimals: 2
+      description: >
+        What the asset is still worth in the books: what it cost less what has
+        been written off. The accumulated depreciation is already carried as a
+        negative figure, so the two are added rather than subtracted. It comes
+        out at nil for every asset that is fully written down.
+
+    - source_field: net book value
+      target_field: ELBT
+      transformation:
+        type: bounded_value
+        minimum: 0.01
+        decimals: 2
+        decimal_separator: ","
+      description: >
+        The value the asset is taken over at. It is the net book value, except
+        where that is nil: an asset taken over at nothing would drop out of the
+        register, so it is taken over at a memo value of one cent instead and
+        stays visible until it is physically disposed of.
+
+output:
+  format: csv
+  schema_reference: schemas/target_schema.yaml
+
+constraints:
+  - The output dataset must follow the target schema exactly.
+  - The output column order must match the target schema.
+  - No additional columns may be added.
+  - Each output row shall represent one fixed asset.
+  - AIBN1 must be unique.
+  - net book value must equal KANSW01 plus KNAFA01.
+  - net book value must not be negative.
+  - ELBT must equal the net book value wherever that is above one cent, and one cent wherever it is not.
+  - NDPER01 must be below twelve.
+  - TXT50 must not exceed fifty characters.

@@ -1,3 +1,4 @@
 ﻿CustomerID,Name,Street,City,PostalCode,Country,LastBusinessActivityDate,Status
-CUST999001,Musterfirma GmbH,Beispielstrasse 1,Musterstadt,12345,DEU,01012024,active
-CUST999002,Beispiel AG,Musterweg 42,Beispielhausen,54321,AUT,15062023,inactive
+CUST999001,Example Company GmbH,Example Street 1,Exampletown,12345,DEU,01012024,active
+CUST999002,Placeholder Group AG,Placeholder Road 42,Placeholderville,54321,AUT,15062023,inactive
+CUST999003,Sample Trading KG,Sample Avenue 7/9,Sampleborough,67890,CHE,20012023,active

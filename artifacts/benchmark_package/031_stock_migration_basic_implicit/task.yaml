@@ -1,0 +1,46 @@
+task_id: 031_STOCK_MIGRATION_BASIC_IMPLICIT
+
+objective: >
+  Transform the provided stock balance dataset into the structure and
+  format shown by the target example. The material number, the base unit
+  of measure and the price unit of the target system are not contained in
+  the source dataset and shall be resolved via the central material cross
+  reference list. The value of the stock is invariant under the migration:
+  the quantity shall be converted from the stock unit of the legacy system
+  into the base unit of the target system using the conversion factors of
+  that same list, and the valuation price shall then be derived from the
+  stock value, the converted quantity and the price unit, so that the
+  three together reproduce the stock value again. The posting month is
+  recorded without a leading zero in the legacy system and shall be filled
+  to two digits. Every record belongs to plant 4170 and company code 0454,
+  and carries the price control indicator V, the valuation type NEU and
+  the currency EUR. No formal source or target schema is given - infer the
+  required structure, the field mapping and the value formats yourself by
+  comparing the input dataset against the target example.
+
+input:
+  source_dataset: data/dataset.csv
+  target_example: data/target_example.csv
+  reference_data:
+    - name: material_cross_reference
+      file: data/mapping_list_material.csv
+      key_field: "part no."
+      value_field:
+        - "material no."
+        - "base unit"
+        - "price unit"
+        - "density"
+      description: >
+        Assigns the part numbers of the legacy ERP system to the material
+        master records of the target ERP system, including the base unit of
+        measure, the price unit and the density of the material grade.
+
+business_rules: {}
+
+output:
+  format: csv
+
+constraints:
+  - Each output row shall represent the stock of one material.
+  - No additional columns beyond those shown in the target example may be added.
+  - The column order must match the target example.

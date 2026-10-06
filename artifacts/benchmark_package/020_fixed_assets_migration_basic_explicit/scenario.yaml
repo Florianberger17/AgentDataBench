@@ -1,0 +1,41 @@
+scenario_id: 020_FIXED_ASSETS_MIGRATION_BASIC_EXPLICIT
+
+name: ERP Fixed Assets Migration
+
+domain: ERP Data Integration
+
+description: >
+  The fixed assets of the company are taken over into a new ERP system as part
+  of a system modernization project. An asset migration is a migration of
+  values first and of master data second: what the new system has to be told
+  is not only that a machine exists but what it is still worth, and the legacy
+  register states that only indirectly - it holds what the asset cost and how
+  much has been written off since. Most of the register has been written off
+  in full, which is normal for a register grown over fifteen years, and an
+  asset carried at nothing would drop out of the register altogether, so those
+  are taken over at a memo value of one cent and stay visible until they are
+  physically scrapped. The remaining useful life has to be restated as well,
+  from a single figure in months into whole years plus the months beyond them,
+  and the dates come out of the legacy system as spreadsheet day numbers
+  rather than as dates. The controlling assignment finally is not in the
+  register at all: the cost centers were renumbered in an earlier wave, part
+  of them retired, and an asset still booked on a retired one cannot be
+  created until someone reassigns it by hand.
+
+business_objects:
+  - Asset
+
+systems:
+  source:
+    name: Legacy ERP System
+    description: >
+      Holds the fixed asset register with acquisition values, accumulated
+      depreciation, remaining useful life in months and dates as spreadsheet
+      day numbers.
+
+  target:
+    name: Target ERP System
+    description: >
+      Creates fixed assets together with the values they are taken over at in
+      the book depreciation area, loaded through the asset master upload
+      container.

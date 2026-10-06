@@ -1,3 +1,4 @@
 ﻿Project Definition,Project Profile,Short Description,Person Responsible ID,Company Code,Project Currency,Start Date,Finish Date,Factory Calendar Key,Planning Profile,Network Assignment
-P-399001,TS00007,SPT 299001-Musterfirma GmbH,52010,0898,EUR,01.03.24,15.06.24,1,ZR0001,2
-P-399002,TS00007,SPT 299002-Beispiel AG,52001,0898,EUR,05.04.24,20.08.24,1,ZR0001,2
+P-399001,TS00007,SPT 299001-Example Company GmbH,52010,0898,EUR,01.03.24,15.06.24,1,ZR0001,2
+P-399002,TS00007,SPT 299002-Placeholder Group AG,52001,0898,EUR,05.04.24,20.08.24,1,ZR0001,2
+P-399003,TS00007,SPT 299003-Sample Trading KG,52002,0898,EUR,12.05.24,30.09.24,1,ZR0001,2

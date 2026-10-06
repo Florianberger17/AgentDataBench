@@ -794,6 +794,31 @@ def test_truncate_handler_cuts_to_the_target_field_length():
     assert [len(value) for value in result] == [40, 5]
 
 
+def test_truncate_handler_cuts_an_already_built_target_field():
+    df = pd.DataFrame({"legacy name": ["ignored"]})
+    mapping = MappingRule(
+        source_field="DESCRIPT",
+        target_field="NAME",
+        transformation={"type": "truncate", "length": 20},
+    )
+    context = TransformationContext(
+        target_columns={"DESCRIPT": pd.Series(["Mechanical Engineering"])}
+    )
+    result = TruncateHandler().apply(df, mapping, context)
+    assert list(result) == ["Mechanical Engineeri"]
+
+
+def test_truncate_handler_defers_on_an_unknown_field():
+    df = pd.DataFrame({"description": ["anything"]})
+    mapping = MappingRule(
+        source_field="DESCRIPT",
+        target_field="NAME",
+        transformation={"type": "truncate", "length": 20},
+    )
+    with pytest.raises(MissingTargetColumn):
+        TruncateHandler().apply(df, mapping)
+
+
 def test_round_handler_keeps_the_decimal_comma():
     df = pd.DataFrame({"price": ["11629,426", "5,281"]})
     mapping = MappingRule(

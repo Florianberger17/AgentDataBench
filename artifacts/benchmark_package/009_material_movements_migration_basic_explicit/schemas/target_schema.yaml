@@ -11,6 +11,7 @@ attributes:
   - name: MBLNR
     type: string
     required: true
+    unique: true
     description: >
       Number of the material document.
 
@@ -74,8 +75,3 @@ attributes:
     required: false
     description: >
       Item text of the material document.
-
-constraints:
-
-  - id: CON-TGT-001
-    description: MBLNR must be unique

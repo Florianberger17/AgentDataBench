@@ -72,14 +72,3 @@ attributes:
     type: string
     required: true
     description: Document number of the legacy system
-
-constraints:
-
-  - id: CON-TGT-001
-    description: PO_NUMBER must be unique
-
-  - id: CON-TGT-002
-    description: VENDOR must be resolved via the central supplier mapping list
-
-  - id: CON-TGT-003
-    description: No field value may be empty

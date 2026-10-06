@@ -1,0 +1,16 @@
+﻿reservation unit no.,designation,standard time per unit,cost center,unit identifier
+1098,Manufacturing - machining centre,"0,08",4444-2505,S
+1433,Treatment - tenifer QPQ,"0,17",4444-2503,
+2105,Manufacturing - annealing,"0,08",4444-2503,
+2996,Manufacturing - gear cutting,"0,08",4444-2505,
+3003,Manufacturing - sawing,"0,08",4444-2503,
+3117,Manufacturing - EDM,"0,08",4444-2503,
+3452,Manufacturing - turning,"0,08",4444-2504,S
+3702,Manufacturing - case hardening,"0,17",4444-2503,
+3973,Manufacturing - hardening,"0,17",4444-2503,
+4098,Manufacturing - deburring,"0,08",4444-2503,S
+4103,Manufacturing - inspection,"0,08",4444-2503,
+4955,Manufacturing - sheet metal shop,"0,25",4444-2503,
+5912,Manufacturing - paint shop,"0,25",4444-2503,S
+8019,Manufacturing - parts fitting shop,"0,08",4444-2503,S
+9515,Manufacturing - profile grinding,"0,08",4444-2506,

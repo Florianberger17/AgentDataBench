@@ -32,8 +32,7 @@ columns:
     library_path: artifacts/part_name_library/part_name_library.csv
 
   - column: component quantity
-    strategy: part_name_mapping
-    library_path: artifacts/part_name_library/part_name_library.csv
+    strategy: numeric_distribution
 
   - column: length
     strategy: numeric_distribution

@@ -1,0 +1,146 @@
+table: production_order_upload
+
+entity: ProductionOrder
+
+description: >
+  Target schema of the production order upload container of the new ERP
+  system. Each record creates one open production order. The new system
+  numbers its confirmations from its own range rather than taking the legacy
+  numbers over, so every record carries a freshly assigned confirmation
+  number together with the legacy one it replaces, which is what lets the
+  shop floor bookings already made be traced back. The quantity the new
+  system schedules is the quantity still to be produced, not the one the
+  order was originally placed for.
+
+attributes:
+
+  - name: confirmation no.
+    type: string
+    required: true
+    unique: true
+    description: >
+      Confirmation number in the new system, handed out from its own range:
+      the orders are numbered consecutively from one, in the order they are
+      delivered in.
+
+  - name: confirmation no. legacy
+    type: string
+    required: true
+    unique: true
+    description: >
+      Confirmation number the order had in the legacy system, carried over so
+      that the hours and quantities already booked against it can be traced.
+
+  - name: material no.
+    type: string
+    required: true
+    description: >
+      Material the order produces, in the numbering of the new system. It is
+      not derivable from the legacy number and comes from the material cross
+      reference.
+
+  - name: material description
+    type: string
+    required: true
+    description: >
+      Designation of that material.
+
+  - name: order quantity
+    type: decimal
+    required: true
+    description: >
+      Quantity the order was originally placed for, with three decimal
+      places.
+
+  - name: delivered quantity
+    type: decimal
+    required: true
+    description: >
+      Quantity already delivered to stock as good parts, with three decimal
+      places.
+
+  - name: scrap quantity
+    type: decimal
+    required: true
+    description: >
+      Quantity already written off as scrap, with three decimal places.
+
+  - name: open quantity
+    type: decimal
+    required: true
+    description: >
+      Quantity still to be produced, with three decimal places. This is what
+      the new system schedules and plans material for: whatever was ordered,
+      less what has already been delivered and what was scrapped along the
+      way.
+
+  - name: unit of measure
+    type: string
+    required: true
+    description: >
+      Unit all quantities of the record are stated in, in the notation of the
+      new system.
+
+  - name: start date
+    type: string
+    required: true
+    format: YYYYMMDD
+    description: >
+      Scheduled start of the order, in the date format of the upload
+      container.
+
+  - name: end date
+    type: string
+    required: true
+    format: YYYYMMDD
+    description: >
+      Scheduled finish of the order, in the same format.
+
+  - name: order status
+    type: string
+    required: true
+    allowed_values:
+      - created
+      - in process
+      - partly confirmed
+    description: >
+      Status the order is created with, which follows from how far it had got
+      on the shop floor in the legacy system.
+
+  - name: planner
+    type: string
+    required: true
+    description: >
+      Planner group responsible for the order.
+
+  - name: plant
+    type: string
+    required: true
+    description: >
+      Plant the order is produced in. All orders of this migration belong to
+      one plant.
+
+  - name: order category
+    type: string
+    required: true
+    description: >
+      Kind of order. Every order of this migration replenishes stock.
+
+constraints:
+
+  - id: CON-TGT-001
+    description: >
+      confirmation no. must run from 1 upwards without a gap, one per record
+
+  - id: CON-TGT-003
+    description: >
+      open quantity must equal the order quantity less the delivered quantity
+      and the scrap quantity
+
+  - id: CON-TGT-004
+    description: >
+      open quantity must be greater than zero, since there is nothing left to
+      schedule otherwise
+
+  - id: CON-TGT-005
+    description: start date must not be later than end date

@@ -1,0 +1,3 @@
+﻿reservation unit no.,designation,unit type,bottleneck unit,capacity,time unit,capacity units,shift factor,rough planning factor,detailed planning factor,overload factor,scheduling key,validity indicator,cost center,cost element,confirmation indicator,unit identifier,period indicator
+9001,Example - milling,in-house,yes,"150,000",hours,"4,0000","1,00","0,90","1,00","1,00",capacity scheduling,generally valid,4444-9001,931316,confirmation required,S,week
+9002,Placeholder - coating,external,no,"0,000",hours,"0,0000","1,00","1,00","1,00","1,00",lead time scheduling,generally valid,4444-9002,951300,confirmation required,,week

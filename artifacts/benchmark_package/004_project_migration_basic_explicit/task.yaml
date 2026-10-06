@@ -28,7 +28,7 @@ business_rules:
         increment: 1
       description: >
         Assign a consecutive project number to every record of the source
-        dataset, starting with P-310000.
+        dataset, starting with P-310000 and numbering in the order in which the records appear in the source dataset.
 
     - target_field: Project Profile
       transformation:

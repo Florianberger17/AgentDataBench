@@ -1,0 +1,80 @@
+seed: 1011
+
+locale: de_DE
+
+columns:
+
+  # The lookup key into mapping_list_material.csv. Substituted here, and the
+  # cross reference list is generated from the result, so both sides of the
+  # lookup match by construction.
+  - column: part no.
+    strategy: numeric_mapping
+    format: "{:08d}"
+    min: 10000000
+    max: 99999999
+
+
+  # Real German part designations - must not survive. Paired 1:1 with
+  # part no., so the substitution has to be consistent per value.
+  - column: description
+    strategy: part_name_mapping
+    library_path: artifacts/part_name_library/part_name_library.csv
+
+  - column: material category
+    strategy: categorical_resample
+
+  # profile, length, width and depth together describe the bar geometry the
+  # weight conversion needs. Resampling them independently would put a width
+  # on a part with no profile, or drop the depth a square bar requires, so
+  # all four are kept as-is.
+  - column: profile
+    strategy: identity
+
+  - column: length
+    strategy: identity
+
+  - column: width
+    strategy: identity
+
+  - column: depth
+    strategy: identity
+
+  - column: storage location
+    strategy: categorical_resample
+
+  - column: year
+    strategy: identity
+
+  - column: month
+    strategy: identity
+
+  # The stock unit decides which conversion rule applies; kept as-is so the
+  # pairing with the base unit of the cross reference survives.
+  - column: stock unit
+    strategy: identity
+
+  # Quantity is strongly stratified by the stock unit - a part stocked in MM
+  # has a median of 2197, one stocked in PCS a median of 27 - so it is
+  # resampled within its own unit group rather than from one fitted range.
+  - column: quantity
+    strategy: conditional_resample
+    reference_column: stock unit
+
+  - column: price unit
+    strategy: identity
+
+  # The valuation price belongs to its part, not just to its price unit:
+  # resampling it even within the price unit put a 24341-per-100-pieces price
+  # on a part stocked by area, giving a valuation price of 240 million. Kept
+  # as-is - a price is a business figure, not an identifying one, once the
+  # part number beside it has been substituted.
+  - column: price
+    strategy: identity
+
+  # Quantity, price and stock value are tied by CON-SRC-002
+  # (value = quantity * price / price unit), so the value is recomputed from
+  # the two rather than kept - keeping it would break the rule in every row.
+  - column: stock value
+    strategy: computed
+    formula: "quantity * price / price unit"
+    decimals: 2

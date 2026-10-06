@@ -1,0 +1,183 @@
+table: asset_master_upload
+
+entity: Asset
+
+description: >
+  Target schema of the fixed asset upload container of the new ERP system,
+  which creates an asset together with the values it is taken over at. The
+  container uses the technical field names of the new system; the descriptions
+  below say what each of them holds. Depreciation area 01 is the book
+  depreciation area, and every value field of this upload belongs to it. The
+  net book value and the takeover value are the point of the exercise: the
+  legacy register states what an asset cost and what has been written off, and
+  what the new system has to be told is what is left - and, where nothing is
+  left, the memo value an asset is kept in the register at.
+
+attributes:
+
+  - name: BUKRS
+    type: string
+    required: true
+    description: >
+      Company code the asset is created in. All assets of this migration
+      belong to one company.
+
+  - name: ANLKL
+    type: string
+    required: true
+    description: >
+      Asset class, which decides the account determination and the default
+      depreciation terms. It follows from the category the legacy register
+      recorded.
+
+  - name: GD_MARK
+    type: string
+    required: true
+    description: >
+      Indicator that the equipment record of the legacy system is to be
+      deleted once the asset has been created. Mandatory and set on every
+      record of this upload.
+
+  - name: AIBN1
+    type: string
+    required: true
+    unique: true
+    description: >
+      Asset number of the legacy register, carried over so the new asset can
+      be reconciled against the old one.
+
+  - name: MEINS
+    type: string
+    required: true
+    description: >
+      Base unit of measure of the quantity below.
+
+  - name: MENGE
+    type: decimal
+    required: true
+    description: >
+      Number of pieces the asset record covers, with three decimal places.
+
+  - name: AKTIV
+    type: string
+    required: true
+    format: YYYYMMDD
+    description: >
+      Capitalisation date of the asset. The legacy register holds it as a
+      spreadsheet day number, which the upload expects as a calendar date.
+
+  - name: TXT50
+    type: string
+    required: true
+    description: >
+      Description of the asset, at most fifty characters, so a longer legacy
+      description is cut to fit.
+
+  - name: KOSTL
+    type: string
+    required: true
+    description: >
+      Cost center the asset is assigned to, in the numbering of the new
+      system. It comes from the controlling assignment, not from the legacy
+      register.
+
+  - name: PRCTR
+    type: string
+    required: true
+    description: >
+      Profit center the asset reports into. It follows from the cost center.
+
+  - name: WERKS
+    type: string
+    required: true
+    description: >
+      Plant the asset stands in. It follows from the cost center as well.
+
+  - name: STORT
+    type: string
+    required: true
+    description: >
+      Location key within the plant. It follows from the category of the
+      asset, since each category is kept in one place.
+
+  - name: AFASL01
+    type: string
+    required: true
+    description: >
+      Depreciation key of area 01, which tells the new system how to
+      depreciate the asset. It follows from the method the legacy register
+      recorded.
+
+  - name: AFABG01
+    type: string
+    required: true
+    format: YYYYMMDD
+    description: >
+      Date depreciation started in area 01, converted from the spreadsheet day
+      number of the legacy register.
+
+  - name: NDJAR01
+    type: integer
+    required: true
+    description: >
+      Whole years of useful life still to run in area 01. The legacy register
+      holds the remaining life as a single figure in months, and the new
+      system splits it into years and periods.
+
+  - name: NDPER01
+    type: integer
+    required: true
+    description: >
+      Months of useful life still to run beyond those whole years, so always
+      fewer than twelve.
+
+  - name: KANSW01
+    type: decimal
+    required: true
+    description: >
+      Acquisition value taken over into area 01, with two decimal places.
+
+  - name: KNAFA01
+    type: decimal
+    required: true
+    description: >
+      Accumulated depreciation taken over into area 01, with two decimal
+      places and carried as a negative figure.
+
+  - name: net book value
+    type: decimal
+    required: true
+    description: >
+      Value of the asset still carried in the books, with two decimal places:
+      what it cost less what has been written off. Nil for an asset that is
+      fully written down, which is most of this register.
+
+  - name: ELBT
+    type: decimal
+    required: true
+    description: >
+      Value the asset is taken over at. It is the net book value, except for
+      an asset that is fully written down: a nil value would drop the asset out
+      of the register altogether, so it is taken over at a memo value of one
+      cent instead and stays visible until it is physically disposed of.
+
+constraints:
+
+  - id: CON-TGT-002
+    description: >
+      net book value must equal KANSW01 plus KNAFA01
+
+  - id: CON-TGT-003
+    description: net book value must not be negative
+
+  - id: CON-TGT-004
+    description: >
+      ELBT must equal the net book value wherever that is above the memo value
+      of one cent, and the memo value wherever it is not
+
+  - id: CON-TGT-005
+    description: >
+      NDPER01 must be below twelve, since whole years are carried in NDJAR01
+
+  - id: CON-TGT-006
+    description: TXT50 must not exceed fifty characters

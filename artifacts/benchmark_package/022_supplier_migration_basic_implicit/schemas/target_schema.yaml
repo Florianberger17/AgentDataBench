@@ -23,6 +23,7 @@ attributes:
   - name: country
     type: string
     required: true
+    format: ISO-3166 alpha-2
     description: ISO 3166 alpha-2 country code.
 
   - name: post_code
@@ -49,14 +50,3 @@ attributes:
     type: string
     required: false
     description: Original supplier identifier from the legacy ERP system.
-
-constraints:
-
-  - id: CON-TGT-001
-    description: bp_no must be unique.
-
-  - id: CON-TGT-002
-    description: name must be provided.
-
-  - id: CON-TGT-003
-    description: country must contain an ISO 3166 alpha-2 country code.

@@ -1,0 +1,92 @@
+table: personnel_master
+
+entity: Employee
+
+description: >
+  Source schema of the personnel master exported from the legacy HR system.
+  Each record is one employee. The HR system is shared across the companies of
+  the group, so the export reaches well beyond the company this migration wave
+  covers, and it is a running register rather than a snapshot of today: it
+  holds employees who have already left as well as employees whose contract
+  only starts later. Bank details are carried here but are loaded into the
+  target system separately; what the creditor master takes from them is only
+  whether an employee can be paid by transfer at all.
+
+attributes:
+
+  - name: personnel no.
+    type: string
+    required: true
+    unique: true
+    description: >
+      Personnel number of the employee in the legacy HR system, assigned from
+      a group-wide number range and therefore three or four digits long
+      depending on how long ago the employee joined.
+
+  - name: last name
+    type: string
+    required: true
+    description: >
+      Family name of the employee, including any nobiliary or other particle.
+
+  - name: first name
+    type: string
+    required: true
+    description: >
+      Given name of the employee.
+
+  - name: employee group
+    type: string
+    required: true
+    allowed_values:
+      - staff
+      - apprentice
+      - working student
+      - executive
+      - managing director
+    description: >
+      Group the employee is assigned to for payroll purposes. It decides which
+      collective account the creditor is posted against in the target system.
+
+  - name: company code
+    type: string
+    required: true
+    description: >
+      Company of the group the employee is employed by. Only one company is
+      migrated in this wave.
+
+  - name: cost center
+    type: string
+    required: true
+    description: >
+      Cost center the employee is assigned to.
+
+  - name: entry date
+    type: string
+    required: true
+    format: DD.MM.YYYY
+    description: >
+      Date the employment starts. It may lie in the future for an employee
+      already recorded but not yet working.
+
+  - name: leaving date
+    type: string
+    required: false
+    format: DD.MM.YYYY
+    description: >
+      Date the employment ended. Empty for every employee still with the
+      company, which is what tells a current employee from a former one.
+
+  - name: IBAN
+    type: string
+    required: false
+    description: >
+      Bank account the salary is paid to. Empty where the HR system holds no
+      bank details for the employee.
+
+constraints:
+
+  - id: CON-SRC-002
+    description: >
+      a leaving date, where one is recorded, must not be earlier than the
+      entry date

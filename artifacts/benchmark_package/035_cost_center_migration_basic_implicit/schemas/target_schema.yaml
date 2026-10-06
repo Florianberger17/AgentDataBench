@@ -1,0 +1,166 @@
+table: cost_center_master_upload
+
+entity: CostCenterMaster
+
+description: >
+  Target schema of the cost center master upload container of the new ERP
+  system. Each record creates exactly one cost center of the target operating
+  model, valid from the migration date onwards. A cost center of the legacy
+  system that was re-cut across two units of the target organisation
+  therefore produces two records here, each standing on its own.
+
+attributes:
+
+  - name: KOKRS
+    type: string
+    required: true
+    description: >
+      Controlling area the cost center is created in. One controlling area
+      holds the whole target organisation.
+
+  - name: COSTCENTER
+    type: string
+    required: true
+    unique: true
+    description: >
+      Cost center number in the target system, made up of the company code
+      and a four-digit number within it.
+
+  - name: VALID_FROM
+    type: string
+    required: true
+    format: YYYYMMDD
+    description: >
+      Start of the validity period. Every cost center is created as of the
+      migration date, whatever the legacy system recorded.
+
+  - name: VALID_TO
+    type: string
+    required: true
+    format: YYYYMMDD
+    description: >
+      End of the validity period, carried over from the legacy cost center.
+      99991231 for a cost center with no planned end.
+
+  - name: DEPARTMENT
+    type: string
+    required: true
+    description: >
+      Department key of the unit the cost center belongs to in the target
+      operating model.
+
+  - name: COSTCENTER_TYPE
+    type: string
+    required: true
+    allowed_values:
+      - O
+      - F
+      - V
+      - H
+    description: >
+      Cost center type: O overhead, F production, V sales, H service. It
+      follows from the category the legacy system recorded.
+
+  - name: COSTCTR_HIER_GRP
+    type: string
+    required: true
+    description: >
+      Standard hierarchy node the cost center hangs under. The hierarchy
+      follows the cost center number ranges, so the node is the leading part
+      of the cost center number.
+
+  - name: COMP_CODE
+    type: string
+    required: true
+    description: >
+      Company code the cost center is assigned to. The target numbering
+      carries it as the leading part of the cost center number.
+
+  - name: CURRENCY
+    type: string
+    required: true
+    format: ISO-4217
+    description: >
+      Currency of the cost center.
+
+  - name: PROFIT_CTR
+    type: string
+    required: true
+    description: >
+      Profit center the cost center reports into. Each company code of the
+      target organisation reports into one profit center.
+
+  - name: RECORD_QUANTITY
+    type: string
+    required: true
+    description: >
+      Indicator that quantities are recorded on the cost center alongside
+      values. Set for every cost center of this migration.
+
+  - name: LOCK_IND_ACTUAL_REVENUES
+    type: string
+    required: false
+    description: >
+      Lock against posting actual revenues to the cost center. Set for every
+      cost center that is not a sales cost center, since revenue belongs on a
+      sales cost center alone.
+
+  - name: LOCK_IND_PLAN_REVENUES
+    type: string
+    required: false
+    description: >
+      Lock against planning revenues on the cost center. It is set wherever
+      the lock on actual revenues is.
+
+  - name: APPLICATION
+    type: string
+    required: true
+    description: >
+      Application the upload is posted through.
+
+  - name: NAME
+    type: string
+    required: true
+    description: >
+      Short name of the cost center as the target system displays it, at most
+      twenty characters long, so a longer description is cut to fit.
+
+  - name: DESCRIPT
+    type: string
+    required: true
+    description: >
+      Full name of the cost center in the target organisation. Where the
+      cross reference list states no new name, the legacy name is kept.
+
+  - name: FUNC_AREA
+    type: string
+    required: true
+    description: >
+      Functional area the costs of the cost center are reported under. It
+      follows from the category the legacy system recorded.
+
+  - name: PERSON_IN_CHARGE_USER
+    type: string
+    required: true
+    description: >
+      User ID of the person responsible for the cost center in the target
+      system.
+
+constraints:
+
+  - id: CON-TGT-002
+    description: >
+      NAME must be the first twenty characters of DESCRIPT
+
+  - id: CON-TGT-003
+    description: >
+      COMP_CODE must be the first four characters of COSTCENTER and
+      COSTCTR_HIER_GRP its first six
+
+  - id: CON-TGT-004
+    description: >
+      LOCK_IND_ACTUAL_REVENUES and LOCK_IND_PLAN_REVENUES must carry the same
+      value
+
+  - id: CON-TGT-005
+    description: VALID_FROM must not be later than VALID_TO

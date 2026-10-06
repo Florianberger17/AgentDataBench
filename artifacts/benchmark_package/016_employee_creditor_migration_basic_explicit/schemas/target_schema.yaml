@@ -1,0 +1,90 @@
+table: creditor_master_upload
+
+entity: Creditor
+
+description: >
+  Target schema of the creditor master upload container of the new ERP
+  system. Each record creates one creditor account for one employee, which is
+  what lets travel expenses and other reimbursements be paid out to that
+  employee. The container is the general creditor interface, so it carries
+  fields that only ever hold one value for an employee creditor; bank details
+  are not part of it and are loaded through a separate interface.
+
+attributes:
+
+  - name: creditor no.
+    type: string
+    required: true
+    unique: true
+    description: >
+      Account number of the creditor. Employee creditors are created in their
+      own number range, which is the prefix 300 followed by the personnel
+      number of the employee filled to four digits.
+
+  - name: creditor name
+    type: string
+    required: true
+    description: >
+      Name of the creditor, at most 35 characters. For an employee creditor it
+      is the family name and the given name, in that order, as the target
+      system sorts and searches creditors by family name.
+
+  - name: creditor type
+    type: string
+    required: true
+    description: >
+      Kind of creditor the account is created as. The container distinguishes
+      several, but an employee creditor is posted against the same accounts as
+      any other vendor and is created as one.
+
+  - name: company designation
+    type: string
+    required: true
+    description: >
+      Free designation field of the container, which this migration uses to
+      carry the personnel number of the employee filled to four digits, so a
+      creditor can be found by it and reconciled against the HR system.
+
+  - name: tax type
+    type: string
+    required: true
+    description: >
+      Tax handling of the creditor. An employee is never subject to VAT on a
+      reimbursement, so one tax type applies throughout.
+
+  - name: payment method
+    type: string
+    required: false
+    description: >
+      How the creditor is paid. Bank transfer wherever the HR system holds
+      bank details for the employee; left empty otherwise, because an
+      automatic payment run would fail on an account it cannot pay to, and
+      those employees are paid manually until their details are recorded.
+
+  - name: collective account 1
+    type: string
+    required: true
+    description: >
+      First collective account the creditor is reconciled against. One
+      account carries all employee creditors of this migration.
+
+  - name: collective account 2
+    type: string
+    required: true
+    description: >
+      Second collective account, which separates the payroll groups: members
+      of the management are reconciled against their own account so that their
+      reimbursements are not visible in the general employee balance.
+
+constraints:
+
+  - id: CON-TGT-002
+    description: >
+      creditor no. must be the prefix 300 followed by company designation, so
+      the two always agree
+
+  - id: CON-TGT-003
+    description: company designation must be exactly four digits
+
+  - id: CON-TGT-004
+    description: creditor name must not exceed 35 characters

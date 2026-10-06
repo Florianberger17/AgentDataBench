@@ -1,0 +1,65 @@
+﻿reservation unit no.,designation,unit type,bottleneck unit,capacity,time unit,capacity units,shift factor,rough planning factor,detailed planning factor,overload factor,scheduling key,validity indicator,cost center,cost element,confirmation indicator,unit identifier,period indicator
+2251,Manufacturing - profile grinding,in-house,yes,"560,000",hours,"8,0000","2,00","0,80","0,90","1,00",capacity scheduling,generally valid,4444-6847,931316,confirmation required,S,week
+4347,Treatment - annealing protective gas,external,no,"0,000",hours,"0,0000","2,00","0,90","1,00","1,00",lead time scheduling,generally valid,4444-3249,931316,confirmation required,,week
+6648,Assembly - external mechanical and electrical,external,no,"0,000",hours,"0,0000","1,00","0,80","0,90","1,00",lead time scheduling,generally valid,4444-3223,931316,confirmation required,,week
+7382,Sales overhead - marketing,in-house,no,"2205,000",hours,"21,0000","3,00","0,90","1,00","1,00",capacity scheduling,generally valid,4444-4636,951300,confirmation required,S,week
+9537,Treatment - hard chrome plating,external,no,"0,000",hours,"0,0000","2,00","0,90","1,00","1,00",lead time scheduling,generally valid,4444-3249,931316,confirmation required,,week
+10693,Manufacturing - surface grinding,in-house,yes,"189,000",hours,"2,0000","3,00","0,90","1,00","1,00",capacity scheduling,generally valid,4444-6847,931316,confirmation required,S,week
+10763,Manufacturing - gear cutting tooth tip,in-house,no,"101,250",hours,"3,0000","1,00","0,80","0,90","1,00",capacity scheduling,generally valid,4444-3783,931316,confirmation required,S,week
+13332,Engineering - electronics software,in-house,no,"438,750",hours,"13,0000","1,00","1,00","1,00","1,00",capacity scheduling,generally valid,4444-2967,931653,confirmation required,S,week
+14345,Manufacturing - turning,in-house,no,"1522,500",hours,"21,0000","2,00","0,80","0,90","1,00",capacity scheduling,generally valid,4444-9106,931316,confirmation required,S,week
+14489,Administrative overhead - general management,in-house,no,"36,250",hours,"1,0000","1,00","1,00","1,00","1,00",capacity scheduling,generally valid,4444-6572,951300,confirmation required,,week
+15047,Treatment - chrome plating,external,yes,"0,000",hours,"0,0000","1,00","1,00","1,00","1,00",lead time scheduling,generally valid,4444-3249,931316,confirmation required,,week
+16410,Manufacturing - deburring,in-house,no,"420,000",hours,"4,0000","3,00","0,90","1,00","1,00",capacity scheduling,generally valid,4444-3249,931316,confirmation required,S,week
+16474,Service - electrical design service,in-house,no,"105,000",hours,"3,0000","1,00","0,80","0,90","1,00",capacity scheduling,generally valid,4444-9246,931654,confirmation required,S,week
+17447,Administrative overhead - IT,in-house,no,"105,000",hours,"1,0000","3,00","0,90","1,00","1,00",capacity scheduling,generally valid,4444-5061,951300,confirmation required,,week
+19829,Treatment - plasma nitriding,external,no,"0,000",hours,"0,0000","2,00","0,80","0,90","1,00",lead time scheduling,generally valid,4444-3249,931316,confirmation required,,week
+20185,Treatment - phosphating,external,no,"0,000",hours,"0,0000","1,00","1,00","1,00","1,00",lead time scheduling,generally valid,4444-3249,931316,confirmation required,,week
+20218,Treatment - black oxidising,external,no,"0,000",hours,"0,0000","2,00","1,00","1,00","1,00",lead time scheduling,generally valid,4444-3249,931316,confirmation required,,week
+21473,Manufacturing - measuring room,in-house,no,"560,000",hours,"8,0000","2,00","1,00","1,00","1,00",capacity scheduling,generally valid,4444-3249,931316,confirmation required,S,week
+26005,Engineering - electronics hardware,in-house,no,"150,000",hours,"4,0000","1,00","1,00","1,00","1,00",capacity scheduling,generally valid,4444-2967,931653,confirmation required,S,week
+27126,Service - warranty,in-house,no,"37,500",hours,"1,0000","1,00","1,00","1,00","1,00",capacity scheduling,generally valid,4444-9246,931654,confirmation required,,week
+27590,Treatment - tenifer QPQ,external,no,"0,000",hours,"0,0000","1,00","0,90","1,00","1,00",lead time scheduling,generally valid,4444-3249,931316,confirmation required,,week
+34111,Manufacturing - centreless grinding,in-house,no,"270,000",hours,"8,0000","1,00","0,90","1,00","1,00",capacity scheduling,generally valid,4444-6847,931316,confirmation required,S,week
+35255,Manufacturing - cutting,in-house,no,"35,000",hours,"1,0000","1,00","0,90","1,00","1,00",capacity scheduling,generally valid,4444-3249,931316,confirmation required,,week
+35875,Sales overhead - project management,in-house,yes,"978,750",hours,"30,0000","1,00","0,80","0,90","1,00",capacity scheduling,generally valid,4444-8815,941591,confirmation required,S,week
+36650,Manufacturing - machining centre,in-house,no,"290,000",hours,"8,0000","1,00","0,90","1,00","1,00",capacity scheduling,generally valid,4444-3783,931316,confirmation required,S,week
+37667,Treatment - TF1 nitriding,external,no,"0,000",hours,"0,0000","3,00","1,00","1,00","1,00",lead time scheduling,generally valid,4444-3249,931316,confirmation required,,week
+41636,Treatment - induction hardening,external,no,"0,000",hours,"0,0000","1,00","1,00","1,00","1,00",lead time scheduling,generally valid,4444-3249,931316,confirmation required,,week
+41948,Manufacturing - sawing,in-house,no,"280,000",hours,"8,0000","1,00","1,00","1,00","1,00",capacity scheduling,generally valid,4444-3249,931316,confirmation required,S,week
+43492,Sales overhead - technical clarification,in-house,no,"91,125",hours,"3,0000","1,00","0,90","1,00","1,00",capacity scheduling,generally valid,4444-7120,951300,confirmation required,S,week
+45710,Manufacturing - milling shop,in-house,no,"126,000",hours,"4,0000","1,00","0,90","1,00","1,00",capacity scheduling,generally valid,4444-3783,931316,confirmation required,S,week
+47291,Engineering - electronics commissioning,in-house,yes,"471,250",hours,"13,0000","1,00","1,00","1,00","1,00",capacity scheduling,generally valid,4444-9110,931653,confirmation required,S,week
+51203,Treatment - hard anodising,external,no,"0,000",hours,"0,0000","2,00","1,00","1,00","1,00",lead time scheduling,generally valid,4444-3249,931316,confirmation required,,week
+52222,Sales overhead - sales management,in-house,no,"424,125",hours,"13,0000","1,00","0,90","1,00","1,00",capacity scheduling,generally valid,4444-8309,951300,confirmation required,S,week
+52543,Treatment - anodising,external,no,"0,000",hours,"0,0000","1,00","0,80","0,90","1,00",lead time scheduling,generally valid,4444-3249,931316,confirmation required,,week
+53056,Sales overhead - business development,in-house,yes,"560,000",hours,"8,0000","2,00","1,00","1,00","1,00",capacity scheduling,generally valid,4444-4974,951300,confirmation required,S,week
+53270,Treatment - gas nitriding,external,no,"0,000",hours,"0,0000","1,00","1,00","1,00","1,00",lead time scheduling,generally valid,4444-3249,931316,confirmation required,,week
+56961,Engineering - documentation,in-house,no,"36,250",hours,"1,0000","1,00","1,00","1,00","1,00",capacity scheduling,generally valid,4444-4840,931659,confirmation required,,week
+57610,Manufacturing - sheet metal shop,in-house,no,"280,000",hours,"4,0000","2,00","1,00","1,00","1,00",capacity scheduling,generally valid,4444-3249,931316,confirmation required,S,week
+58716,Manufacturing - tool presetting,in-house,no,"2610,000",hours,"30,0000","2,00","1,00","1,00","1,00",capacity scheduling,generally valid,4444-3783,931316,confirmation required,S,week
+59888,Manufacturing - thread grinding,in-house,no,"978,750",hours,"30,0000","1,00","0,90","1,00","1,00",capacity scheduling,generally valid,4444-6847,931316,confirmation required,S,week
+61956,Manufacturing - milling spline profile,in-house,no,"3150,000",hours,"30,0000","3,00","1,00","1,00","1,00",capacity scheduling,generally valid,4444-3783,931316,confirmation required,S,week
+62213,Manufacturing - spline profile grinding,in-house,no,"1417,500",hours,"21,0000","2,00","0,80","0,90","1,00",capacity scheduling,generally valid,4444-6847,931316,confirmation required,S,week
+63081,Administrative overhead - finance management,in-house,no,"1087,500",hours,"30,0000","1,00","1,00","1,00","1,00",capacity scheduling,generally valid,4444-9437,951300,confirmation required,S,week
+63614,Manufacturing - parts fitting shop,in-house,no,"72,500",hours,"1,0000","2,00","0,90","1,00","1,00",capacity scheduling,generally valid,4444-3249,931316,confirmation required,,week
+63886,Manufacturing - hardening,in-house,no,"140,000",hours,"2,0000","2,00","0,90","1,00","1,00",capacity scheduling,generally valid,4444-3249,931316,confirmation required,S,week
+64087,Engineering - mechanical machine design,in-house,no,"112,500",hours,"3,0000","1,00","1,00","1,00","1,00",capacity scheduling,generally valid,4444-7281,931651,confirmation required,S,week
+64929,Treatment - flame hardening,external,no,"0,000",hours,"0,0000","1,00","1,00","1,00","1,00",lead time scheduling,generally valid,4444-3249,931316,confirmation required,,week
+66760,Manufacturing - lamella grinding,in-house,no,"70,000",hours,"1,0000","2,00","1,00","1,00","1,00",capacity scheduling,generally valid,4444-6847,931316,confirmation required,,week
+68267,Administrative overhead - controlling,in-house,no,"97,875",hours,"1,0000","3,00","1,00","1,00","1,00",capacity scheduling,generally valid,4444-8589,951300,confirmation required,,week
+69617,Manufacturing - inspection,in-house,no,"145,000",hours,"2,0000","2,00","1,00","1,00","1,00",capacity scheduling,generally valid,4444-3249,931316,confirmation required,S,week
+70432,Sales overhead - technical sales,in-house,no,"72,500",hours,"2,0000","1,00","0,80","0,90","1,00",capacity scheduling,generally valid,4444-7541,951300,confirmation required,S,week
+71843,Service - mechanical design service,in-house,no,"36,250",hours,"1,0000","1,00","0,90","1,00","1,00",capacity scheduling,generally valid,4444-9246,931654,confirmation required,,week
+73896,Manufacturing - sand blasting,in-house,no,"280,000",hours,"8,0000","1,00","1,00","1,00","1,00",capacity scheduling,generally valid,4444-3249,931316,confirmation required,S,week
+74342,Manufacturing - broaching spline profile,in-house,no,"195,750",hours,"3,0000","2,00","0,90","1,00","1,00",capacity scheduling,generally valid,4444-6847,931316,confirmation required,S,week
+82756,Manufacturing - annealing,in-house,no,"280,000",hours,"4,0000","2,00","0,90","1,00","1,00",capacity scheduling,generally valid,4444-3249,931316,confirmation required,S,week
+83560,Manufacturing - paint shop,in-house,no,"67,500",hours,"2,0000","1,00","1,00","1,00","1,00",capacity scheduling,generally valid,4444-3249,931316,confirmation required,S,week
+84256,Engineering - mechanical tooling design,in-house,yes,"70,000",hours,"2,0000","1,00","1,00","1,00","1,00",capacity scheduling,generally valid,4444-4518,931652,confirmation required,S,week
+84547,Manufacturing - gear grinding,in-house,no,"130,500",hours,"3,0000","1,00","1,00","1,00","1,00",capacity scheduling,generally valid,4444-6847,931316,confirmation required,S,week
+85393,Assembly - mechanical assembly,in-house,no,"108,750",hours,"1,0000","3,00","0,80","0,90","1,00",capacity scheduling,generally valid,4444-3223,931316,confirmation required,,week
+85641,Assembly - final assembly and test,in-house,no,"210,000",hours,"2,0000","3,00","0,80","0,90","1,00",capacity scheduling,generally valid,4444-3223,931316,confirmation required,S,week
+88101,Manufacturing - profile grinding II,in-house,no,"180,000",hours,"2,0000","2,00","1,00","1,00","1,00",capacity scheduling,generally valid,4444-6847,931316,confirmation required,S,week
+90792,Administrative overhead - general administration,in-house,no,"130,500",hours,"4,0000","1,00","0,80","0,90","1,00",capacity scheduling,generally valid,4444-4447,951300,confirmation required,S,week
+94361,Treatment - chemical nickel plating,external,no,"0,000",hours,"0,0000","3,00","1,00","1,00","1,00",lead time scheduling,generally valid,4444-3249,931316,confirmation required,,week
+96805,Manufacturing - broaching polygon,in-house,no,"72,500",hours,"2,0000","1,00","1,00","1,00","1,00",capacity scheduling,generally valid,4444-6847,931316,confirmation required,S,week

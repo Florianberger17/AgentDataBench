@@ -55,11 +55,3 @@ attributes:
     type: string
     required: true
     description: Identifier of the responsible planner
-
-constraints:
-
-  - id: CON-SRC-001
-    description: CustomerTransaction must be unique
-
-  - id: CON-SRC-002
-    description: CustomerName must be provided

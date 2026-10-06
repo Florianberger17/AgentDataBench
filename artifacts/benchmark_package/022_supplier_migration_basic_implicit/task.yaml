@@ -6,8 +6,12 @@ objective: >
   for every supplier whose last activity (last_activity, recorded as
   DD.MM.YYYY) is on or after 2023-01-01. The business partner number is
   not contained in the source dataset: assign a consecutive number
-  starting at 20000000, in the order of the filtered dataset.
-  No formal source or target schema is given - infer the required structure, the field mapping and the value formats yourself by comparing the input dataset against the target example.
+  starting at 20000000, in the order of the filtered dataset. The source
+  dataset holds two name fields per supplier; the name to migrate is the
+  legal company name, which it records in 'name 2'. No formal source or
+  target schema is given - infer the required structure, the field mapping
+  and the value formats yourself by comparing the input dataset against
+  the target example.
 
 input:
   source_dataset: data/dataset.csv

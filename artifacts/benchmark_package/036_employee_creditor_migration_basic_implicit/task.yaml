@@ -1,0 +1,53 @@
+task_id: 036_EMPLOYEE_CREDITOR_MIGRATION_BASIC_IMPLICIT
+
+objective: >
+  Create a creditor account for every employee who is to be reimbursed
+  through the new ERP system from the personnel master of the legacy HR
+  system, and produce a file in the structure and format shown by the
+  target example. The HR system is shared across the group and is a
+  running register, so only part of its employees belong in the upload:
+  only those of company code 0454, only those who have joined by the time
+  the new system goes live on 1 January 2027, and only those still with
+  the company - an employee who has left carries a leaving date. On top of
+  that, the employees already created as creditors during the pilot wave
+  are named in the central creditor list and must not be created a second
+  time. Deliver the creditors in ascending order of the personnel number.
+  Employee creditors occupy their own number range: the personnel number
+  is filled to four digits and prefixed with 300, and the designation
+  field carries the same four digits without that prefix. The creditor
+  name is the family name and the given name in that order, separated by a
+  comma and a blank. An employee the HR system holds bank details for is
+  paid by transfer; where there are none, no payment method is set at all.
+  The second collective account separates the management from the rest of
+  the workforce: executives and managing directors are reconciled against
+  account 99, every other payroll group against 90. Every creditor is
+  created as a vendor with tax type 39 and first collective account 90. No
+  formal source or target schema is given - infer the required structure,
+  the field mapping and the value formats yourself by comparing the input
+  dataset against the target example.
+
+input:
+  source_dataset: data/dataset.csv
+  target_example: data/target_example.csv
+  reference_data:
+    - name: existing_creditors
+      file: data/mapping_list_existing_creditors.csv
+      key_field: "personnel no."
+      value_field: "creditor no."
+      description: >
+        The employees already created as creditors in the target system during
+        the pilot wave, with the account each of them received. An employee
+        named in this list already has an account and must not be created
+        again. The list is maintained independently of the export and also
+        names employees who have since left the group, so not every entry
+        matches an exported employee.
+
+business_rules: {}
+
+output:
+  format: csv
+
+constraints:
+  - Each output row shall represent one employee.
+  - No additional columns beyond those shown in the target example may be added.
+  - The column order must match the target example.

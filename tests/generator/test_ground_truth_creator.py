@@ -343,3 +343,109 @@ def test_filtered_records_do_not_contribute_to_an_aggregate():
     )
     result = GroundTruthCreator().create_ground_truth(df, _aggregating_task(), schema)
     assert list(result["b"]) == ["3"]
+
+
+def _expanding_task(**overrides):
+    business_rules = {
+        "filtering": {
+            "rules": [{"field": "status", "operator": "==", "value": "active"}]
+        },
+        "expansion": {
+            "reference": "cross_reference",
+            "source_field": "cost center",
+            "key_field": "legacy",
+            "carry_fields": ["new"],
+        },
+        "record_order": {"fields": ["new"]},
+        "mappings": [
+            {
+                "source_field": "new",
+                "target_field": "a",
+                "transformation": {"type": "copy"},
+            },
+            {
+                "source_field": "description",
+                "target_field": "b",
+                "transformation": {"type": "copy"},
+            },
+        ],
+    }
+    business_rules.update(overrides)
+    return Task(
+        task_id="T1",
+        objective="test",
+        input={
+            "source_dataset": "data/dataset.csv",
+            "source_schema": "schemas/source_schema.yaml",
+            "target_schema": "schemas/target_schema.yaml",
+            "reference_data": [
+                {
+                    "name": "cross_reference",
+                    "file": "data/cross_reference.csv",
+                    "key_field": "legacy",
+                    "value_field": "new",
+                }
+            ],
+        },
+        required_operations=["expansion"],
+        business_rules=business_rules,
+        output={"format": "csv", "schema_reference": "schemas/target_schema.yaml"},
+        constraints=[],
+    )
+
+
+def _split_cost_centers():
+    return pd.DataFrame(
+        {
+            "cost center": ["K1", "K2", "K3"],
+            "description": ["one", "two", "three"],
+            "status": ["active", "active", "blocked"],
+        }
+    )
+
+
+def _split_reference():
+    return {
+        "cross_reference": pd.DataFrame(
+            {
+                "legacy": ["K1", "K2", "K1", "K3"],
+                "new": ["N3", "N2", "N1", "N4"],
+            }
+        )
+    }
+
+
+def _two_column_schema():
+    return Schema(
+        table="t",
+        description="d",
+        attributes=[
+            {"name": "a", "type": "string", "required": True},
+            {"name": "b", "type": "string", "required": True},
+        ],
+    )
+
+
+def test_expansion_turns_one_record_into_one_row_per_successor():
+    result = GroundTruthCreator().create_ground_truth(
+        _split_cost_centers(),
+        _expanding_task(),
+        _two_column_schema(),
+        _split_reference(),
+    )
+
+    # K1 has two successors, K2 one, K3 is filtered out before expanding.
+    # record_order then sorts the expanded rows, not the source rows.
+    assert list(result["a"]) == ["N1", "N2", "N3"]
+    assert list(result["b"]) == ["one", "two", "one"]
+
+
+def test_a_filtered_record_acquires_no_successors():
+    result = GroundTruthCreator().create_ground_truth(
+        _split_cost_centers(),
+        _expanding_task(),
+        _two_column_schema(),
+        _split_reference(),
+    )
+
+    assert "N4" not in set(result["a"])

@@ -1,0 +1,68 @@
+task_id: 040_FIXED_ASSETS_MIGRATION_BASIC_IMPLICIT
+
+objective: >
+  Create the fixed assets of the new ERP system from the asset register of
+  the legacy system and produce a file in the structure and format shown
+  by the target example. Only assets the company still holds are taken
+  over; one that was disposed of, or that is being written off, is not
+  created. The controlling assignment of an asset - the cost center of the
+  new numbering, the profit center it reports into and the plant it stands
+  in - is not in the register at all and comes from the central cost
+  center list; a legacy cost center absent from that list was retired, and
+  an asset still booked on it cannot be created until it has been
+  reassigned by hand. Deliver the assets in ascending order of their
+  legacy asset number. The takeover values are what the migration turns
+  on: the register states what an asset cost and how much has been written
+  off since, and what the new system has to be told is what is still
+  carried in the books, which is the one less the other - the accumulated
+  depreciation is already held as a negative figure. Where nothing is
+  left, a nil value would drop the asset out of the register, so it is
+  taken over at a memo value of one cent instead and stays visible until
+  it is physically disposed of; where something is left, it is taken over
+  at its book value. The useful life has to be restated as well: the
+  register holds it as a single figure in months, the new system in whole
+  years plus the months beyond them, which are therefore always fewer than
+  twelve. Dates come out of the legacy system as spreadsheet day numbers
+  counted from 30 December 1899 and have to become calendar dates. The
+  asset class and the location follow from the category the register
+  recorded: machinery becomes class 3200 at location DE400, data
+  processing equipment 3500 and DE300, vehicles 3300 and DE230, fixtures
+  and fittings 3012 and DE100, software 3900 and DE000, and buildings 3600
+  and DE310. The depreciation key follows from the method: straight line
+  becomes LINS, declining balance GD25 and manual MANU. The description
+  field of the new system holds fifty characters, so a longer one is cut
+  to fit. Every asset is created in company code 0454 and in depreciation
+  area 01, and the equipment record of the legacy system is marked for
+  deletion. No formal source or target schema is given - infer the
+  required structure, the field mapping and the value formats yourself by
+  comparing the input dataset against the target example.
+
+input:
+  source_dataset: data/dataset.csv
+  target_example: data/target_example.csv
+  reference_data:
+    - name: cost_center_assignment
+      file: data/mapping_list_cost_centers.csv
+      key_field: "cost center legacy"
+      value_field:
+        - "cost center new"
+        - "profit center"
+        - "plant"
+      description: >
+        The controlling assignment of the new system: per legacy cost center
+        the cost center of the new numbering, the profit center it reports into
+        and the plant it belongs to. The list covers the whole company, so it
+        also names cost centers no asset happens to sit on. A legacy cost
+        center the list does not carry was retired during the controlling
+        migration, and an asset still booked on it cannot be created until it
+        has been reassigned by hand.
+
+business_rules: {}
+
+output:
+  format: csv
+
+constraints:
+  - Each output row shall represent one fixed asset.
+  - No additional columns beyond those shown in the target example may be added.
+  - The column order must match the target example.

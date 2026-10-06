@@ -1,0 +1,100 @@
+table: cost_center_master
+
+entity: CostCenter
+
+description: >
+  Source schema of the cost center master exported from the legacy ERP
+  system. Each record is one cost center of the legacy controlling area,
+  carrying its name, its category and the period it is valid for. The export
+  is a snapshot of the organisation as it was built up over the years and
+  therefore still holds cost centers that were locked or closed long ago.
+  It knows nothing of the target operating model the new system is cut along,
+  so which unit a cost center ends up in cannot be read from it.
+
+attributes:
+
+  - name: cost center
+    type: string
+    required: true
+    unique: true
+    description: >
+      Cost center number in the legacy ERP system, made up of the plant and a
+      four-digit number. It is what the cross reference list resolves the
+      successors of a cost center by.
+
+  - name: description
+    type: string
+    required: true
+    description: >
+      Name of the cost center, stating the business function it collects the
+      costs of.
+
+  - name: cost center category
+    type: string
+    required: true
+    allowed_values:
+      - "1"
+      - "2"
+      - "3"
+      - "4"
+    description: >
+      Category of the cost center: 1 administration, 2 production, 3 sales,
+      4 service. It decides how the cost center is set up in the target
+      system, from its type through its functional area to whether revenue
+      may be posted to it at all.
+
+  - name: manager
+    type: string
+    required: true
+    description: >
+      Name of the manager responsible for the cost center in the legacy
+      system. The target system holds a user ID instead, which the cross
+      reference list carries.
+
+  - name: valid from
+    type: string
+    required: true
+    format: DD.MM.YYYY
+    description: >
+      Start of the validity period of the cost center in the legacy system.
+
+  - name: valid to
+    type: string
+    required: true
+    format: DD.MM.YYYY
+    description: >
+      End of the validity period of the cost center. 31.12.9999 for a cost
+      center with no planned end. A cost center that expires before the
+      migration date is not carried into the new system.
+
+  - name: status
+    type: string
+    required: true
+    allowed_values:
+      - active
+      - blocked
+      - closed
+    description: >
+      Processing status of the cost center. Only an active cost center is
+      still in use; a blocked one may no longer be posted to and a closed one
+      has been taken out of the organisation.
+
+  - name: plant
+    type: string
+    required: true
+    description: >
+      Plant the cost center belongs to, identical on every record of this
+      export.
+
+  - name: currency
+    type: string
+    required: true
+    format: ISO-4217
+    description: >
+      Currency the cost center is managed in.
+
+constraints:
+
+  - id: CON-SRC-002
+    description: >
+      valid from must not be later than valid to

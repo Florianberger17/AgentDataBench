@@ -1,0 +1,278 @@
+task_id: 018_WORK_PLAN_MIGRATION_BASIC_EXPLICIT
+
+objective: >
+  Load the routings of the new production planning system from the routing
+  export of the legacy system and produce a CSV file that conforms exactly to
+  the target schema. Two things have to be worked out rather than carried
+  over. First, every operation has to be checked against the reservation unit
+  master of the new system: the shop floor was reorganised and part of the
+  legacy units no longer exist, and an operation booked on one of those
+  cannot be scheduled at all, so it is not loaded - and the unit's
+  designation, its cost center and its minimum booking time come from that
+  same master. Second, the times: the legacy system records them in minutes
+  and against the lot they were measured over, while the new system plans in
+  hours and against a single piece, so every time has to be converted and
+  normalised. The wage time additionally has to respect the minimum booking
+  time of the unit it runs on, which is what an operation that was never
+  timed falls back to.
+
+input:
+  source_dataset: data/dataset.csv
+  source_schema: schemas/source_schema.yaml
+  target_schema: schemas/target_schema.yaml
+  reference_data:
+    - name: reservation_unit_master
+      file: data/mapping_list_reservation_units.csv
+      key_field: "reservation unit no."
+      value_field:
+        - "designation"
+        - "standard time per unit"
+        - "cost center"
+        - "unit identifier"
+      description: >
+        The reservation units of the new production planning system, with the
+        designation, the cost center and the minimum booking time of each.
+        This list decides which operations can be migrated at all: a
+        reservation unit of the legacy export that the list does not carry no
+        longer exists, and every operation booked on it has to be left out.
+        The list covers the whole new shop floor, so it also names units no
+        legacy routing happens to use.
+
+required_operations:
+  - schema_mapping
+  - filtering
+  - reference_validation
+  - time_calculation
+  - calculation
+  - unit_conversion
+  - value_limitation
+  - value_mapping
+  - conditional_assignment
+  - constant_assignment
+
+business_rules:
+
+  filtering:
+    description: >
+      Only operations that are released for production are loaded. An
+      operation still being worked on by engineering, or locked, is not part
+      of this migration.
+    rules:
+      - field: status
+        operator: "=="
+        value: "released"
+
+  expansion:
+    description: >
+      Every operation is matched against the reservation unit master of the
+      new system. This is the check the whole upload depends on: the shop
+      floor was reorganised, and an operation still booked on a reservation
+      unit that master no longer carries has nothing to be scheduled against,
+      so it is not loaded at all. For the operations that do match, the same
+      master supplies the designation of the unit, the cost center the
+      confirmed time is posted to, the minimum booking time the wage time has
+      to respect, and the mark that says whether the unit is a pooled one -
+      none of which the legacy routing export holds.
+    reference: reservation_unit_master
+    source_field: reservation unit no.
+    key_field: "reservation unit no."
+    carry_fields:
+      - "designation"
+      - "standard time per unit"
+      - "cost center"
+      - "unit identifier"
+
+  record_order:
+    description: >
+      The operations are delivered in ascending order of the routing number
+      and, within a routing, of the operation number - both read as numbers
+      rather than as text, which is the order the operations are carried out
+      in.
+    fields:
+      - routing no.
+      - operation no.
+    direction: ascending
+
+  mappings:
+
+    - source_field: routing no.
+      target_field: routing no.
+      transformation:
+        type: copy
+
+    - source_field: operation no.
+      target_field: operation no.
+      transformation:
+        type: copy
+
+    - source_field: operation text 1
+      target_field: operation text 1
+      transformation:
+        type: copy
+
+    - source_field: operation text 2
+      target_field: operation text 2
+      transformation:
+        type: copy
+
+    - source_field: reservation unit no.
+      target_field: reservation unit no.
+      transformation:
+        type: copy
+
+    - source_field: designation
+      target_field: reservation unit designation
+      transformation:
+        type: copy
+      description: >
+        The designation is the one the new reservation unit master carries,
+        not the one the legacy routing was printed with.
+
+    - source_field: operation type
+      target_field: reference type
+      transformation:
+        type: value_mapping
+        mapping:
+          "E": "in-house"
+          "A": "external"
+      description: >
+        The legacy system holds a one-letter code; the target system spells
+        the type out.
+
+    - source_fields:
+        - setup minutes
+      target_field: setup time
+      transformation:
+        type: calculation
+        formula: "setup minutes / 60"
+        decimals: 3
+        decimal_separator: ","
+      description: >
+        The setup is recorded in minutes and planned in hours. It is incurred
+        once per order, so no quantity enters into it.
+
+    - source_fields:
+        - operation minutes
+        - base quantity
+      target_field: time per unit
+      transformation:
+        type: calculation
+        formula: "operation minutes / base quantity / 60"
+        decimals: 3
+        decimal_separator: ","
+      description: >
+        The time the new system plans and costs with is the time for one
+        piece in hours. The legacy figure is neither: it is in minutes, and
+        it was measured over the lot the base quantity states rather than
+        over a single piece. So it is divided by that lot first and then
+        brought from minutes to hours. An operation the legacy system never
+        timed stays at zero here.
+
+    - target_field: time unit
+      transformation:
+        type: constant
+        value: "hours"
+
+    - target_field: time base
+      transformation:
+        type: constant
+        value: "1,000"
+      description: >
+        Every operation is normalised to a single piece, which is what makes
+        the times of different lot sizes comparable in the new system.
+
+    - source_field: time per unit
+      target_field: wage time per unit
+      transformation:
+        type: bounded_value
+        minimum_field: standard time per unit
+        decimals: 3
+        decimal_separator: ","
+      description: >
+        Labour is booked at the time per unit, but never below the minimum
+        booking time of the reservation unit the operation runs on, which the
+        new unit master states. An operation quicker than that minimum, and
+        one the legacy system never timed at all, is therefore booked at the
+        minimum rather than at its own figure.
+
+    - source_field: lead time days
+      target_field: lead time
+      transformation:
+        type: copy
+
+    - target_field: overlap type
+      transformation:
+        type: constant
+        value: "none"
+
+    - target_field: validity indicator
+      transformation:
+        type: constant
+        value: "generally valid"
+
+    - target_field: confirmation indicator
+      transformation:
+        type: constant
+        value: "confirmation required"
+
+    - source_field: operation type
+      target_field: scheduling key
+      transformation:
+        type: value_mapping
+        mapping:
+          "E": "capacity scheduling"
+          "A": "lead time scheduling"
+      description: >
+        An operation on one of the plant's own units is scheduled against
+        that unit's capacity. A bought-in operation has none, so the system
+        can only schedule it by its lead time.
+
+    - source_field: cost center
+      target_field: cost center
+      transformation:
+        type: copy
+      description: >
+        The cost center follows the reservation unit and therefore comes from
+        the new unit master, not from the routing.
+
+    - source_field: material no.
+      target_field: material no.
+      transformation:
+        type: copy
+
+    - target_field: material description
+      transformation:
+        type: conditional_value
+        conditions:
+          - when:
+              field: material no.
+              is: empty
+            value: "*** No usage ***"
+          - from_field: material description
+      description: >
+        A routing that is not assigned to any part is marked as unused, so
+        that the upload does not leave the designation blank and the routing
+        can be found and cleaned up later.
+
+    - source_field: unit identifier
+      target_field: unit identifier
+      transformation:
+        type: copy
+      description: >
+        Whether the reservation unit is a pooled one is a property of the
+        unit and comes from the new unit master.
+
+output:
+  format: csv
+  schema_reference: schemas/target_schema.yaml
+
+constraints:
+  - The output dataset must follow the target schema exactly.
+  - The output column order must match the target schema.
+  - No additional columns may be added.
+  - Each output row shall represent one operation of one routing.
+  - routing no. and operation no. together must be unique.
+  - setup time and time per unit must not be negative.
+  - wage time per unit must not be less than time per unit.
+  - material description must mark the routing as unused exactly where material no. is empty.
+  - scheduling key must be lead time scheduling exactly for the operations of reference type external.

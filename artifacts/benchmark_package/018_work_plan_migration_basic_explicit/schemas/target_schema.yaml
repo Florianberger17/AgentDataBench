@@ -1,0 +1,192 @@
+table: routing_upload
+
+entity: Operation
+
+description: >
+  Target schema of the routing upload container of the new production
+  planning system. Each record is one operation of one routing, scheduled
+  against the reservation unit it is carried out on. All times are stated in
+  the unit named beside them and against a time base of one piece, which is
+  what the new system plans and costs with - so every time of the upload has
+  to be worked out rather than carried over.
+
+attributes:
+
+  - name: routing no.
+    type: string
+    required: true
+    description: >
+      Number of the routing, carried over from the legacy system.
+
+  - name: operation no.
+    type: string
+    required: true
+    description: >
+      Position of the operation within its routing.
+
+  - name: operation text 1
+    type: string
+    required: true
+    description: >
+      First line of the shop floor instruction.
+
+  - name: operation text 2
+    type: string
+    required: false
+    description: >
+      Second line of the instruction, empty where there is none.
+
+  - name: reservation unit no.
+    type: string
+    required: true
+    description: >
+      Reservation unit the operation is scheduled against. Every number here
+      exists in the reservation unit master of the new system; an operation
+      whose unit does not is not part of this upload.
+
+  - name: reservation unit designation
+    type: string
+    required: true
+    description: >
+      Designation of that reservation unit, as the new master carries it.
+
+  - name: reference type
+    type: string
+    required: true
+    allowed_values:
+      - in-house
+      - external
+    description: >
+      Whether the operation is carried out on the plant's own units or bought
+      in from a subcontractor.
+
+  - name: setup time
+    type: decimal
+    required: true
+    description: >
+      Setup time of the operation in the time unit stated below, with three
+      decimal places. Incurred once per production order.
+
+  - name: time per unit
+    type: decimal
+    required: true
+    description: >
+      Time the operation takes for one piece, in the time unit stated below
+      and with three decimal places. The legacy system records its times in
+      minutes and over the lot they were measured on, so this is that figure
+      brought to one piece and to the time unit of the new system. Zero for
+      an operation the legacy system never timed.
+
+  - name: time unit
+    type: string
+    required: true
+    description: >
+      Unit all times of the record are stated in.
+
+  - name: time base
+    type: decimal
+    required: true
+    description: >
+      Number of pieces the time per unit refers to. The new system normalises
+      every operation to a single piece.
+
+  - name: wage time per unit
+    type: decimal
+    required: true
+    description: >
+      Time booked to wages for one piece, with three decimal places. It is
+      the time per unit, but never less than the minimum booking time of the
+      reservation unit the operation runs on: an hour of labour cannot be
+      booked in smaller pieces than that unit allows, so an operation that is
+      quicker than the minimum - or was never timed at all - is booked at the
+      minimum.
+
+  - name: lead time
+    type: decimal
+    required: true
+    description: >
+      Days that have to pass after the operation before the next one starts.
+
+  - name: overlap type
+    type: string
+    required: true
+    description: >
+      How the operation may overlap with the next one. No operation of this
+      migration is set up to overlap.
+
+  - name: validity indicator
+    type: string
+    required: true
+    description: >
+      Validity of the operation. Every operation is loaded without a
+      restriction in time.
+
+  - name: confirmation indicator
+    type: string
+    required: true
+    description: >
+      Whether the operation has to be confirmed on the shop floor.
+      Confirmation is required throughout this migration.
+
+  - name: scheduling key
+    type: string
+    required: true
+    allowed_values:
+      - capacity scheduling
+      - lead time scheduling
+    description: >
+      How the operation is scheduled. An operation on one of the plant's own
+      units is scheduled against that unit's capacity; a bought-in operation
+      has none to schedule against and goes by its lead time.
+
+  - name: cost center
+    type: string
+    required: true
+    description: >
+      Cost center the confirmed time is posted to. It follows from the
+      reservation unit, not from the operation.
+
+  - name: material no.
+    type: string
+    required: false
+    description: >
+      Part the routing produces. Empty for a routing not assigned to a part.
+
+  - name: material description
+    type: string
+    required: true
+    description: >
+      Designation of that part. A routing not assigned to any part is marked
+      as unused instead, so the field is never empty.
+
+  - name: unit identifier
+    type: string
+    required: false
+    description: >
+      Marks an operation running on a pooled reservation unit, which the new
+      system schedules differently from one with a single workplace. Empty
+      otherwise.
+
+constraints:
+
+  - id: CON-TGT-001
+    description: >
+      routing no. and operation no. together must be unique
+
+  - id: CON-TGT-002
+    description: setup time and time per unit must not be negative
+
+  - id: CON-TGT-003
+    description: >
+      wage time per unit must not be less than time per unit, since it is
+      that time raised to the minimum booking time of its reservation unit
+
+  - id: CON-TGT-004
+    description: >
+      material description must mark the routing as unused exactly where
+      material no. is empty
+
+  - id: CON-TGT-005
+    description: >
+      scheduling key must be lead time scheduling exactly for the operations
+      of reference type external

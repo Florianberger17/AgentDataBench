@@ -1,0 +1,184 @@
+task_id: 016_EMPLOYEE_CREDITOR_MIGRATION_BASIC_EXPLICIT
+
+objective: >
+  Create a creditor account for every employee who is to be reimbursed through
+  the new ERP system, from the personnel master of the legacy HR system, and
+  produce a CSV file that conforms exactly to the target schema. The work of
+  this task is mostly in deciding which employees belong in the upload at all:
+  the HR system is shared across the group and is a running register, so the
+  export holds employees of companies this wave does not cover, employees who
+  have already left, and employees whose contract only starts after the new
+  system goes live. On top of that, part of the workforce was already created
+  as creditors during the pilot wave and must not be created a second time;
+  those employees are listed in the central creditor list. For the employees
+  that remain, the account number and the designation field both follow from
+  the personnel number, the name is composed from the two name parts, and the
+  accounts and the payment method follow from the payroll group and from
+  whether the HR system holds bank details at all.
+
+input:
+  source_dataset: data/dataset.csv
+  source_schema: schemas/source_schema.yaml
+  target_schema: schemas/target_schema.yaml
+  reference_data:
+    - name: existing_creditors
+      file: data/mapping_list_existing_creditors.csv
+      key_field: "personnel no."
+      value_field: "creditor no."
+      description: >
+        The employees already created as creditors in the target system during
+        the pilot wave, with the account each of them received. An employee
+        named in this list already has an account and must not be created
+        again. The list is maintained independently of the export and also
+        names employees who have since left the group, so not every entry
+        matches an exported employee.
+
+required_operations:
+  - schema_mapping
+  - filtering
+  - reference_exclusion
+  - field_concatenation
+  - zero_padding
+  - value_mapping
+  - conditional_assignment
+  - constant_assignment
+
+business_rules:
+
+  filtering:
+    description: >
+      An employee is created as a creditor only if this wave covers their
+      company, they have joined by the time the new system goes live on
+      1 January 2027, they are still with the company, and they do not already
+      have a creditor account from the pilot wave.
+    rules:
+      - field: company code
+        operator: "=="
+        value: "0454"
+      - field: entry date
+        operator: "<="
+        value: "2027-01-01"
+        field_format: "DD.MM.YYYY"
+      - field: leaving date
+        operator: is empty
+      - field: personnel no.
+        operator: not in
+        reference: existing_creditors
+        key_field: "personnel no."
+
+  record_order:
+    description: >
+      The creditors are delivered in ascending order of the personnel number,
+      read as a number rather than as text, which is also the order of the
+      creditor number range.
+    fields:
+      - personnel no.
+    direction: ascending
+
+  mappings:
+
+    - source_field: personnel no.
+      target_field: creditor no.
+      transformation:
+        type: prefix_and_pad
+        pad_to: 4
+        pad_character: "0"
+        prefix: "300"
+      description: >
+        Employee creditors occupy their own number range: the personnel number
+        is filled to four digits and prefixed with 300, so personnel number
+        412 becomes creditor 3000412.
+
+    - source_fields:
+        - last name
+        - first name
+      target_field: creditor name
+      transformation:
+        type: concatenate
+        separator: ", "
+      description: >
+        The target system sorts and searches creditors by family name, so the
+        name is written family name first, separated from the given name by a
+        comma and a space.
+
+    - target_field: creditor type
+      transformation:
+        type: constant
+        value: "Lieferant"
+      description: >
+        An employee creditor is created as an ordinary vendor; the container
+        expects the key of the target system unchanged.
+
+    - source_field: personnel no.
+      target_field: company designation
+      transformation:
+        type: pad
+        pad_to: 4
+        pad_character: "0"
+      description: >
+        The designation field carries the personnel number filled to four
+        digits - the same figure as in the account number, but without the
+        number range prefix.
+
+    - target_field: tax type
+      transformation:
+        type: constant
+        value: "39"
+      description: >
+        A reimbursement to an employee never carries VAT, so every employee
+        creditor is created with the same tax type.
+
+    - target_field: payment method
+      transformation:
+        type: conditional_value
+        conditions:
+          - when:
+              field: IBAN
+              is: not_empty
+            value: "31"
+          - value: ""
+      description: >
+        An employee the HR system holds bank details for is paid by transfer.
+        Where there are no bank details, no payment method is set at all,
+        since an automatic payment run would otherwise fail on the account.
+
+    - target_field: collective account 1
+      transformation:
+        type: constant
+        value: "90"
+      description: >
+        All employee creditors of this migration are reconciled against one
+        collective account.
+
+    - source_field: employee group
+      target_field: collective account 2
+      transformation:
+        type: value_mapping
+        mapping:
+          "staff": "90"
+          "apprentice": "90"
+          "working student": "90"
+          "executive": "99"
+          "managing director": "99"
+      description: >
+        The second collective account separates the management from the rest
+        of the workforce: members of the management are reconciled against
+        their own account, every other payroll group against the general one.
+
+ignored_source_fields:
+  - cost center
+
+output:
+  format: csv
+  schema_reference: schemas/target_schema.yaml
+
+constraints:
+  - The output dataset must follow the target schema exactly.
+  - The output column order must match the target schema.
+  - No additional columns may be added.
+  - Each output row shall represent one employee.
+  - creditor no. must be unique.
+  - creditor no. must be the prefix 300 followed by company designation.
+  - company designation must be exactly four digits.
+  - creditor name must not exceed 35 characters.
+  - Both collective accounts must be filled.

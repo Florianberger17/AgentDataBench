@@ -48,6 +48,10 @@ OUTPUT_FILENAME = "solution.csv"
 SOLUTION_SCRIPT_FILENAME = "solution.py"
 
 
+def _as_list(value: str | list[str]) -> list[str]:
+    return value if isinstance(value, list) else [value]
+
+
 class AgentAdapter(ABC):
     def __init__(self, name: str, default_workspace_root: Path | None = None) -> None:
         self.name = name
@@ -292,7 +296,7 @@ class AgentAdapter(ABC):
         so that name has to resolve to a concrete file."""
         if not reference_data:
             return []
-        lines = ["Reference tables (for lookup mappings below):"]
+        lines = ["Reference tables (used by the rules below):"]
         for reference in reference_data:
             value_fields = reference.value_field
             if isinstance(value_fields, str):
@@ -340,6 +344,36 @@ class AgentAdapter(ABC):
                 lines.append(f"  {business_rules.filtering.description.strip()}")
             for rule in business_rules.filtering.rules:
                 lines.append(f"  - Keep rows where {self._render_filter_rule(rule)}")
+            lines.append("")
+
+        if business_rules.expansion:
+            # Without this an agent would map every source record to exactly
+            # one output record, and silently lose the extra successors of a
+            # record the reorganisation split in two.
+            expansion = business_rules.expansion
+            lines.append(
+                "Expansion (one output record per matching reference entry, "
+                "not per source record):"
+            )
+            if expansion.description:
+                lines.append(f"  {expansion.description.strip()}")
+            source_fields = _as_list(expansion.source_field)
+            key_fields = _as_list(expansion.key_field)
+            joined = ", ".join(
+                f"{source} = {key}" for source, key in zip(source_fields, key_fields)
+            )
+            lines.append(
+                f"  - Join each row onto {expansion.reference} on {joined}, and "
+                f"emit one output row per matching entry"
+            )
+            lines.append(
+                f"  - Take these columns from the matched entry: "
+                f"{', '.join(expansion.carry_fields)}"
+            )
+            lines.append(
+                "  - A row whose key is absent from the reference table has no "
+                "successor and is dropped"
+            )
             lines.append("")
 
         if business_rules.aggregation:

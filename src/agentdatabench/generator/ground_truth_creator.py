@@ -16,12 +16,17 @@ Target columns are then built in dependency order rather than schema order:
 a field derived from other target fields (a valuation price from a converted
 quantity) is deferred until those exist - see _build_columns.
 
-``business_rules.aggregation`` then collapses what survives, where the target
-system keeps one record per group rather than per source record (one credit
-master record per customer, from every order that customer placed). It runs
-after both dropping steps so that a record the migration does not carry over
-never contributes to a sum, and before record_order, which has to sort the
-records that actually end up in the output.
+Two steps then change how many records the frame holds, both after the dropping
+steps - so that a record the migration does not carry over neither contributes
+to a sum nor acquires successors - and both before record_order, which has to
+sort the records that actually end up in the output.
+``business_rules.expansion`` runs first and multiplies records, where one
+source object became several target objects (a legacy cost center re-cut across
+two units of the target operating model). ``business_rules.aggregation`` then
+collapses them, where the target system keeps one record per group rather than
+per source record (one credit master record per customer, from every order that
+customer placed). Expansion before aggregation because it refines the
+granularity of the frame while aggregation coarsens it.
 
 ``business_rules.record_order`` sorts what survives. It has to run after the
 dropping and collapsing steps and before any column is built, because a
@@ -41,6 +46,7 @@ from agentdatabench.domain.dataset import Dataset
 from agentdatabench.domain.schema import Schema
 from agentdatabench.domain.task import MappingRule, RecordOrder, Task
 from agentdatabench.generator.aggregation import apply_aggregation
+from agentdatabench.generator.expansion import apply_expansion
 from agentdatabench.generator.filtering import apply_filtering
 from agentdatabench.generator.transformations import (
     DEFAULT_TRANSFORMATION_HANDLERS,
@@ -94,6 +100,9 @@ class GroundTruthCreator:
 
         filtered = self._drop_unmappable_records(
             filtered, list(mappings_by_target.values()), context
+        )
+        filtered = apply_expansion(
+            filtered, task.business_rules.expansion, context.reference_data
         )
         filtered = apply_aggregation(
             filtered, task.business_rules.aggregation, context.reference_data

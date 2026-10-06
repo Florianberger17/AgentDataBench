@@ -1,0 +1,38 @@
+scenario_id: 039_PRODUCTION_ORDER_MIGRATION_BASIC_IMPLICIT
+
+name: ERP Production Order Migration
+
+domain: ERP Data Integration
+
+description: >
+  The open production orders of the shop floor are carried into a new ERP
+  system as part of a system modernization project. The material master was
+  migrated before them and renumbered in the process: the legacy range had
+  grown over decades into a mixture of plain numbers of several lengths,
+  letter-prefixed numbers and alphanumeric ones, and the new system numbers
+  its materials in a single clean range instead. Nothing connects the two
+  except the central cross reference, and part of the legacy materials were
+  not carried over at all - an order producing one of those has no material
+  to be created against. The confirmation numbers are renumbered too: the new
+  system hands them out from its own range, so the legacy numbers are kept
+  only for tracing what the shop floor already booked. And what the new
+  system has to schedule is not the quantity the order was placed for but the
+  quantity still to be produced, since part of the orders have already
+  delivered to stock or scrapped along the way.
+
+business_objects:
+  - ProductionOrder
+
+systems:
+  source:
+    name: Legacy ERP System
+    description: >
+      Holds the open production orders with their legacy material numbers,
+      schedule dates, delivered and scrapped quantities.
+
+  target:
+    name: Target ERP System
+    description: >
+      Schedules open production orders against its own material and
+      confirmation number ranges, loaded through the production order upload
+      container.

@@ -1,0 +1,32 @@
+scenario_id: 031_STOCK_MIGRATION_BASIC_IMPLICIT
+
+name: ERP Stock and Valuation Migration
+
+domain: ERP Data Integration
+
+description: >
+  Stock balances and their valuation are migrated from a legacy ERP system to
+  a new ERP system as part of a system modernization project. The source
+  system records the stock of each part at the end of an accounting period in
+  the unit the part is stocked in, which for raw material is often a piece
+  count or a bar length. The target ERP system values material in its own base
+  unit, which may be a weight, so quantities have to be converted using the
+  geometry of the bar and the density of its material grade. The value of the
+  stock itself is invariant under the migration: the valuation price of the
+  target system is derived from it, not carried over. Material numbers, base
+  units and price units are not contained in the source dataset and must be
+  resolved via a central material cross reference list.
+
+business_objects:
+  - MaterialValuation
+
+systems:
+  source:
+    name: Legacy ERP System
+    description: >
+      Stores stock balances and valuation prices per accounting period.
+
+  target:
+    name: Target ERP System
+    description: >
+      Stores the valuated stock of each material per plant and period.

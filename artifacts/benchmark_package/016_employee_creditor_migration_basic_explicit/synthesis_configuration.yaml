@@ -1,0 +1,65 @@
+seed: 1016
+
+locale: de_DE
+
+columns:
+
+  # The personnel number identifies the employee and is what both target
+  # account fields are derived from. Substituted consistently per distinct
+  # value and drawn without replacement, since two employees collapsing onto
+  # one number would collapse onto one creditor account as well. The range
+  # spans three- and four-digit numbers, as the real export does: a number
+  # shorter than the account field is what the padding rule exists for.
+  - column: personnel no.
+    strategy: numeric_mapping
+    format: "{:d}"
+    min: 100
+    max: 2999
+
+  # Real people. Both name parts are replaced by drawn ones, consistently per
+  # distinct value, so an employee keeps one name throughout. The creditor
+  # name of the target system is composed from the two of them, which is the
+  # only place either value is read.
+  - column: last name
+    strategy: faker_mapping
+    provider: last_name
+
+  - column: first name
+    strategy: faker_mapping
+    provider: first_name
+
+  # Decides the second collective account of every record. Resampling it would
+  # move employees between accounts; an employee group is a classification key
+  # of the HR system, not an identifying value.
+  - column: employee group
+    strategy: identity
+
+  # Decides which employees this migration wave covers at all, so it is
+  # carried over unchanged. A company code is an organisational key.
+  - column: company code
+    strategy: identity
+
+  # Not read by any rule of the task. Resampled rather than carried over,
+  # since the cost center is what would place an employee inside the real
+  # organisation.
+  - column: cost center
+    strategy: categorical_resample
+
+  # The entry date decides which employees have joined by the migration date,
+  # and the leaving date which of them are still with the company - the
+  # filters rest on both exactly, the second on whether it is filled at all.
+  # Neither identifies anyone once the name beside it has been replaced.
+  - column: entry date
+    strategy: identity
+
+  - column: leaving date
+    strategy: identity
+
+  # Bank details of a real person. Replaced by drawn IBANs, consistently per
+  # distinct value. Empty values stay empty, which is what matters here: the
+  # payment method follows from whether an employee has bank details at all,
+  # and the IBAN itself never reaches the target system - it is loaded
+  # separately.
+  - column: IBAN
+    strategy: faker_mapping
+    provider: iban

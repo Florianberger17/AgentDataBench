@@ -1,0 +1,101 @@
+﻿confirmation no.,material no.,material description,material validity,start date,end date,confirmation status,release flag,order quantity,good quantity,scrap quantity,unit of measure,planner
+404490,13387806955254,push disc d60 mm,valid,01.02.2026,24.09.2026,activated,not released,"20,000","0,000","0,000",STK,E07
+443526,749792463,sensor pin d6x25 mm,valid,13.01.2026,06.09.2026,activated,not released,"10,000","0,000","0,000",STK,E07
+428073,C5624491814203,cam piece 30 mm,valid,22.03.2026,24.08.2026,partly finished,not released,"100,000","0,000","0,000",STK,E00
+413268,B31638396675042,transport bracket 100x100 mm,valid,09.01.2026,14.07.2026,partly finished,not released,"160,000","0,000","0,000",STK,E00
+431491,12700515684561,gear block 80x80 mm,valid,11.05.2026,11.07.2026,partly finished,released,"48,000","0,000","0,000",STK,E00
+458531,12015772,bearing piece 40 mm,does not exist,18.05.2026,27.12.2026,partly finished,released,"6,000","0,000","0,000",STK,E08
+479943,B31638396675042,transport bracket 100x100 mm,valid,09.06.2026,26.08.2026,started,released,"2,000","0,000","0,000",STK,E00
+470703,12256838949204,grid 10x10 mm,valid,22.05.2026,26.11.2026,activated,released,"8,000","0,000","0,000",STK,E05
+488775,B33901432106686,journal guide 200 mm,valid,24.06.2026,19.12.2026,partly finished,released,"125,000","0,000","0,000",STK,E00
+429907,13257983931715,journal bushing d25/d20x25 mm,valid,19.06.2026,06.09.2026,started,released,"10,000","1,000","0,000",STK,E07
+438633,12682245917516,clamping screw m12x60 mm,valid,27.05.2026,27.12.2026,started,released,"5,000","2,000","1,000",STK,E00
+449330,C5624491814203,cam piece 30 mm,valid,15.02.2026,08.10.2026,started,released,"5,000","0,000","0,000",STK,E05
+450717,13635955437685,locking plate 60x60 mm,valid,11.06.2026,14.09.2026,started,released,"50,000","0,000","0,000",STK,E06
+437582,B91133741189041,support piece complete 60 mm,valid,26.06.2026,26.08.2026,started,released,"6,000","0,000","0,000",STK,E00
+434039,71143177,reinforcement 3.0 mm,valid,24.02.2026,21.12.2026,started,released,"120,000","71,000","0,000",STK,E00
+429547,11477985720818,transport shaft d25x600 mm,valid,08.06.2026,12.08.2026,started,released,"2,000","0,000","0,000",STK,E08
+434214,B11560964527476,adapter piece 50 mm,valid,04.02.2026,03.11.2026,activated,released,"2,000","0,000","0,000",STK,E00
+413648,11603387632508,linear motor 200n,valid,08.05.2026,19.11.2026,partly finished,released,"100,000","84,000","14,000",STK,E07
+485559,12368600983057,contour strip 300 mm,valid,28.02.2026,12.10.2026,started,not released,"100,000","0,000","0,000",STK,E08
+445884,12682245917516,clamping screw m12x60 mm,valid,07.03.2026,10.07.2026,started,not released,"40,000","0,000","0,000",STK,E00
+453602,13873720636393,safety pin d8x40 mm,valid,19.02.2026,23.07.2026,activated,released,"160,000","0,000","0,000",STK,E07
+406374,B24830885397781,worm wheel complete z=30 m1.5,valid,23.03.2026,02.07.2026,started,released,"48,000","0,000","0,000",STK,E08
+424224,12876076745786,wall cover 1000x500 mm,valid,10.04.2026,15.10.2026,partly finished,released,"30,000","0,000","0,000",STK,E06
+458273,13393859772977,straightening block 100x60 mm,valid,28.01.2026,22.11.2026,started,released,"12,000","0,000","0,000",STK,E00
+437803,13051765471906,locking bracket 50x50 mm,valid,03.05.2026,16.08.2026,activated,released,"10,000","0,000","0,000",STK,E08
+461930,749792463,sensor pin d6x25 mm,valid,22.02.2026,04.11.2026,started,released,"48,000","0,000","0,000",STK,E00
+485644,VM113-6128P184A,driver d20 mm,valid,23.02.2026,26.09.2026,partly finished,released,"6,000","0,000","0,000",STK,E00
+462103,12368600983057,contour strip 300 mm,valid,02.03.2026,13.07.2026,started,released,"20,000","0,000","0,000",STK,E00
+405748,13051765471906,locking bracket 50x50 mm,valid,10.02.2026,27.07.2026,started,released,"90,000","0,000","0,000",STK,E00
+415811,13234248056979,adjustment 0-20 mm,valid,15.03.2026,01.08.2026,started,released,"2,000","0,000","0,000",STK,E00
+464769,B11943489461174,tool piece 50 mm,valid,13.01.2026,02.08.2026,started,released,"12,000","0,000","0,000",STK,E06
+420536,12727603450755,carrier strip 400 mm,valid,04.04.2026,06.09.2026,started,released,"1,000","0,000","0,000",STK,E07
+479003,12511326112010,slide handle 120 mm,valid,05.04.2026,17.07.2026,activated,released,"4,000","0,000","0,000",STK,E00
+424895,12502852391699,brake complete 24v 10nm,valid,16.01.2026,27.09.2026,started,released,"10,000","0,000","0,000",STK,E07
+469148,13873720636393,safety pin d8x40 mm,valid,25.06.2026,28.11.2026,started,released,"40,000","0,000","0,000",STK,E00
+488679,12511326112010,slide handle 120 mm,valid,21.02.2026,20.10.2026,started,released,"3,000","0,000","0,000",STK,E08
+452289,C5624491814203,cam piece 30 mm,valid,05.05.2026,22.10.2026,partly finished,not released,"6,000","0,000","0,000",STK,E08
+453638,13358029216274,storage 100x100 mm,valid,25.01.2026,28.07.2026,started,released,"100,000","0,000","0,000",STK,E07
+465144,13554764005440,cylinder head d50 mm,valid,08.01.2026,22.07.2026,started,released,"2,000","0,000","0,000",STK,E08
+422131,60722671,conveyor frame 1500 mm,valid,20.01.2026,05.12.2026,started,released,"160,000","122,000","15,000",STK,E06
+457329,11431175147879,inlet d25 mm,valid,23.02.2026,26.11.2026,started,released,"48,000","0,000","0,000",STK,E00
+491938,12700515684561,gear block 80x80 mm,valid,23.04.2026,26.12.2026,partly finished,released,"90,000","0,000","0,000",STK,E08
+407118,12368600983057,contour strip 300 mm,valid,16.03.2026,03.11.2026,started,released,"5,000","0,000","0,000",STK,E05
+413364,13635955437685,locking plate 60x60 mm,valid,15.03.2026,14.07.2026,activated,released,"100,000","0,000","0,000",STK,E05
+485056,835728760,measuring screw m6,does not exist,28.04.2026,21.12.2026,started,released,"4,000","0,000","0,000",STK,E05
+438252,71509791,lifting cylinder d50x150 mm,valid,23.04.2026,20.07.2026,started,released,"2,000","0,000","0,000",STK,E00
+413412,13257983931715,journal bushing d25/d20x25 mm,valid,24.01.2026,22.08.2026,partly finished,released,"5,000","0,000","0,000",STK,E07
+458793,12368600983057,contour strip 300 mm,valid,17.06.2026,19.12.2026,started,released,"120,000","0,000","0,000",STK,E00
+450090,12612137740944,support lever 250 mm,valid,02.04.2026,05.08.2026,activated,released,"72,000","0,000","0,000",STK,E07
+475598,12135495494118,mounting bolt m10x40 mm,valid,12.03.2026,17.10.2026,partly finished,released,"180,000","0,000","0,000",STK,E05
+466447,62996497,sealing flange dn40,valid,26.01.2026,18.12.2026,activated,released,"5,000","0,000","0,000",STK,E00
+489435,11418394024503,switch piece 30 mm,valid,12.04.2026,23.08.2026,activated,released,"10,000","0,000","0,000",STK,E07
+413955,12876076745786,wall cover 1000x500 mm,valid,25.01.2026,19.07.2026,activated,released,"30,000","0,000","0,000",STK,E08
+493228,B24830885397781,worm wheel complete z=30 m1.5,valid,08.02.2026,28.08.2026,activated,released,"40,000","14,000","23,000",STK,E06
+498132,13387806955254,push disc d60 mm,valid,16.05.2026,11.09.2026,started,released,"90,000","0,000","0,000",STK,E08
+438879,12700515684561,gear block 80x80 mm,valid,14.05.2026,24.12.2026,activated,released,"20,000","0,000","0,000",STK,E08
+423094,13234248056979,adjustment 0-20 mm,valid,24.05.2026,18.09.2026,activated,released,"60,000","0,000","0,000",STK,E00
+454920,11418394024503,switch piece 30 mm,valid,20.04.2026,14.09.2026,started,released,"5,000","0,000","0,000",STK,E06
+427261,12727603450755,carrier strip 400 mm,valid,04.03.2026,07.09.2026,activated,released,"90,000","56,000","0,000",STK,E05
+437820,13358029216274,storage 100x100 mm,valid,23.05.2026,22.08.2026,started,released,"40,000","0,000","0,000",STK,E07
+484444,11418394024503,switch piece 30 mm,valid,21.02.2026,24.09.2026,partly finished,released,"2,000","0,000","0,000",STK,E08
+460944,12502852391699,brake complete 24v 10nm,valid,15.06.2026,13.07.2026,activated,released,"30,000","0,000","0,000",STK,E05
+427420,13873720636393,safety pin d8x40 mm,valid,16.05.2026,10.08.2026,activated,released,"180,000","0,000","0,000",STK,E06
+457731,12717251347521,feed 100 mm,valid,24.02.2026,07.09.2026,started,released,"40,000","0,000","0,000",STK,E00
+425945,12232930379773,gripper unit parallel,valid,08.04.2026,10.11.2026,activated,released,"120,000","0,000","0,000",STK,E00
+474844,B33901432106686,journal guide 200 mm,valid,26.02.2026,27.08.2026,started,released,"60,000","0,000","0,000",STK,E00
+425408,B11560964527476,adapter piece 50 mm,valid,17.04.2026,21.10.2026,started,not released,"12,000","0,000","0,000",STK,E07
+429688,11418394024503,switch piece 30 mm,valid,27.06.2026,16.11.2026,activated,released,"3,000","0,000","0,000",STK,E08
+465691,VM113-6128P184A,driver d20 mm,valid,28.03.2026,20.12.2026,started,not released,"6,000","0,000","0,000",STK,E08
+416205,B11560964527476,adapter piece 50 mm,valid,23.06.2026,20.12.2026,started,released,"1,000","0,000","0,000",STK,E06
+474350,12727603450755,carrier strip 400 mm,valid,10.03.2026,25.11.2026,started,released,"3,000","1,000","0,000",STK,E06
+445310,VM918-7787L479B,gripper arm 100 mm,valid,01.04.2026,20.11.2026,started,released,"12,000","0,000","0,000",STK,E00
+402640,12717251347521,feed 100 mm,valid,04.01.2026,27.11.2026,activated,not released,"100,000","0,000","0,000",STK,E00
+419606,827455732,roller piece 50 mm,does not exist,15.02.2026,17.12.2026,activated,released,"72,000","0,000","0,000",STK,E00
+415529,11603387632508,linear motor 200n,valid,17.04.2026,04.08.2026,partly finished,released,"5,000","4,000","0,000",STK,E07
+462553,12717251347521,feed 100 mm,valid,21.05.2026,16.08.2026,activated,released,"90,000","0,000","0,000",STK,E07
+479880,VM670-6735L279A,oil level indicator g1/2,valid,23.02.2026,17.09.2026,activated,released,"48,000","1,000","0,000",STK,E06
+406968,43237474,cutting nut m20x1.5,valid,04.05.2026,04.09.2026,activated,released,"12,000","0,000","0,000",STK,E07
+410948,12876076745786,wall cover 1000x500 mm,valid,17.04.2026,21.12.2026,started,released,"20,000","17,000","1,000",STK,E00
+467218,224150578,motor support 150 mm,valid,28.01.2026,06.07.2026,activated,released,"20,000","0,000","0,000",STK,E05
+482897,43237474,cutting nut m20x1.5,valid,02.01.2026,06.08.2026,started,released,"160,000","0,000","0,000",STK,E08
+488866,13387806955254,push disc d60 mm,valid,25.05.2026,11.10.2026,started,released,"160,000","0,000","0,000",STK,E00
+456834,13635955437685,locking plate 60x60 mm,does not exist,16.06.2026,20.09.2026,activated,released,"1,000","0,000","0,000",STK,E08
+404569,12682245917516,clamping screw m12x60 mm,valid,15.04.2026,09.09.2026,partly finished,released,"8,000","7,000","0,000",STK,E00
+405559,12682245917516,clamping screw m12x60 mm,valid,01.04.2026,10.08.2026,started,released,"125,000","0,000","0,000",STK,E07
+451164,13393859772977,straightening block 100x60 mm,valid,12.03.2026,16.10.2026,activated,released,"8,000","0,000","0,000",STK,E07
+496320,12135495494118,mounting bolt m10x40 mm,valid,16.04.2026,11.09.2026,started,released,"60,000","0,000","0,000",STK,E00
+454383,B11560964527476,adapter piece 50 mm,valid,03.03.2026,16.11.2026,started,not released,"6,000","0,000","0,000",STK,E08
+434092,12242661820739,crankcase 200x150 mm,valid,28.03.2026,03.12.2026,started,not released,"2,000","0,000","0,000",STK,E07
+445686,13955675564155,tact rod d12x250 mm,does not exist,14.03.2026,05.08.2026,partly finished,released,"125,000","0,000","0,000",STK,E00
+438570,71509791,lifting cylinder d50x150 mm,valid,09.04.2026,24.12.2026,started,released,"12,000","0,000","0,000",STK,E07
+481293,VM113-6128P184A,driver d20 mm,valid,22.03.2026,07.08.2026,started,released,"5,000","3,000","1,000",STK,E00
+457966,12365299721152,wheel d100 mm,valid,08.06.2026,02.09.2026,started,released,"20,000","18,000","1,000",STK,E08
+488471,96572302,end stop 100 mm,valid,07.05.2026,10.08.2026,started,released,"180,000","135,000","0,000",STK,E07
+417179,12135495494118,mounting bolt m10x40 mm,valid,10.01.2026,25.10.2026,started,released,"125,000","0,000","0,000",STK,E05
+462614,13312098876678,connecting cable 1.5 m,valid,04.04.2026,08.12.2026,started,released,"8,000","0,000","0,000",STK,E08
+483926,12831927087685,swivel unit 90 deg 24v,does not exist,07.01.2026,17.10.2026,partly finished,released,"120,000","0,000","0,000",STK,E08
+403114,11763658928196,dipstick 300 mm,valid,08.06.2026,17.11.2026,started,released,"8,000","0,000","0,000",STK,E06
+486177,224150578,motor support 150 mm,valid,28.02.2026,26.10.2026,activated,released,"120,000","119,000","0,000",STK,E07
+458598,71509791,lifting cylinder d50x150 mm,valid,07.02.2026,02.11.2026,activated,released,"60,000","0,000","0,000",STK,E00

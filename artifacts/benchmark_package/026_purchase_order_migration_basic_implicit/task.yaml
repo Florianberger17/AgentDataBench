@@ -1,15 +1,21 @@
 task_id: 026_PURCHASE_ORDER_MIGRATION_BASIC_IMPLICIT
 
 objective: >
-  Transform the provided purchase order item dataset into the structure and
-  format shown by the target example. The purchase order number is derived
-  from the legacy transaction number by adding the number range offset
-  9700000000; the item numbers are assigned in steps of ten. Material and
-  cost center numbers of the target system are not contained in the source
-  dataset and shall be resolved via the two central mapping lists; items
-  without a material number or without a cost center remain without one.
-  Every item is delivered to plant 4170.
-  No formal source or target schema is given - infer the required structure, the field mapping and the value formats yourself by comparing the input dataset against the target example.
+  Transform the provided purchase order item dataset into the structure
+  and format shown by the target example. The purchase order number is
+  derived from the legacy transaction number by adding the number range
+  offset 9700000000; the item numbers are assigned in steps of ten.
+  Material and cost center numbers of the target system are not contained
+  in the source dataset and shall be resolved via the two central mapping
+  lists; items without a material number or without a cost center remain
+  without one. Every item is delivered to plant 4170. The telephone number
+  is the extension of the buyer the legacy record names: Ann-Kathrin Hein
+  is reached on +49 6039 488 223, Ramazan Häring on +49 6039 488 298,
+  Magret Flantz on +49 6039 488 317, Agatha Haering B.Eng. on +49 6039 488
+  250 and Hansjörg Becker on +49 6039 488 335. No formal source or target
+  schema is given - infer the required structure, the field mapping and
+  the value formats yourself by comparing the input dataset against the
+  target example.
 
 input:
   source_dataset: data/dataset.csv

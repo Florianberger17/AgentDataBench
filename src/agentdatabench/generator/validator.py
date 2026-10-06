@@ -8,8 +8,15 @@ first problem) so a package author gets a full report in one pass.
 Only the artifacts that make up a *published* BenchmarkPackage are in scope
 (scenario/task/schemas/metadata, dataset.csv, ground_truth/*.csv, optional
 noise_configuration.yaml). source_data/ and synthesis_configuration.yaml are
-Benchmark-Generator-internal inputs - source_data/ is deliberately purged
-before publishing (see purge_source_data) - and are out of scope here.
+Benchmark-Generator-internal inputs and are deliberately purged before
+publishing (see purge_source_data), so no check may *require* them.
+
+While they are still present - i.e. during authoring, which is when a package
+is actually validated - the synthesis step can be checked too, and
+SynthesisReproducibilityCheck does so. Without it the reproducibility checks
+start at clean_dataset.csv and a synthesis_configuration.yaml that no longer
+produces the published clean_dataset.csv passes unnoticed, which silently
+corrupts the package for whoever regenerates it next.
 
 Each check is a small, independently testable class; new checks can be added
 without changing Validator itself by passing a custom `package_checks` list.
@@ -27,8 +34,10 @@ from agentdatabench.domain.benchmark_package import BenchmarkPackage
 from agentdatabench.domain.common import load_yaml
 from agentdatabench.domain.dataset import Dataset
 from agentdatabench.domain.noise_configuration import NoiseConfiguration
+from agentdatabench.domain.synthesis_configuration import SynthesisConfiguration
 from agentdatabench.domain.task import Task
 from agentdatabench.domain.validation_result import ValidationIssue, ValidationResult
+from agentdatabench.generator.dataset_creator import DatasetCreator
 from agentdatabench.generator.ground_truth_creator import (
     GroundTruthCreator,
     load_reference_data,
@@ -349,8 +358,9 @@ def _comparable(df: pd.DataFrame) -> pd.DataFrame:
 
 class ReproducibilityCheck:
     """Re-derives dataset.csv and ground_truth.csv from clean_dataset.csv and
-    compares them to what is on disk. Deliberately does not touch source_data/
-    or synthesis_configuration.yaml (out of scope, see module docstring).
+    compares them to what is on disk. Starts at clean_dataset.csv and therefore
+    says nothing about how that file came about -
+    SynthesisReproducibilityCheck covers the step before it.
     The ground_truth.csv half of this is skipped for an implicit task
     (package.target_schema is None, see TaskInput.target_example) - dataset.csv
     reproducibility still applies regardless."""
@@ -415,11 +425,102 @@ class ReproducibilityCheck:
         return issues
 
 
+def _column_divergence(expected: pd.DataFrame, actual: pd.DataFrame) -> str:
+    """Names what differs between two frames, so a failure points at a column
+    rather than just asserting that something is wrong."""
+    missing = [c for c in expected.columns if c not in actual.columns]
+    unexpected = [c for c in actual.columns if c not in expected.columns]
+    parts = []
+    if missing:
+        parts.append(f"columns missing from the file: {missing}")
+    if unexpected:
+        parts.append(f"columns not re-synthesized: {unexpected}")
+    if len(expected) != len(actual):
+        parts.append(f"{len(expected)} rows re-synthesized vs {len(actual)} in the file")
+    shared = [c for c in expected.columns if c in actual.columns]
+    if len(expected) == len(actual):
+        differing = [
+            c for c in shared if not expected[c].reset_index(drop=True).equals(
+                actual[c].reset_index(drop=True)
+            )
+        ]
+        if differing:
+            parts.append(f"differing columns: {differing}")
+    return "; ".join(parts) or "no column-level difference could be isolated"
+
+
+class SynthesisReproducibilityCheck:
+    """Re-synthesizes clean_dataset.csv from source_data/ and compares it to
+    what is on disk, closing the gap ReproducibilityCheck leaves: that one
+    starts *at* clean_dataset.csv, so it cannot see a
+    synthesis_configuration.yaml which no longer produces it.
+
+    Skips silently when source_data/ or synthesis_configuration.yaml is absent.
+    Both are generator-internal and purged before publishing (see the module
+    docstring), so their absence is the normal state of a published package and
+    not a finding - this check only adds coverage while authoring."""
+
+    def __init__(self, dataset_creator: DatasetCreator | None = None) -> None:
+        self._dataset_creator = dataset_creator or DatasetCreator()
+
+    def check(self, package: BenchmarkPackage) -> list[ValidationIssue]:
+        source_path = package.root / "source_data" / "source_data.csv"
+        config_path = package.root / "synthesis_configuration.yaml"
+        if not source_path.is_file() or not config_path.is_file():
+            return []
+
+        try:
+            config = SynthesisConfiguration(**load_yaml(config_path))
+        except Exception as exc:
+            return [
+                ValidationIssue(
+                    severity="error",
+                    code="invalid_synthesis_configuration",
+                    message=f"synthesis_configuration.yaml is invalid: {exc}",
+                )
+            ]
+
+        try:
+            expected = self._dataset_creator.create_clean_dataset(
+                Dataset(source_path).df, config
+            )
+        except Exception as exc:
+            return [
+                ValidationIssue(
+                    severity="error",
+                    code="synthesis_failed",
+                    message=(
+                        "re-synthesizing clean_dataset.csv from source_data/ "
+                        f"failed: {exc}"
+                    ),
+                )
+            ]
+
+        actual = package.clean_dataset.df
+        if _comparable(expected).equals(_comparable(actual)):
+            return []
+        return [
+            ValidationIssue(
+                severity="error",
+                code="clean_dataset_not_reproducible",
+                message=(
+                    "clean_dataset.csv does not match re-running DatasetCreator "
+                    "on source_data/ with the current "
+                    "synthesis_configuration.yaml - regenerating this package "
+                    "would change its data ("
+                    + _column_divergence(_comparable(expected), _comparable(actual))
+                    + ")"
+                ),
+            )
+        ]
+
+
 DEFAULT_PACKAGE_CHECKS: list[PackageCheck] = [
     SchemaConformanceCheck(),
     CsvStructureCheck(),
     MetadataConsistencyCheck(),
     ReproducibilityCheck(),
+    SynthesisReproducibilityCheck(),
 ]
 
 

@@ -1,0 +1,101 @@
+﻿cost center,description,cost center category,manager,valid from,valid to,status,plant,currency
+4444-2700,General Management,1,Ralf Jacobi Jäckel,18.03.2013,31.12.9999,active,4444,EUR
+4444-5930,Management Assistance,1,Prof. Mina Wesack MBA.,28.11.2013,31.12.9999,active,4444,EUR
+4444-8972,Corporate Strategy,1,Ilonka Schacht,28.03.2017,31.12.2029,active,4444,EUR
+4444-9577,Internal Audit,1,Iwona Wagner,11.11.2012,31.12.9999,active,4444,EUR
+4444-7577,Legal Affairs and Compliance,1,Klaus-Michael Weinhage,03.11.2008,31.12.9999,active,4444,EUR
+4444-5577,Investor Relations,1,Stavros Lehmann,15.12.2013,31.12.9999,closed,4444,EUR
+4444-8150,Business Development,1,Dipl.-Ing. Jo Kabus B.A.,06.03.2017,31.12.9999,active,4444,EUR
+4444-6022,Quality Management System,1,Ing. Anatoli Hein MBA.,14.02.2015,31.12.9999,active,4444,EUR
+4444-8833,Financial Accounting,1,Antonius Hermighausen,17.12.2016,31.12.9999,active,4444,EUR
+4444-1155,Controlling,1,Ing. Liliana Margraf,02.11.2009,31.12.9999,active,4444,EUR
+4444-2798,Treasury and Cash Management,1,Stavros Lehmann,08.09.2011,31.12.9999,active,4444,EUR
+4444-7754,Payroll Accounting,1,Gertraude Roskoth,18.02.2012,31.12.9999,active,4444,EUR
+4444-9119,Human Resources,1,Hartmuth Ehlert B.Sc.,08.04.2011,31.12.9999,active,4444,EUR
+4444-7739,Personnel Development,1,Dimitri Putz,30.08.2010,31.12.9999,active,4444,EUR
+4444-9193,Information Technology,1,Hans-Michael Kühnert,14.12.2014,31.12.9999,active,4444,EUR
+4444-6408,IT Infrastructure and Networks,1,Arnulf Hartung,16.09.2016,31.12.9999,blocked,4444,EUR
+4444-4783,Occupational Safety and Health,1,Dr. Alexej Winkler MBA.,26.05.2010,31.12.9999,active,4444,EUR
+4444-4799,Environmental Protection,1,Anto Möchlichen-Haase,29.05.2014,31.12.2026,active,4444,EUR
+4444-5966,Insurance and Risk Management,1,Isolde Krause-Rudolph,14.01.2014,31.12.9999,blocked,4444,EUR
+4444-1743,Travel Management,1,Birgid Rörricht,08.09.2015,31.12.9999,active,4444,EUR
+4444-4767,Design Management,1,Prof. Ludwina Beckmann,06.12.2014,31.12.9999,active,4444,EUR
+4444-7211,Project Management Office,1,Dr. Reni Bloch,25.05.2015,31.12.9999,active,4444,EUR
+4444-2890,Project Management Machinery,1,Grzegorz Rörricht,19.03.2014,31.12.9999,active,4444,EUR
+4444-2109,Mechanical Design Machinery,1,Rolf-Dieter Seidel-Pruschke,10.02.2009,31.12.9999,active,4444,EUR
+4444-5184,Mechanical Design Tooling,1,Dipl.-Ing. Natascha Schmidt,13.06.2013,31.12.9999,active,4444,EUR
+4444-7971,Mechanical Design Fixtures,1,Detlev Eigenwillig,05.12.2010,31.12.9999,active,4444,EUR
+4444-5609,Electrical Design Hardware,1,Dr. Franz Josef Wilms,28.09.2011,31.12.9999,active,4444,EUR
+4444-8258,Electrical Design Software,1,Agata Rörricht,12.12.2010,31.12.9999,active,4444,EUR
+4444-5223,Electrical Design Hardware and Software,1,Rosalia Spieß,15.12.2010,31.12.9999,active,4444,EUR
+4444-6585,Automation Engineering,1,Süleyman Graf B.Sc.,11.09.2014,31.12.9999,active,4444,EUR
+4444-4359,Control Cabinet Design,1,Univ.Prof. Nikolaos Schäfer,25.10.2009,31.12.9999,closed,4444,EUR
+4444-7817,Simulation and Calculation,1,Rose-Marie Mangold,09.07.2008,31.12.9999,active,4444,EUR
+4444-3126,Technical Documentation,1,Antonius Hermighausen,19.04.2008,31.12.9999,active,4444,EUR
+4444-2746,Standards and Norms,1,Ralf Jacobi Jäckel,23.08.2009,31.12.9999,active,4444,EUR
+4444-1013,Research and Development,1,Frau Erika Eckbauer B.Sc.,30.05.2015,31.12.9999,closed,4444,EUR
+4444-3957,Prototype Shop,2,Eveline Sauer,28.07.2010,31.12.9999,active,4444,EUR
+4444-9621,Apprentice Workshop,1,Frau Linda Fischer B.Sc.,10.01.2017,31.12.9999,active,4444,EUR
+4444-9693,Technical Training,1,Ing. Magdalene Speer B.Eng.,25.01.2010,31.12.9999,active,4444,EUR
+4444-1088,Engineering Change Management,1,Grzegorz Rörricht,26.07.2012,31.12.9999,active,4444,EUR
+4444-7410,CAD Administration,1,Hans-Michael Kühnert,23.04.2015,30.06.2026,active,4444,EUR
+4444-7590,Value Engineering,1,Prof. Elisa Schäfer B.Sc.,13.08.2017,31.12.9999,active,4444,EUR
+4444-1159,Purchasing,1,Ingmar Trüb,19.04.2011,31.12.9999,active,4444,EUR
+4444-2307,Strategic Purchasing,1,Stavros Lehmann,30.10.2013,31.12.9999,active,4444,EUR
+4444-4642,Operational Purchasing,1,Dr. Alexej Winkler MBA.,21.09.2009,31.12.9999,active,4444,EUR
+4444-4670,Purchasing Electrical Parts,1,Wenzel Scheibe,04.11.2012,31.12.2026,active,4444,EUR
+4444-5047,Purchasing Mechanical Parts,1,Nuri Ernst,06.09.2017,31.12.9999,active,4444,EUR
+4444-1532,Supplier Quality Assurance,4,Univ.Prof. Hans-Erich Lehmann,26.01.2017,31.12.9999,active,4444,EUR
+4444-8703,Supplier Complaint Handling,4,Annegret Hethur,11.07.2016,31.12.9999,active,4444,EUR
+4444-3175,Customs and Export Control,1,Nick Scheuermann,28.07.2011,31.12.9999,blocked,4444,EUR
+4444-2031,Subcontracting,1,Prof. Marian Schulz MBA.,06.10.2017,30.06.2028,active,4444,EUR
+4444-8692,Production and Assembly Management,2,Dipl.-Ing. Jo Kabus B.A.,14.02.2017,31.12.9999,active,4444,EUR
+4444-4351,Mechanical Assembly,2,Paulo Hänel B.Sc.,23.05.2013,31.12.9999,active,4444,EUR
+4444-7258,Electrical Assembly,2,Nuri Ernst,23.04.2014,31.12.9999,active,4444,EUR
+4444-8765,Mechanical Commissioning,2,Klaus-Michael Weinhage,14.05.2014,31.12.9999,active,4444,EUR
+4444-7321,Final Assembly and Test,2,Prof. Marian Schulz MBA.,10.05.2008,31.08.2026,active,4444,EUR
+4444-6631,Manufacturing General,2,Ing. Wilhelm Köster B.Eng.,10.09.2014,31.12.9999,active,4444,EUR
+4444-3089,Manufacturing Turning,2,Nuran Hübel,08.06.2015,31.12.9999,active,4444,EUR
+4444-7940,Manufacturing Milling,2,Dr. Lidija Birnbaum,13.11.2013,31.12.9999,active,4444,EUR
+4444-9511,Manufacturing Grinding,2,Kornelius Gehringer,09.08.2011,31.12.9999,active,4444,EUR
+4444-1537,Manufacturing EDM,2,Angelique Bonbach,30.05.2010,31.12.9999,active,4444,EUR
+4444-9883,Manufacturing Sheet Metal,2,Hans-Dieter Meyer B.A.,17.02.2011,31.12.9999,active,4444,EUR
+4444-8129,Manufacturing Welding,2,Isolde Krause-Rudolph,24.09.2009,31.12.9999,active,4444,EUR
+4444-4773,Surface Treatment,2,Wenke Oderwald B.Eng.,07.02.2015,31.12.9999,closed,4444,EUR
+4444-1883,Tool Shop,2,Univ.Prof. Imre Schottin,13.06.2015,31.12.2030,active,4444,EUR
+4444-1453,Work Scheduling,2,Univ.Prof. Nikolaos Schäfer,14.10.2009,31.12.9999,active,4444,EUR
+4444-6404,Production Planning and Control,2,Iwona Wagner,24.06.2009,31.12.9999,active,4444,EUR
+4444-3341,NC Programming,2,Nick Scheuermann,03.06.2017,31.12.9999,blocked,4444,EUR
+4444-9593,Maintenance and Repair,2,Traugott Mude-Tschentscher,10.11.2013,31.12.9999,active,4444,EUR
+4444-8017,Facility Services,2,Marga Schuster,16.12.2010,31.12.9999,active,4444,EUR
+4444-7978,Energy Management,2,Detlev Eigenwillig,05.09.2010,31.12.2025,active,4444,EUR
+4444-1668,Goods Receipt and Inspection,2,Katja Weitzel,19.06.2016,31.12.9999,active,4444,EUR
+4444-3801,Warehouse Raw Material,2,Herr Zoltan Staude B.Sc.,26.03.2010,31.12.9999,active,4444,EUR
+4444-3148,Warehouse Finished Goods,2,Ilonka Schacht,02.02.2013,31.12.9999,closed,4444,EUR
+4444-3924,Logistics and Shipping,2,Inka Hendriks,24.08.2015,31.12.9999,active,4444,EUR
+4444-5429,Packaging and Crating,2,Gert Junk,28.10.2017,31.12.9999,active,4444,EUR
+4444-5139,Vehicle Fleet,2,Isolde Krause-Rudolph,10.02.2008,31.12.9999,blocked,4444,EUR
+4444-1188,Internal Transport,2,Dr. Lidija Birnbaum,20.01.2011,31.12.9999,active,4444,EUR
+4444-6457,Scrap and Waste Disposal,2,Univ.Prof. Niels Weinhage,15.06.2008,31.03.2026,active,4444,EUR
+4444-4335,Quality Assurance,4,Dipl.-Ing. Claus-Peter Häring,22.07.2011,31.12.9999,active,4444,EUR
+4444-4092,Incoming Goods Inspection,4,Klaus-Jürgen Gehringer B.Eng.,14.05.2008,31.12.9999,active,4444,EUR
+4444-1739,Measuring Room,4,Klaus-Michael Weinhage,04.02.2013,31.12.9999,active,4444,EUR
+4444-3704,Customer Complaint Handling,4,Kreszentia Mentzel,12.12.2008,31.12.9999,active,4444,EUR
+4444-6374,Calibration Service,4,Ing. Wilhelm Köster B.Eng.,13.07.2011,31.12.9999,blocked,4444,EUR
+4444-8192,Service Center,4,Dr. Jaroslaw Bien MBA.,20.02.2016,31.12.9999,active,4444,EUR
+4444-9047,Spare Parts Management,4,Hanns Jäkel,15.03.2011,31.12.9999,active,4444,EUR
+4444-1260,Field Service,4,Marga Schuster,06.07.2017,31.12.9999,active,4444,EUR
+4444-5559,Service Hotline,4,Heinz-Peter Klemm,14.12.2013,31.03.2029,active,4444,EUR
+4444-3094,Retrofit and Modernisation,4,Gert Junk,31.05.2017,31.12.9999,active,4444,EUR
+4444-1418,Repair Shop,4,Heinz-Günther Pechel,02.06.2010,30.09.2026,active,4444,EUR
+4444-6099,Training Center Customers,4,Kasimir Kitzmann,04.10.2008,31.12.9999,active,4444,EUR
+4444-5774,Sales Management,3,Ing. Anatoli Hein MBA.,27.04.2017,31.12.9999,active,4444,EUR
+4444-9770,Technical Clarification,3,Rudolph Bohlander,04.07.2016,31.12.9999,active,4444,EUR
+4444-8989,Technical Sales,3,Prof. Elisa Schäfer B.Sc.,22.08.2014,31.12.9999,active,4444,EUR
+4444-1405,Key Account Management,3,Heinz-Peter Klemm,06.08.2012,31.12.2028,active,4444,EUR
+4444-3456,Inside Sales,3,Elisabet Scheibe,13.03.2011,31.12.2026,active,4444,EUR
+4444-2164,Order Processing,3,Wenzel Schmidt,21.04.2017,31.12.9999,active,4444,EUR
+4444-9126,Quotation Management,3,Univ.Prof. Arnfried Hornig MBA.,23.05.2014,31.12.9999,active,4444,EUR
+4444-6738,Marketing and Communications,3,Inka Hendriks,15.04.2015,31.12.9999,active,4444,EUR
+4444-5387,Trade Fairs and Events,3,Aline Juncken B.Sc.,21.08.2009,31.12.9999,blocked,4444,EUR
+4444-8832,Product Management,3,Aline Juncken B.Sc.,04.03.2016,31.12.9999,active,4444,EUR

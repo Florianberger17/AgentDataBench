@@ -1,0 +1,81 @@
+seed: 1019
+
+locale: de_DE
+
+columns:
+
+  # The production order of the legacy system. Substituted consistently per
+  # distinct value and drawn without replacement, since two orders sharing a
+  # number would be indistinguishable, and it is also the order the new
+  # confirmation numbers are handed out in.
+  - column: confirmation no.
+    strategy: numeric_mapping
+    format: "{:d}"
+    min: 400000
+    max: 499999
+
+  # Carried over unchanged, for two reasons. The lookup into the material
+  # cross reference rests on it exactly, and its shape is the substance of
+  # the task: the legacy range mixes plain digits of three different lengths
+  # with letter-prefixed and alphanumeric numbers, and no single substitution
+  # format could reproduce that mix - replacing it would turn a lookup into a
+  # reformatting exercise. A material number is a technical code, and the
+  # designation beside it is replaced.
+  - column: material no.
+    strategy: identity
+
+  # The part the order produces. Substituted consistently per distinct value,
+  # so a material keeps one designation across its orders.
+  - column: material description
+    strategy: part_name_mapping
+    library_path: artifacts/part_name_library/part_name_library.csv
+
+  # Decides which orders are migrated at all, so it is carried over
+  # unchanged: resampling it would move the orders the legacy system itself
+  # reports as having no material behind them.
+  - column: material validity
+    strategy: identity
+
+  # Both dates are carried into the target in another format, and the source
+  # schema requires the start not to lie after the end. Redrawing them
+  # independently would break that pairing; a production date identifies
+  # nothing once the material beside it has been replaced.
+  - column: start date
+    strategy: identity
+
+  - column: end date
+    strategy: identity
+
+  # Decides the order status of the target but carries no figure another
+  # column depends on, so it is redrawn from its own frequency distribution.
+  - column: confirmation status
+    strategy: categorical_resample
+
+  # The second filter of the task, carried over for the same reason as the
+  # material validity.
+  - column: release flag
+    strategy: identity
+
+  # The three quantities the open quantity is calculated from. Redrawing any
+  # of them would make the expected figure arbitrary and could break the rule
+  # that what was delivered and scrapped stays below what was ordered. An
+  # order quantity is a business figure, not an identifying one.
+  - column: order quantity
+    strategy: identity
+
+  - column: good quantity
+    strategy: identity
+
+  - column: scrap quantity
+    strategy: identity
+
+  # One unit throughout this export. Replaced by a constant so nothing of the
+  # real export travels with the package.
+  - column: unit of measure
+    strategy: constant
+    value: "STK"
+
+  # Carried into the target but read by no rule, so it is redrawn from its own
+  # frequency distribution.
+  - column: planner
+    strategy: categorical_resample

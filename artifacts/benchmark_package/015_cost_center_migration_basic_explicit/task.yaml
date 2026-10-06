@@ -1,0 +1,292 @@
+task_id: 015_COST_CENTER_MIGRATION_BASIC_EXPLICIT
+
+objective: >
+  Create the cost centers of the new ERP system from the cost center master of
+  the legacy system and produce a CSV file that conforms exactly to the target
+  schema. The new organisation is cut along a target operating model the
+  legacy system knows nothing about, so a legacy cost center does not simply
+  become one new cost center: where its work was divided between two or three
+  units of the new organisation, it becomes one cost center per unit, and each
+  of them stands on its own in the upload. Which units a legacy cost center
+  was divided between, and under which number, name, department and
+  responsible user each of them is created, is held in the central cost center
+  cross reference list. Only cost centers that are still in use and still
+  valid at the migration date are carried over at all. Everything the target
+  system needs beyond that follows from the legacy category of the cost center
+  and from the new cost center number itself.
+
+input:
+  source_dataset: data/dataset.csv
+  source_schema: schemas/source_schema.yaml
+  target_schema: schemas/target_schema.yaml
+  reference_data:
+    - name: cost_center_cross_reference
+      file: data/mapping_list_cost_centers.csv
+      key_field: "cost center legacy"
+      value_field:
+        - "cost center new"
+        - "cost center new description"
+        - "department"
+        - "person in charge"
+      description: >
+        Assigns the cost centers of the legacy ERP system to the cost centers
+        of the target operating model and carries the number, name, department
+        and responsible user of each of them. A legacy cost center appears
+        once per unit of the new organisation its work was divided between, so
+        its number repeats in the list wherever it was split. A legacy cost
+        center missing from the list has no successor in the target operating
+        model and is not created.
+
+required_operations:
+  - schema_mapping
+  - filtering
+  - expansion
+  - value_mapping
+  - date_conversion
+  - truncation
+  - conditional_assignment
+  - constant_assignment
+
+business_rules:
+
+  filtering:
+    description: >
+      Only cost centers that are still in use and still valid when the new
+      system goes live on 1 January 2027 are migrated.
+    rules:
+      - field: status
+        operator: "=="
+        value: "active"
+      - field: valid to
+        operator: ">="
+        value: "2027-01-01"
+        field_format: "DD.MM.YYYY"
+
+  expansion:
+    description: >
+      A legacy cost center becomes one cost center per unit of the target
+      operating model its work was divided between, so it appears in the
+      upload as many times as the cross reference list names a successor for
+      it. The unit cannot be read from the source dataset at all - it exists
+      only in the new organisation - which is why the cross reference list and
+      not the legacy master decides how many records a cost center produces.
+    reference: cost_center_cross_reference
+    source_field: cost center
+    key_field: "cost center legacy"
+    carry_fields:
+      - "cost center new"
+      - "cost center new description"
+      - "department"
+      - "person in charge"
+
+  record_order:
+    description: >
+      The cost centers are delivered in ascending order of their new cost
+      center number, which is also the order of the standard hierarchy.
+    fields:
+      - cost center new
+    direction: ascending
+
+  mappings:
+
+    - target_field: KOKRS
+      transformation:
+        type: constant
+        value: "1000"
+      description: >
+        The whole target organisation is held in one controlling area.
+
+    - source_field: cost center new
+      target_field: COSTCENTER
+      transformation:
+        type: copy
+      description: >
+        The new cost center number comes from the cross reference list; it is
+        what distinguishes the successors of a cost center that was split.
+
+    - target_field: VALID_FROM
+      transformation:
+        type: constant
+        value: "20270101"
+      description: >
+        Every cost center is created as of the migration date, whatever start
+        the legacy system recorded.
+
+    - source_field: valid to
+      target_field: VALID_TO
+      transformation:
+        type: date_format
+        input_format: DD.MM.YYYY
+        output_format: YYYYMMDD
+      description: >
+        The end of the validity period is carried over from the legacy cost
+        center and written in the date format of the upload container.
+
+    - source_field: department
+      target_field: DEPARTMENT
+      transformation:
+        type: copy
+      description: >
+        The department follows the unit of the target operating model and
+        therefore comes from the cross reference list.
+
+    - source_field: cost center category
+      target_field: COSTCENTER_TYPE
+      transformation:
+        type: value_mapping
+        mapping:
+          "1": "O"
+          "2": "F"
+          "3": "V"
+          "4": "H"
+      description: >
+        An administration cost center becomes an overhead cost center in the
+        target system, a production one a production cost center, a sales one
+        a sales cost center and a service one a service cost center.
+
+    - source_field: COSTCENTER
+      target_field: COSTCTR_HIER_GRP
+      transformation:
+        type: truncate
+        length: 6
+      description: >
+        The standard hierarchy follows the cost center number ranges, so the
+        node a cost center hangs under is the leading six characters of its
+        new number.
+
+    - source_field: COSTCENTER
+      target_field: COMP_CODE
+      transformation:
+        type: truncate
+        length: 4
+      description: >
+        The target numbering carries the company code as the leading four
+        characters of the cost center number.
+
+    - source_field: currency
+      target_field: CURRENCY
+      transformation:
+        type: copy
+
+    - target_field: PROFIT_CTR
+      transformation:
+        type: conditional_value
+        conditions:
+          - when:
+              field: COMP_CODE
+              is: equals
+              to: "4170"
+            value: "A042000000"
+          - value: "A040100000"
+      description: >
+        Each company code of the target organisation reports into one profit
+        center: the plant company into A042000000, the sales company into
+        A040100000.
+
+    - target_field: RECORD_QUANTITY
+      transformation:
+        type: constant
+        value: "x"
+      description: >
+        Quantities are recorded alongside values on every cost center of this
+        migration.
+
+    - target_field: LOCK_IND_ACTUAL_REVENUES
+      transformation:
+        type: conditional_value
+        conditions:
+          - when:
+              field: cost center category
+              is: equals
+              to: "3"
+            value: ""
+          - value: "x"
+      description: >
+        Revenue belongs on a sales cost center alone, so every cost center
+        that was not a sales cost center in the legacy system is locked
+        against revenue postings.
+
+    - target_field: LOCK_IND_PLAN_REVENUES
+      transformation:
+        type: conditional_value
+        conditions:
+          - when:
+              field: cost center category
+              is: equals
+              to: "3"
+            value: ""
+          - value: "x"
+      description: >
+        Planning revenues is locked wherever posting them is.
+
+    - target_field: APPLICATION
+      transformation:
+        type: constant
+        value: "CO-001"
+
+    - source_field: DESCRIPT
+      target_field: NAME
+      transformation:
+        type: truncate
+        length: 20
+      description: >
+        The short name of the target system holds twenty characters, so it is
+        the full name of the cost center cut to fit - including where that
+        name was the legacy one.
+
+    - target_field: DESCRIPT
+      transformation:
+        type: conditional_value
+        conditions:
+          - when:
+              field: cost center new description
+              is: empty
+            from_field: description
+          - from_field: cost center new description
+      description: >
+        The target organisation renamed part of the cost centers, and the
+        cross reference list carries the new name. Where it states none, the
+        cost center keeps the name it had in the legacy system.
+
+    - source_field: cost center category
+      target_field: FUNC_AREA
+      transformation:
+        type: value_mapping
+        mapping:
+          "1": "2016"
+          "2": "2020"
+          "3": "3010"
+          "4": "2040"
+      description: >
+        The functional area the costs are reported under follows from the
+        legacy category of the cost center.
+
+    - source_field: person in charge
+      target_field: PERSON_IN_CHARGE_USER
+      transformation:
+        type: copy
+      description: >
+        The target system holds a user ID rather than the name the legacy
+        system recorded, and the cross reference list carries it per new cost
+        center.
+
+ignored_source_fields:
+  - manager
+  - valid from
+  - plant
+
+output:
+  format: csv
+  schema_reference: schemas/target_schema.yaml
+
+constraints:
+  - The output dataset must follow the target schema exactly.
+  - The output column order must match the target schema.
+  - No additional columns may be added.
+  - Each output row shall represent one cost center of the target system.
+  - COSTCENTER must be unique.
+  - NAME must be the first twenty characters of DESCRIPT.
+  - COMP_CODE must be the first four characters of COSTCENTER.
+  - COSTCTR_HIER_GRP must be the first six characters of COSTCENTER.
+  - LOCK_IND_ACTUAL_REVENUES and LOCK_IND_PLAN_REVENUES must carry the same value.
+  - VALID_FROM must not be later than VALID_TO.

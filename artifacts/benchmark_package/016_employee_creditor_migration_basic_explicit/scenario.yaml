@@ -1,0 +1,36 @@
+scenario_id: 016_EMPLOYEE_CREDITOR_MIGRATION_BASIC_EXPLICIT
+
+name: ERP Employee Creditor Migration
+
+domain: ERP Data Integration
+
+description: >
+  The employees of one company of the group are set up as creditors in a new
+  ERP system as part of a system modernization project, which is what lets
+  travel expenses and other reimbursements be paid out to them. The only
+  record of who those employees are is the personnel master of the legacy HR
+  system. That system is shared across the group and is a running register
+  rather than a snapshot: it reaches beyond the company this wave covers, it
+  keeps employees who have already left, and it already holds employees whose
+  contract starts only after the new system goes live. Part of the workforce
+  was also created during an earlier pilot wave and must not receive a second
+  account. The accounts themselves are numbered from the personnel number, and
+  the collective accounts separate the management from the rest of the
+  workforce. Bank details travel through a separate interface; the creditor
+  master only records whether an employee can be paid by transfer at all.
+
+business_objects:
+  - Creditor
+
+systems:
+  source:
+    name: Legacy HR System
+    description: >
+      Holds the personnel master of all companies of the group, with payroll
+      group, employment dates and bank details per employee.
+
+  target:
+    name: Target ERP System
+    description: >
+      Keeps employees as creditors so reimbursements can be paid to them,
+      loaded through the general creditor master upload container.

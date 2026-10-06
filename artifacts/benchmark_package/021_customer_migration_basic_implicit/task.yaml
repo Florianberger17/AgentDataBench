@@ -4,7 +4,12 @@ objective: >
   Transform the provided customer dataset into the structure and format
   shown by the target example, and produce a CSV file containing one row
   for every customer whose last business activity (LastOrderDate) is on or
-  after 2023-01-01. No formal source or target schema is given - infer the required structure, the field mapping and the value formats yourself by comparing the input dataset against the target example.
+  after 2023-01-01. The status follows from the customer type the source
+  dataset records: a former customer is inactive, while a current customer
+  and a prospect are both treated as active. No formal source or target
+  schema is given - infer the required structure, the field mapping and
+  the value formats yourself by comparing the input dataset against the
+  target example.
 
 input:
   source_dataset: data/dataset.csv

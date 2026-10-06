@@ -1,0 +1,63 @@
+task_id: 038_WORK_PLAN_MIGRATION_BASIC_IMPLICIT
+
+objective: >
+  Load the routings of the new production planning system from the routing
+  export of the legacy system and produce a file in the structure and
+  format shown by the target example. Only operations released for
+  production are loaded; one still being worked on by engineering, or
+  locked, is not. Every remaining operation has to be checked against the
+  reservation unit master of the new system: the shop floor was
+  reorganised and part of the legacy units no longer exist, and an
+  operation still booked on one of those has nothing to be scheduled
+  against, so it is not loaded at all. For the operations that do match,
+  that same master supplies the designation of the unit, the cost center
+  the confirmed time is posted to, the minimum booking time and the mark
+  that says whether the unit is a pooled one. Deliver the operations in
+  ascending order of the routing number and, within one routing, of the
+  operation number. The legacy system records its times in minutes and
+  against the lot they were measured over, while the new system plans in
+  hours and per piece: the setup time is therefore the recorded minutes
+  brought to hours, and the time per unit is the recorded minutes divided
+  by that lot and then brought to hours. The wage time is that time per
+  unit, but never below the minimum booking time of the unit the operation
+  runs on, so an operation quicker than the minimum - or one the legacy
+  system never timed at all - is booked at the minimum instead. An
+  operation carried out in house is scheduled against the capacity of its
+  unit, a bought-in one by its lead time. A routing that is not assigned
+  to any part is marked as unused in place of a description. Every
+  operation is loaded generally valid, with its times in hours against a
+  time base of one piece, no overlap and confirmation required. No formal
+  source or target schema is given - infer the required structure, the
+  field mapping and the value formats yourself by comparing the input
+  dataset against the target example.
+
+input:
+  source_dataset: data/dataset.csv
+  target_example: data/target_example.csv
+  reference_data:
+    - name: reservation_unit_master
+      file: data/mapping_list_reservation_units.csv
+      key_field: "reservation unit no."
+      value_field:
+        - "designation"
+        - "standard time per unit"
+        - "cost center"
+        - "unit identifier"
+      description: >
+        The reservation units of the new production planning system, with the
+        designation, the cost center and the minimum booking time of each.
+        This list decides which operations can be migrated at all: a
+        reservation unit of the legacy export that the list does not carry no
+        longer exists, and every operation booked on it has to be left out.
+        The list covers the whole new shop floor, so it also names units no
+        legacy routing happens to use.
+
+business_rules: {}
+
+output:
+  format: csv
+
+constraints:
+  - Each output row shall represent one operation of one routing.
+  - No additional columns beyond those shown in the target example may be added.
+  - The column order must match the target example.
