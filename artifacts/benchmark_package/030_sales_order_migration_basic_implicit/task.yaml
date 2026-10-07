@@ -15,8 +15,16 @@ objective: >
   1006000000, which all of its items carry. The requested delivery date is
   stored as a serial day number counted from 30.12.1899 and shall be
   converted to a calendar date. Every item belongs to sales organisation
-  0454.
-  No formal source or target schema is given - infer the required structure, the field mapping and the value formats yourself by comparing the input dataset against the target example.
+  0454. A legacy order of type ERS becomes sales document type ZV43, one
+  of type KSE becomes ZV73. The short text consists of the designation and
+  the additional designation of the ordered object, separated by a single
+  blank; an item without an additional designation receives the
+  designation only. The short text is cut to forty characters and the
+  result is adopted unchanged - where the cut falls on a blank character,
+  that blank is part of the value. No formal source or target schema is
+  given - infer the required structure, the field mapping and the value
+  formats yourself by comparing the input dataset against the target
+  example.
 
 input:
   source_dataset: data/dataset.csv

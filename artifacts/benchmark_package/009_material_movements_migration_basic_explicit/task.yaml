@@ -123,6 +123,7 @@ business_rules:
       transformation:
         type: round
         decimals: 3
+        rounding: half_up
         decimal_separator: ","
 
     - source_field: unit
@@ -142,6 +143,7 @@ business_rules:
       transformation:
         type: round
         decimals: 2
+        rounding: half_up
         decimal_separator: ","
 
     - source_field: cost center

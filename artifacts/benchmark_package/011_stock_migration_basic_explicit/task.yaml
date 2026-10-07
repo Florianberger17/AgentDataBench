@@ -158,6 +158,7 @@ business_rules:
         post_processing:
           type: round
           decimals: 3
+          rounding: half_up
       description: >
         Where the stock unit of the legacy system and the base unit of the
         target system are identical, the quantity is adopted unchanged. Where
@@ -178,6 +179,7 @@ business_rules:
         type: calculation
         formula: "stock value / LBKUM * PEINH"
         decimals: 2
+        rounding: half_up
       description: >
         The valuation price of the target ERP system refers to the converted
         quantity and to the price unit of the target ERP system. It therefore
@@ -194,6 +196,7 @@ business_rules:
         type: calculation
         formula: "LBKUM * VERPR / PEINH"
         decimals: 2
+        rounding: half_up
       description: >
         The stock value of the target ERP system follows from the converted
         quantity and the converted valuation price. Rounding differences

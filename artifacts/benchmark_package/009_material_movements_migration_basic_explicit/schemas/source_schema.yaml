@@ -5,7 +5,8 @@ entity: MaterialMovement
 description: >
   Source schema containing the material movement journal exported from the
   legacy ERP system. Each record represents one posted stock movement,
-  identified by the journal no.
+  identified by the journal no. Decimal values are written with a comma as
+  the decimal separator and without a thousands separator.
 
 attributes:
 

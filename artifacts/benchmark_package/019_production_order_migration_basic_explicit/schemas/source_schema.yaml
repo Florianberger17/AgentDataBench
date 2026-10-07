@@ -8,9 +8,10 @@ description: >
   shop floor books against. The export is taken as it stands and therefore
   still holds orders that were never released and orders whose material the
   legacy system itself no longer recognises. The material numbers are the
-  grown legacy range: plain digits of differing lengths alongside
-  letter-prefixed and alphanumeric numbers, with no rule connecting them to
-  the numbers of the new system.
+  grown legacy range: plain digits of differing lengths alongside letter-
+  prefixed and alphanumeric numbers, with no rule connecting them to the
+  numbers of the new system. Decimal values are written with a comma as the
+  decimal separator and without a thousands separator.
 
 attributes:
 

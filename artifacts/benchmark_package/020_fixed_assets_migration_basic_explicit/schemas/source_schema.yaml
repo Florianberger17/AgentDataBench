@@ -10,7 +10,9 @@ description: >
   over fifteen years. Dates are exported as spreadsheet day numbers rather
   than as dates, and the useful life is held as a single figure in months. The
   register still contains assets that were retired or blocked and assets
-  booked on cost centers the controlling migration has since retired.
+  booked on cost centers the controlling migration has since retired. Decimal
+  values are written with a comma as the decimal separator and without a
+  thousands separator.
 
 attributes:
 

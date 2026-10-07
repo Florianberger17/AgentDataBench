@@ -17,9 +17,11 @@ Two handlers need more than the row values themselves:
 
 from __future__ import annotations
 
+import ast
 import math
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
+from decimal import Decimal, InvalidOperation, ROUND_FLOOR, ROUND_HALF_EVEN, ROUND_HALF_UP
 from typing import Protocol
 
 import pandas as pd
@@ -570,6 +572,191 @@ class NumericFactorHandler:
         )
 
 
+_ROUNDING_MODES = {"half_up": ROUND_HALF_UP, "half_even": ROUND_HALF_EVEN}
+
+
+def _rounding(mapping: MappingRule) -> str:
+    """The rounding mode of a calculated value.
+
+    Defaults to ``half_up``: a migration states a commercial amount, and
+    rounding a tie away from zero is the convention every ERP applies to one.
+    ``rounding: half_even`` opts into banker's rounding where a specification
+    calls for it. The mode only ever decides a tie - a result whose first
+    dropped digit is a 5 with nothing behind it - so for every other value it
+    makes no difference which one is set.
+    """
+    name = getattr(mapping.transformation, "rounding", None) or "half_up"
+    if name not in _ROUNDING_MODES:
+        raise ValueError(
+            f"Unknown rounding mode {name!r}; expected one of "
+            f"{sorted(_ROUNDING_MODES)}"
+        )
+    return _ROUNDING_MODES[name]
+
+
+def _to_decimal(column: pd.Series) -> tuple[pd.Series, str]:
+    """The column as exact ``Decimal`` values, plus its decimal separator.
+
+    The decimal counterpart of _to_numeric, and the reason a calculated value
+    can be rounded by a rule at all: a float cannot represent 3214779.505, so
+    rounding it is decided by whichever side of the tie the binary
+    approximation happens to fall on. Parsing the written digits keeps the tie
+    a tie, and _format_decimal then resolves it as the rule says.
+
+    Values that are empty or not numeric become None, which _format_decimal
+    renders as an empty cell - the same contract pd.to_numeric's ``coerce``
+    gives _to_numeric.
+    """
+    text = column.astype(str).str.strip()
+    comma = bool(text.str.contains(",", regex=False).any())
+    separator = "," if comma else "."
+
+    def parse(value: str) -> Decimal | None:
+        if not value or value.lower() in ("nan", "none"):
+            return None
+        if comma:
+            value = value.replace(".", "").replace(",", ".")
+        try:
+            return Decimal(value)
+        except InvalidOperation:
+            return None
+
+    return text.map(parse), separator
+
+
+def _format_decimal(
+    values: pd.Series, separator: str, decimals: int | None, rounding: str
+) -> pd.Series:
+    """Renders exact values, quantized to ``decimals`` places by ``rounding``."""
+
+    def render(value: Decimal | None) -> str:
+        if value is None:
+            return ""
+        if decimals is not None:
+            quantum = Decimal(1).scaleb(-decimals)
+            text = str(value.quantize(quantum, rounding=rounding))
+        elif value == value.to_integral_value():
+            text = str(int(value))
+        else:
+            text = str(value.normalize())
+        return text.replace(".", separator) if separator == "," else text
+
+    return values.map(render)
+
+
+_ARITHMETIC_NODES = (
+    # ast.Load is the context every Name carries; it grants nothing.
+    ast.Expression, ast.BinOp, ast.UnaryOp, ast.Constant, ast.Name,
+    ast.Load,
+    ast.Add, ast.Sub, ast.Mult, ast.Div, ast.FloorDiv, ast.Mod, ast.Pow,
+    ast.USub, ast.UAdd,
+)
+
+
+def _arithmetic_tree(expression: str) -> ast.Expression:
+    """Parses an expression and refuses anything that is not arithmetic.
+
+    Keeps the guarantee the pandas engine gave evaluate_formula: a task.yaml
+    cannot reach a name, call or attribute beyond its own operands.
+    """
+    tree = ast.parse(expression, mode="eval")
+    for node in ast.walk(tree):
+        if not isinstance(node, _ARITHMETIC_NODES):
+            raise ValueError(
+                f"Formula contains {type(node).__name__}, which is not "
+                f"arithmetic: {expression!r}"
+            )
+    return tree
+
+
+def _evaluate_node(node: ast.AST, values: dict[str, Decimal]) -> Decimal:
+    if isinstance(node, ast.Expression):
+        return _evaluate_node(node.body, values)
+    if isinstance(node, ast.Constant):
+        if isinstance(node.value, bool) or not isinstance(node.value, (int, float)):
+            raise ValueError(f"Formula contains a non-numeric constant: {node.value!r}")
+        return Decimal(str(node.value))
+    if isinstance(node, ast.Name):
+        if node.id not in values:
+            raise ValueError(f"Formula names an unknown operand: {node.id!r}")
+        return values[node.id]
+    if isinstance(node, ast.UnaryOp):
+        operand = _evaluate_node(node.operand, values)
+        return -operand if isinstance(node.op, ast.USub) else +operand
+    left = _evaluate_node(node.left, values)
+    right = _evaluate_node(node.right, values)
+    kind = type(node.op)
+    if kind is ast.Add:
+        return left + right
+    if kind is ast.Sub:
+        return left - right
+    if kind is ast.Mult:
+        return left * right
+    if kind is ast.Div:
+        return left / right
+    if kind is ast.Pow:
+        return left ** right
+    # // and % keep the floor semantics of the pandas/numpy evaluation they
+    # replace; Decimal's own operators truncate towards zero instead, which
+    # would shift results for a negative operand.
+    floor = (left / right).to_integral_value(rounding=ROUND_FLOOR)
+    if kind is ast.FloorDiv:
+        return floor
+    if kind is ast.Mod:
+        return left - right * floor
+    raise ValueError(f"Formula uses an unsupported operator: {kind.__name__}")
+
+
+def evaluate_formula_exactly(
+    formula: str, operands: dict[str, pd.Series]
+) -> pd.Series:
+    """Evaluates ``formula`` row by row over exact ``Decimal`` operands.
+
+    The decimal counterpart of evaluate_formula. Operand names are aliased the
+    same way, so a formula may still name a column the way task.yaml spells
+    it, and ``^`` is still accepted for exponentiation. A row in which any
+    operand is missing yields None rather than a guess.
+    """
+    expression = formula.replace("^", "**")
+    aliases: dict[str, str] = {}
+    for index, name in enumerate(sorted(operands, key=len, reverse=True)):
+        alias = f"_op{index}"
+        aliases[alias] = name
+        expression = expression.replace(name, alias)
+    tree = _arithmetic_tree(expression)
+
+    index = next(iter(operands.values())).index
+    results = []
+    for position in index:
+        values = {alias: operands[name].loc[position]
+                  for alias, name in aliases.items()}
+        values["pi"] = Decimal(repr(math.pi))
+        if any(value is None for key, value in values.items() if key != "pi"):
+            results.append(None)
+            continue
+        try:
+            results.append(_evaluate_node(tree, values))
+        except (InvalidOperation, ZeroDivisionError):
+            results.append(None)
+    return pd.Series(results, index=index)
+
+
+def _decimal_operands(
+    df: pd.DataFrame, fields: list[str], context: TransformationContext
+) -> tuple[dict[str, pd.Series], str]:
+    """The named fields as exact decimals, from the source row or from the
+    target columns built so far - the decimal counterpart of _numeric_operands."""
+    operands: dict[str, pd.Series] = {}
+    separator = "."
+    for name in fields:
+        column = _resolve_column(df, name, context)
+        values, field_separator = _to_decimal(column)
+        operands[name] = values
+        if field_separator == ",":
+            separator = ","
+    return operands, separator
+
+
 def evaluate_formula(formula: str, operands: dict[str, pd.Series]) -> pd.Series:
     """Evaluates an arithmetic formula over named operand columns.
 
@@ -633,6 +820,10 @@ class CalculationHandler:
     already built, so a field can be derived from other target fields - a
     valuation price from a converted quantity and a price unit. Those are
     declared in ``source_fields`` alongside the real source columns.
+
+    The arithmetic runs on exact decimals, not floats, so ``decimals`` rounds
+    by the rule ``rounding`` names (see _rounding) instead of by whichever side
+    of a tie the binary approximation of the operands happens to fall on.
     """
 
     def apply(
@@ -642,10 +833,11 @@ class CalculationHandler:
         context: TransformationContext = EMPTY_CONTEXT,
     ) -> pd.Series:
         formula = mapping.transformation.formula
-        operands, separator = _numeric_operands(df, mapping.source_fields or [], context)
-        result = evaluate_formula(formula, operands)
-        return _format_numeric(
-            result, _separator(mapping, separator), _decimals(mapping)
+        operands, separator = _decimal_operands(df, mapping.source_fields or [], context)
+        result = evaluate_formula_exactly(formula, operands)
+        return _format_decimal(
+            result, _separator(mapping, separator), _decimals(mapping),
+            _rounding(mapping),
         )
 
 
@@ -886,7 +1078,12 @@ class TruncateHandler:
 
 class RoundHandler:
     """Rounds to ``decimals`` places, keeping the column's decimal convention
-    (see _to_numeric)."""
+    (see _to_decimal).
+
+    Works on exact decimals for the same reason CalculationHandler does: a
+    written "2,985" rounded to two places is a tie, and which way it goes has
+    to follow ``rounding`` rather than its binary approximation.
+    """
 
     def apply(
         self,
@@ -895,8 +1092,10 @@ class RoundHandler:
         context: TransformationContext = EMPTY_CONTEXT,
     ) -> pd.Series:
         decimals = getattr(mapping.transformation, "decimals", 2)
-        numbers, separator = _to_numeric(df[mapping.source_field])
-        return _format_numeric(numbers.round(decimals), _separator(mapping, separator), decimals)
+        values, separator = _to_decimal(df[mapping.source_field])
+        return _format_decimal(
+            values, _separator(mapping, separator), decimals, _rounding(mapping)
+        )
 
 
 class SerialDateConversionHandler:

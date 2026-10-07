@@ -6,6 +6,8 @@ description: >
   Target schema of the financial document upload container of the new ERP
   system. Each record represents one document to be posted. Several fields of
   the container are not relevant for this migration and are delivered empty.
+  Decimal values are written with a comma as the decimal separator and
+  without a thousands separator.
 
 attributes:
 

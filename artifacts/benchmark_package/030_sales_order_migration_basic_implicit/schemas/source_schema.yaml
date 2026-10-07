@@ -5,7 +5,8 @@ entity: SalesOrderItem
 description: >
   Source schema containing sales order data exported from the legacy ERP
   system. Each record represents one item of a sales order, identified by the
-  combination of sales order no. and item no.
+  combination of sales order no. and item no. Decimal values are written with
+  a comma as the decimal separator and without a thousands separator.
 
 attributes:
 

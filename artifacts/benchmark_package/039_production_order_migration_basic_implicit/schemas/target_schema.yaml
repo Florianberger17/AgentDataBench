@@ -10,7 +10,8 @@ description: >
   number together with the legacy one it replaces, which is what lets the
   shop floor bookings already made be traced back. The quantity the new
   system schedules is the quantity still to be produced, not the one the
-  order was originally placed for.
+  order was originally placed for. Decimal values are written with a comma
+  as the decimal separator and without a thousands separator.
 
 attributes:
 

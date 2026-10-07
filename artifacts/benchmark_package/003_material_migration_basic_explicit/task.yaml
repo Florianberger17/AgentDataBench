@@ -79,6 +79,10 @@ business_rules:
         type: date_format
         input_format: DD.MM.YY
         output_format: DD.MM.YYYY
+      description: >
+        Expand the two-digit year of the legacy system to four digits. A
+        two-digit year YY stands for 20YY; the legacy part master holds no
+        record created before 2000.
 
 ignored_source_fields:
   - approval

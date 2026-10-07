@@ -95,6 +95,7 @@ business_rules:
       transformation:
         type: round
         decimals: 2
+        rounding: half_up
 
     - source_field: currency
       target_field: COND_CURR

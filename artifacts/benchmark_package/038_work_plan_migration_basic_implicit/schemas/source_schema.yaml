@@ -11,6 +11,8 @@ description: >
   never cleaned up after the shop floor was reorganised. The legacy system
   records its times in minutes and against the lot they were measured over,
   not per piece, so no time of this export can be loaded as it stands.
+  Decimal values are written with a comma as the decimal separator and
+  without a thousands separator.
 
 attributes:
 

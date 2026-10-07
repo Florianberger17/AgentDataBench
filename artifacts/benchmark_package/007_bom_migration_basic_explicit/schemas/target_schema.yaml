@@ -5,7 +5,8 @@ entity: BillOfMaterial
 description: >
   Target schema for bill of material data in the new ERP system. Each record
   represents one position of one bill of material, identified by the
-  combination of MATNR and POSNR.
+  combination of MATNR and POSNR. Decimal values are written with a comma as
+  the decimal separator and without a thousands separator.
 
 attributes:
 
@@ -50,6 +51,7 @@ attributes:
 
   - name: MENGE
     type: decimal
+    format: "source value adopted unchanged: piece counts without decimal places, lengths with two decimal places"
     required: true
     description: >
       Required quantity of the component.

@@ -38,11 +38,13 @@ attributes:
 
   - name: PurchaseOrderDate
     type: date
+    format: DD.MM.YY
     required: true
     description: Date of the customer purchase order
 
   - name: ConfirmedDeliveryDate
     type: date
+    format: DD.MM.YY
     required: false
     description: Delivery date confirmed to the customer
 

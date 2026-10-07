@@ -1169,3 +1169,110 @@ def test_date_difference_handler_rejects_an_unmapped_difference():
     )
     with pytest.raises(ValueError, match="difference of"):
         DateDifferenceHandler().apply(df, mapping)
+
+
+def test_calculation_handler_rounds_a_tie_commercially_by_default():
+    """3458,50 x 929,53 is exactly 3214779,5050 - a tie at two places. As a
+    float the product is 3214779.504999..., so formatting it would round down
+    for no stated reason; the exact arithmetic rounds it up as half_up says."""
+    df = pd.DataFrame({"price": ["3458,50"], "quantity": ["929,53"]})
+    mapping = MappingRule(
+        source_fields=["price", "quantity"],
+        target_field="value",
+        transformation={
+            "type": "calculation",
+            "formula": "price * quantity",
+            "decimals": 2,
+        },
+    )
+    assert list(CalculationHandler().apply(df, mapping)) == ["3214779,51"]
+
+
+def test_calculation_handler_honours_half_even_when_asked():
+    df = pd.DataFrame({"price": ["3458,50"], "quantity": ["929,53"]})
+    mapping = MappingRule(
+        source_fields=["price", "quantity"],
+        target_field="value",
+        transformation={
+            "type": "calculation",
+            "formula": "price * quantity",
+            "decimals": 2,
+            "rounding": "half_even",
+        },
+    )
+    assert list(CalculationHandler().apply(df, mapping)) == ["3214779,50"]
+
+
+def test_calculation_handler_refuses_an_unknown_rounding_mode():
+    df = pd.DataFrame({"a": ["1,5"], "b": ["1"]})
+    mapping = MappingRule(
+        source_fields=["a", "b"],
+        target_field="c",
+        transformation={
+            "type": "calculation",
+            "formula": "a * b",
+            "decimals": 0,
+            "rounding": "towards_the_moon",
+        },
+    )
+    with pytest.raises(ValueError, match="Unknown rounding mode"):
+        CalculationHandler().apply(df, mapping)
+
+
+def test_calculation_handler_keeps_floor_semantics_for_negative_operands():
+    """// and % replaced a pandas/numpy evaluation that floored. Decimal's own
+    operators truncate towards zero instead, which would shift a negative
+    result - so the handler must keep flooring."""
+    df = pd.DataFrame({"a": ["-7", "7"], "b": ["2", "2"]})
+    floor_div = MappingRule(
+        source_fields=["a", "b"], target_field="c",
+        transformation={"type": "calculation", "formula": "a // b", "decimals": 0},
+    )
+    modulo = MappingRule(
+        source_fields=["a", "b"], target_field="c",
+        transformation={"type": "calculation", "formula": "a % b", "decimals": 0},
+    )
+    assert list(CalculationHandler().apply(df, floor_div)) == ["-4", "3"]
+    assert list(CalculationHandler().apply(df, modulo)) == ["1", "1"]
+
+
+def test_calculation_handler_refuses_a_formula_that_is_not_arithmetic():
+    """The pandas engine could not reach beyond its operands; the decimal
+    evaluator must not either."""
+    df = pd.DataFrame({"a": ["1"], "b": ["2"]})
+    for formula in ("__import__('os')", "a.real", "max(a, b)"):
+        mapping = MappingRule(
+            source_fields=["a", "b"], target_field="c",
+            transformation={"type": "calculation", "formula": formula},
+        )
+        with pytest.raises(ValueError):
+            CalculationHandler().apply(df, mapping)
+
+
+def test_calculation_handler_leaves_a_row_empty_when_an_operand_is_missing():
+    df = pd.DataFrame({"a": ["2,5", ""], "b": ["4", "4"]})
+    mapping = MappingRule(
+        source_fields=["a", "b"], target_field="c",
+        transformation={"type": "calculation", "formula": "a * b", "decimals": 2},
+    )
+    assert list(CalculationHandler().apply(df, mapping)) == ["10,00", ""]
+
+
+def test_round_handler_rounds_a_tie_commercially():
+    """A written 2,985 is a tie at two places; rounding must follow the rule
+    rather than the binary approximation of 2.985."""
+    df = pd.DataFrame({"amount": ["2,985", "2,975"]})
+    mapping = MappingRule(
+        source_field="amount", target_field="rounded",
+        transformation={"type": "round", "decimals": 2},
+    )
+    assert list(RoundHandler().apply(df, mapping)) == ["2,99", "2,98"]
+
+
+def test_round_handler_honours_half_even_when_asked():
+    df = pd.DataFrame({"amount": ["2,985", "2,975"]})
+    mapping = MappingRule(
+        source_field="amount", target_field="rounded",
+        transformation={"type": "round", "decimals": 2, "rounding": "half_even"},
+    )
+    assert list(RoundHandler().apply(df, mapping)) == ["2,98", "2,98"]

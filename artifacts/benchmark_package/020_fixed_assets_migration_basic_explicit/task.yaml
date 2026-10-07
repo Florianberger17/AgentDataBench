@@ -119,6 +119,7 @@ business_rules:
       transformation:
         type: round
         decimals: 3
+        rounding: half_up
         decimal_separator: ","
 
     - source_field: capitalisation serial
@@ -218,6 +219,7 @@ business_rules:
         type: calculation
         formula: "remaining life months // 12"
         decimals: 0
+        rounding: half_up
       description: >
         The legacy register holds the remaining useful life as one figure in
         months. The new system wants the whole years of it, which is that
@@ -230,6 +232,7 @@ business_rules:
         type: calculation
         formula: "remaining life months % 12"
         decimals: 0
+        rounding: half_up
       description: >
         And the months left over beyond those whole years, which is the
         remainder of the same division and therefore always below twelve.
@@ -239,12 +242,14 @@ business_rules:
       transformation:
         type: round
         decimals: 2
+        rounding: half_up
 
     - source_field: accumulated depreciation
       target_field: KNAFA01
       transformation:
         type: round
         decimals: 2
+        rounding: half_up
 
     - source_fields:
         - KANSW01
@@ -254,6 +259,7 @@ business_rules:
         type: calculation
         formula: "KANSW01 + KNAFA01"
         decimals: 2
+        rounding: half_up
       description: >
         What the asset is still worth in the books: what it cost less what has
         been written off. The accumulated depreciation is already carried as a

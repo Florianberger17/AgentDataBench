@@ -12,10 +12,15 @@ objective: >
   is the extension of the buyer the legacy record names: Ann-Kathrin Hein
   is reached on +49 6039 488 223, Ramazan Häring on +49 6039 488 298,
   Magret Flantz on +49 6039 488 317, Agatha Haering B.Eng. on +49 6039 488
-  250 and Hansjörg Becker on +49 6039 488 335. No formal source or target
-  schema is given - infer the required structure, the field mapping and
-  the value formats yourself by comparing the input dataset against the
-  target example.
+  250 and Hansjörg Becker on +49 6039 488 335. The valuation price of the
+  goods receipt is the order price times the quantity not yet delivered,
+  divided by the price unit the order price refers to - a price quoted per
+  100 or per 1000 units values that many units, not one - and rounded
+  commercially to two decimal places. The legacy unit of measure becomes
+  the international one: STK becomes PC, STD becomes HR and MON stays MON.
+  No formal source or target schema is given - infer the required
+  structure, the field mapping and the value formats yourself by comparing
+  the input dataset against the target example.
 
 input:
   source_dataset: data/dataset.csv

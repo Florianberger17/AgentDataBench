@@ -14,10 +14,11 @@ objective: >
   Movements without a storage location or without a cost center are posted
   without one. The movement type follows from the movement code of the
   legacy journal: WE becomes 101, WA becomes 103, BWA becomes 105, UMW
-  becomes 311, RF becomes 262 and WAS becomes 201. No formal source or
-  target schema is given - infer the required structure, the field mapping
-  and the value formats yourself by comparing the input dataset against
-  the target example.
+  becomes 311, RF becomes 262 and WAS becomes 201. The unit PCS becomes
+  ST; M and MM are kept unchanged. No formal source or target schema is
+  given - infer the required structure, the field mapping and the value
+  formats yourself by comparing the input dataset against the target
+  example.
 
 input:
   source_dataset: data/dataset.csv

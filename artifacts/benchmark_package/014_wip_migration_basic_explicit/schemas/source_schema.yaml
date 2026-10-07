@@ -8,7 +8,8 @@ description: >
   as many records as figures were ever posted to it. The export holds the
   planned order value and the incurred costs side by side, told apart only by
   the value type, and is the only record the work in progress of a project can
-  be derived from.
+  be derived from. Decimal values are written with a comma as the decimal
+  separator and without a thousands separator.
 
 attributes:
 

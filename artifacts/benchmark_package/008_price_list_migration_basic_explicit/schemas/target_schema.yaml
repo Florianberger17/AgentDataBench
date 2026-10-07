@@ -4,8 +4,9 @@ entity: ConditionRecord
 
 description: >
   Target schema for price condition records in the new ERP system. Each record
-  represents one condition record, identified by the combination of
-  PRICE_LIST and MATERIAL.
+  represents one condition record, identified by the combination of PRICE_LIST
+  and MATERIAL. Decimal values are written with a comma as the decimal
+  separator and without a thousands separator.
 
 attributes:
 

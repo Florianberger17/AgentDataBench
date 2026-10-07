@@ -5,7 +5,9 @@ entity: BillOfMaterial
 description: >
   Source schema containing bill of material data exported from the legacy ERP
   system. Each record represents one component position of one bill of
-  material, identified by the combination of bom no. and item no.
+  material, identified by the combination of bom no. and item no. Decimal
+  values are written with a comma as the decimal separator and without a
+  thousands separator.
 
 attributes:
 

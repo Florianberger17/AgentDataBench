@@ -26,10 +26,12 @@ objective: >
   unit, a bought-in one by its lead time. A routing that is not assigned
   to any part is marked as unused in place of a description. Every
   operation is loaded generally valid, with its times in hours against a
-  time base of one piece, no overlap and confirmation required. No formal
-  source or target schema is given - infer the required structure, the
-  field mapping and the value formats yourself by comparing the input
-  dataset against the target example.
+  time base of one piece, no overlap and confirmation required. The legacy
+  system records an operation performed on one of the plant's own units
+  with operation type E and a bought-in one with A. No formal source or
+  target schema is given - infer the required structure, the field mapping
+  and the value formats yourself by comparing the input dataset against
+  the target example.
 
 input:
   source_dataset: data/dataset.csv

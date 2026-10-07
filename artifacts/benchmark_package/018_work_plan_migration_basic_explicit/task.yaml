@@ -146,6 +146,7 @@ business_rules:
         type: calculation
         formula: "setup minutes / 60"
         decimals: 3
+        rounding: half_up
         decimal_separator: ","
       description: >
         The setup is recorded in minutes and planned in hours. It is incurred
@@ -159,6 +160,7 @@ business_rules:
         type: calculation
         formula: "operation minutes / base quantity / 60"
         decimals: 3
+        rounding: half_up
         decimal_separator: ","
       description: >
         The time the new system plans and costs with is the time for one

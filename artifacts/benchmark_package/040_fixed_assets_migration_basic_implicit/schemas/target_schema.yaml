@@ -11,7 +11,9 @@ description: >
   net book value and the takeover value are the point of the exercise: the
   legacy register states what an asset cost and what has been written off, and
   what the new system has to be told is what is left - and, where nothing is
-  left, the memo value an asset is kept in the register at.
+  left, the memo value an asset is kept in the register at. Decimal values are
+  written with a comma as the decimal separator and without a thousands
+  separator.
 
 attributes:
 

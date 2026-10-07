@@ -8,10 +8,11 @@ objective: >
   P-310000, in the order in which the records appear in the source
   dataset. Every project receives the fixed project profile TS00007, the
   company code 0898, the factory calendar key 1, the planning profile
-  ZR0001 and the network assignment 2. No formal source or target schema
-  is given - infer the required structure, the field mapping and the value
-  formats yourself by comparing the input dataset against the target
-  example.
+  ZR0001 and the network assignment 2. The person responsible follows from
+  the planner of the legacy record: S01 becomes 52010, S12 becomes 52001
+  and S24 becomes 52002. No formal source or target schema is given -
+  infer the required structure, the field mapping and the value formats
+  yourself by comparing the input dataset against the target example.
 
 input:
   source_dataset: data/dataset.csv

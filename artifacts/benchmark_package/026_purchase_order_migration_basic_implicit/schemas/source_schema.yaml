@@ -6,7 +6,8 @@ description: >
   Structural schema definition for purchase order item data in a legacy ERP
   system. Each record represents one purchase order item, identified by the
   combination of TransactionNo and ItemNo. This schema defines only data
-  structure, not data quality characteristics.
+  structure, not data quality characteristics. Decimal values are written
+  with a comma as the decimal separator and without a thousands separator.
 
 attributes:
 
@@ -48,11 +49,13 @@ attributes:
 
   - name: OpenQuantity
     type: decimal
+    format: "decimal comma, two decimal places, no thousands separator"
     required: true
     description: Quantity not yet delivered
 
   - name: OrderPrice
     type: decimal
+    format: "decimal comma, two decimal places, no thousands separator"
     required: true
     description: Order price of the item
 

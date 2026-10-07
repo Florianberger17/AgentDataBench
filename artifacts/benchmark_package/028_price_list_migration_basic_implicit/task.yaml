@@ -10,8 +10,11 @@ objective: >
   calendar date; price records without a recorded start of validity become
   valid on the cutover date 01.06.2025. Every condition record is migrated
   without a limitation of the validity period, ending 31.12.9999, and
-  refers to the unit of measure ST.
-  No formal source or target schema is given - infer the required structure, the field mapping and the value formats yourself by comparing the input dataset against the target example.
+  refers to the unit of measure ST. The price list of the target system
+  follows from the legacy price list number: 5303 becomes 01 and 9503
+  becomes 02. No formal source or target schema is given - infer the
+  required structure, the field mapping and the value formats yourself by
+  comparing the input dataset against the target example.
 
 input:
   source_dataset: data/dataset.csv

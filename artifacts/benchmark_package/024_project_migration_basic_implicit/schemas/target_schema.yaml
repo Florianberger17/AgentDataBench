@@ -43,11 +43,13 @@ attributes:
 
   - name: "Start Date"
     type: date
+    format: DD.MM.YY
     required: true
     description: Planned start date of the project
 
   - name: "Finish Date"
     type: date
+    format: DD.MM.YY
     required: false
     description: Planned finish date of the project
 

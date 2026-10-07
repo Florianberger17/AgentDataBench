@@ -16,10 +16,13 @@ attributes:
     description: Type of the business document
 
   - name: TransactionNo
-    type: integer
+    type: string
     required: true
     unique: true
-    description: Document number of the purchase order
+    description: >
+      Document number of the purchase order, five digits with leading zeros.
+      It is a code, not a quantity: the leading zeros belong to the number
+      and must be preserved.
 
   - name: Status
     type: string

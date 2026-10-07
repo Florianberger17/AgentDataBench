@@ -13,9 +13,10 @@ objective: >
   location is recorded, the target system expects the value 0. The
   purchasing group follows from the fourth planner field of the legacy
   record: E02 becomes 203, E03 becomes 204, E04 becomes 105 and E07
-  becomes 206. No formal source or target schema is given - infer the
-  required structure, the field mapping and the value formats yourself by
-  comparing the input dataset against the target example.
+  becomes 206. Incoterm codes are written in upper case. No formal source
+  or target schema is given - infer the required structure, the field
+  mapping and the value formats yourself by comparing the input dataset
+  against the target example.
 
 input:
   source_dataset: data/dataset.csv

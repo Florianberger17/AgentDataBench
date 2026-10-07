@@ -9,7 +9,9 @@ description: >
   system and carries a number of fields that hold the same value for every
   unit of this migration. The capacity is the field the whole upload turns
   on: the legacy system never held one, so it is determined from the shift
-  arrangement and has to be stated here per period.
+  arrangement and has to be stated here per period. Decimal values are
+  written with a comma as the decimal separator and without a thousands
+  separator.
 
 attributes:
 

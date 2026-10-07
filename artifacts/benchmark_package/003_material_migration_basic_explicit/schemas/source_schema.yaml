@@ -11,7 +11,7 @@ attributes:
     type: string
     required: true
     description: >
-      Legacy part number in the format ####-####.
+      Legacy part number in the format ######-####.
 
   - name: name
     type: string

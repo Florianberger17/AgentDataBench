@@ -118,18 +118,21 @@ business_rules:
       transformation:
         type: round
         decimals: 3
+        rounding: half_up
 
     - source_field: good quantity
       target_field: delivered quantity
       transformation:
         type: round
         decimals: 3
+        rounding: half_up
 
     - source_field: scrap quantity
       target_field: scrap quantity
       transformation:
         type: round
         decimals: 3
+        rounding: half_up
 
     - source_fields:
         - order quantity
@@ -140,6 +143,7 @@ business_rules:
         type: calculation
         formula: "order quantity - good quantity - scrap quantity"
         decimals: 3
+        rounding: half_up
       description: >
         The new system schedules what is left to produce, not what was
         ordered: the quantity already delivered to stock and the quantity

@@ -4,9 +4,13 @@ objective: >
   Transform the provided part master dataset into the structure and format
   shown by the target example, and produce a CSV file containing one row
   for every part whose part status is 1 or lower. The ERP number is not
-  contained in the source dataset: assign a consecutive number starting
-  at 30000000000, in the order of the filtered dataset.
-  No formal source or target schema is given - infer the required structure, the field mapping and the value formats yourself by comparing the input dataset against the target example.
+  contained in the source dataset: assign a consecutive number starting at
+  30000000000, in the order of the filtered dataset. In the legacy system
+  a two-digit year stands for the year 20YY. A part the legacy system
+  classifies as a spare part receives material type 'erze', every other
+  part 'bmav'. No formal source or target schema is given - infer the
+  required structure, the field mapping and the value formats yourself by
+  comparing the input dataset against the target example.
 
 input:
   source_dataset: data/dataset.csv

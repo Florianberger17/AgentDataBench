@@ -5,7 +5,8 @@ entity: StockBalance
 description: >
   Source schema containing stock balances and valuation prices exported from
   the legacy ERP system. Each record represents the stock of one part at the
-  end of one accounting period.
+  end of one accounting period. Decimal values are written with a comma as
+  the decimal separator and without a thousands separator.
 
 attributes:
 

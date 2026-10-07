@@ -6,7 +6,9 @@ description: >
   Target schema of the results analysis upload container of the new ERP
   system. Each record carries the work in progress of exactly one project for
   one posting period, together with the two figures it was derived from, so
-  that the upload can be reconciled against the legacy system.
+  that the upload can be reconciled against the legacy system. Decimal values
+  are written with a comma as the decimal separator and without a thousands
+  separator.
 
 attributes:
 

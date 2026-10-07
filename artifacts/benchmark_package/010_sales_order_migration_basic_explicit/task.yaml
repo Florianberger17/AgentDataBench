@@ -169,12 +169,15 @@ business_rules:
         ordered object separated by a single blank character and truncate the
         result to the maximum field length of the target ERP system. Items
         without an additional designation receive the designation only.
+        The truncated result is adopted unchanged;
+        where the cut falls on a blank character, that blank is part of the value.
 
     - source_field: quantity
       target_field: KWMENG
       transformation:
         type: round
         decimals: 3
+        rounding: half_up
         decimal_separator: ","
 
     - source_field: net price
@@ -182,6 +185,7 @@ business_rules:
       transformation:
         type: round
         decimals: 2
+        rounding: half_up
         decimal_separator: ","
 
     - source_field: requested date

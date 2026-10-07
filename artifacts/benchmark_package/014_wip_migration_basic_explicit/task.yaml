@@ -194,6 +194,7 @@ business_rules:
         type: calculation
         formula: "actual costs - WIP"
         decimals: 2
+        rounding: half_up
       description: >
         Whatever the cap cut off the work in progress is a cost the planned
         revenue does not cover, and is provided for as a loss instead of being

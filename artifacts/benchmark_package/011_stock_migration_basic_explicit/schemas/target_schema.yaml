@@ -5,7 +5,8 @@ entity: MaterialValuation
 description: >
   Target schema for stock balances and valuation data in the new ERP system.
   Each record represents the valuated stock of one material in one plant for
-  one accounting period.
+  one accounting period. Decimal values are written with a comma as the
+  decimal separator and without a thousands separator.
 
 attributes:
 

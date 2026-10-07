@@ -1,13 +1,15 @@
 task_id: 012_INVOICE_MIGRATION_BASIC_EXPLICIT
 
 objective: >
-  Transform the provided outgoing invoice dataset from the source schema to
-  the target schema and produce a CSV file that conforms exactly to the
+  Transform the provided outgoing invoice dataset from the source schema
+  to the target schema and produce a CSV file that conforms exactly to the
   target schema. The account numbers of the target ERP system are not
   contained in the source dataset and shall be resolved via the central
-  customer cross reference list. The payment term of the target ERP system is
-  not recorded in the source dataset either and shall be derived from the due
-  date.
+  customer cross reference list. The payment term of the target ERP system
+  is not recorded in the source dataset either and shall be derived from
+  the due date. Dates are recorded with a two-digit year in the legacy
+  system and migrated with a four-digit one; a two-digit year YY stands
+  for 20YY.
 
 input:
   source_dataset: data/dataset.csv
@@ -117,6 +119,7 @@ business_rules:
       transformation:
         type: round
         decimals: 2
+        rounding: half_up
         decimal_separator: ","
 
     - source_field: invoice value
@@ -124,6 +127,7 @@ business_rules:
       transformation:
         type: round
         decimals: 2
+        rounding: half_up
         decimal_separator: ","
       description: >
         Every invoice is issued in the local currency, so the amount in local
@@ -134,6 +138,7 @@ business_rules:
       transformation:
         type: round
         decimals: 2
+        rounding: half_up
         decimal_separator: ","
       description: >
         The group currency is the local currency, so the amount is adopted

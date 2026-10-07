@@ -5,6 +5,8 @@ entity: PriceRecord
 description: >
   Source schema containing price list data exported from the legacy ERP
   system. Each record represents the price of one part within one price list.
+  Decimal values are written with a comma as the decimal separator and
+  without a thousands separator.
 
 attributes:
 

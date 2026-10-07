@@ -8,7 +8,8 @@ description: >
   against the reservation unit it is carried out on. All times are stated in
   the unit named beside them and against a time base of one piece, which is
   what the new system plans and costs with - so every time of the upload has
-  to be worked out rather than carried over.
+  to be worked out rather than carried over. Decimal values are written with
+  a comma as the decimal separator and without a thousands separator.
 
 attributes:
 

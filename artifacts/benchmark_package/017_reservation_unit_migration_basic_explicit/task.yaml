@@ -113,6 +113,7 @@ business_rules:
         type: calculation
         formula: "capacity units * shifts per day * (hours per shift - break minutes per shift / 60) * working days per week"
         decimals: 3
+        rounding: half_up
         decimal_separator: ","
       description: >
         The capacity is the net productive time of the unit over one period.
@@ -134,6 +135,7 @@ business_rules:
       transformation:
         type: round
         decimals: 4
+        rounding: half_up
         decimal_separator: ","
       description: >
         The number of workplaces the capacity was determined over, written
@@ -144,6 +146,7 @@ business_rules:
       transformation:
         type: round
         decimals: 2
+        rounding: half_up
         decimal_separator: ","
       description: >
         The number of shifts is carried into the target system as its shift

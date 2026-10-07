@@ -5,7 +5,8 @@ entity: SalesOrderItem
 description: >
   Target schema for sales order items in the new ERP system. Each record
   represents one item of a sales order, identified by the combination of
-  VBELN and POSNR.
+  VBELN and POSNR. Decimal values are written with a comma as the
+  decimal separator and without a thousands separator.
 
 attributes:
 
@@ -38,7 +39,8 @@ attributes:
     type: string
     required: true
     description: >
-      Customer number of the sold-to party, consisting of ten digits.
+      Customer number of the sold-to party, as the customer cross reference
+      list assigns it.
 
   - name: BSTKD
     type: string
@@ -56,7 +58,9 @@ attributes:
     type: string
     required: true
     description: >
-      Short text of the sales order item, at most 40 characters long.
+      Short text of the sales order item, at most 40 characters long. A text
+      cut to that length is adopted unchanged, including a blank character the
+      cut happens to fall on.
 
   - name: KWMENG
     type: decimal

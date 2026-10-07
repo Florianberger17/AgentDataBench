@@ -148,14 +148,18 @@ business_rules:
     - source_fields:
         - OrderPrice
         - OpenQuantity
+        - PRICE_UNIT
       target_field: GR_PRICE
       transformation:
         type: calculation
-        formula: "OrderPrice * OpenQuantity"
+        formula: "OrderPrice * OpenQuantity / PRICE_UNIT"
         decimals: 2
+        rounding: half_up
       description: >
         The valuation price of the goods receipt is the product of the order
-        price and the quantity not yet delivered.
+        price and the quantity not yet delivered, divided by the price unit the
+        order price refers to: a price quoted per 100 or per 1000 units values
+        that many units, not one.
 
     - source_field: ConfirmedDate
       target_field: DELIVERY_DATE

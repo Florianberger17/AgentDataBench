@@ -11,7 +11,9 @@ description: >
   technical postings all share the range, and only the genuine work centers
   are reservation units in the new system. The legacy system holds no
   capacity figure at all; it records the shift arrangement a work center is
-  run under, from which the capacity has to be determined.
+  run under, from which the capacity has to be determined. Decimal values are
+  written with a comma as the decimal separator and without a thousands
+  separator.
 
 attributes:
 

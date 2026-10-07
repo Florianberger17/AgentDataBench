@@ -28,7 +28,8 @@ objective: >
   reduced one at 0,80 and 0,90, and a manually planned one at 1,00 and
   1,00. Every unit is created generally valid, with its capacity stated
   per week in hours, an overload factor of 1,00 and confirmation required.
-  No formal source or target schema is given - infer the required
+  The legacy system flags a bottleneck unit with J and every other unit
+  with N. No formal source or target schema is given - infer the required
   structure, the field mapping and the value formats yourself by comparing
   the input dataset against the target example.
 

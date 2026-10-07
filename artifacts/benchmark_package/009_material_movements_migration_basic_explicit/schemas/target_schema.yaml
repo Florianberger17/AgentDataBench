@@ -4,7 +4,9 @@ entity: MaterialDocument
 
 description: >
   Target schema for material documents in the new ERP system. Each record
-  represents one material document, identified by MBLNR.
+  represents one material document, identified by MBLNR. Decimal values
+  are written with a comma as the decimal separator and without a
+  thousands separator.
 
 attributes:
 
