@@ -185,7 +185,9 @@ business_rules:
         quantity and to the price unit of the target ERP system. It therefore
         follows from the stock value, the converted quantity and the price
         unit, which covers both a change of the unit of measure and a change
-        of the price unit.
+        of the price unit. The converted quantity enters this calculation as
+        it is written to LBKUM, rounded to three decimal places, not as an
+        unrounded intermediate.
 
     - source_fields:
         - LBKUM
@@ -199,8 +201,11 @@ business_rules:
         rounding: half_up
       description: >
         The stock value of the target ERP system follows from the converted
-        quantity and the converted valuation price. Rounding differences
-        against the stock value of the legacy system are accepted.
+        quantity and the converted valuation price, both as they are written
+        to LBKUM and VERPR - rounded to three and to two decimal places
+        respectively, not as unrounded intermediates. Rounding differences
+        against the stock value of the legacy system are accepted and are the
+        reason the figure is recomputed rather than carried over.
 
     - target_field: VPRSV
       transformation:
@@ -225,6 +230,8 @@ business_rules:
 ignored_source_fields:
   - description
   - material category
+  - price
+  - price unit
 
 output:
   format: csv

@@ -232,7 +232,8 @@ business_rules:
       description: >
         The short name of the target system holds twenty characters, so it is
         the full name of the cost center cut to fit - including where that
-        name was the legacy one.
+        name was the legacy one. The cut result is adopted unchanged; where the
+        cut falls on a blank character, that blank is part of the short name.
 
     - target_field: DESCRIPT
       transformation:

@@ -17,20 +17,22 @@ objective: >
   cost centers in ascending order of their new number. Where the cross
   reference list states no new name, the cost center keeps the name it had
   in the legacy system; the short name is that name cut to twenty
-  characters. The standard hierarchy node is the leading six characters of
-  the new cost center number and the company code its leading four, and
-  the profit center follows from that company code. The cost center type
-  and the functional area follow from the legacy category: administration
-  (1) becomes type O in functional area 2016, production (2) type F in
-  2020, sales (3) type V in 3010 and service (4) type H in 2040. Revenue
-  belongs on a sales cost center alone, so every cost center that was not
-  a sales one in the legacy system is locked against posting and against
-  planning revenues. Every cost center is created in controlling area 1000
-  as of 1 January 2027, with the validity end carried over from the legacy
-  master, quantity recording switched on and application CO-001. No formal
-  source or target schema is given - infer the required structure, the
-  field mapping and the value formats yourself by comparing the input
-  dataset against the target example.
+  characters and adopted unchanged - where the cut falls on a blank
+  character, that blank is part of the short name. The standard hierarchy
+  node is the leading six characters of the new cost center number and the
+  company code its leading four, and the profit center follows from that
+  company code. The cost center type and the functional area follow from
+  the legacy category: administration (1) becomes type O in functional
+  area 2016, production (2) type F in 2020, sales (3) type V in 3010 and
+  service (4) type H in 2040. Revenue belongs on a sales cost center
+  alone, so every cost center that was not a sales one in the legacy
+  system is locked against posting and against planning revenues. Every
+  cost center is created in controlling area 1000 as of 1 January 2027,
+  with the validity end carried over from the legacy master, quantity
+  recording switched on and application CO-001. No formal source or target
+  schema is given - infer the required structure, the field mapping and
+  the value formats yourself by comparing the input dataset against the
+  target example.
 
 input:
   source_dataset: data/dataset.csv

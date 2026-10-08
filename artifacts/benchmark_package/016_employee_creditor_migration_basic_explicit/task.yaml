@@ -54,7 +54,7 @@ business_rules:
     rules:
       - field: company code
         operator: "=="
-        value: "0454"
+        value: "0993"
       - field: entry date
         operator: "<="
         value: "2027-01-01"

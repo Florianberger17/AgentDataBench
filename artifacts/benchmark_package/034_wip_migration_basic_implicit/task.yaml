@@ -6,16 +6,20 @@ objective: >
   shown by the target example. The legacy system holds no work in progress
   at all; it has to be derived from the single postings the project cost
   report exports, and a posting on a cancelled production order is
-  reversed and counts for nothing. Every posting is one record of the
-  source dataset, while the target system expects one record per project,
-  so the figures of a project have to be accumulated over its postings
-  first; deliver the projects in ascending order of their legacy project
-  number. Which postings make up which figure is decided by the value
-  type: the actual costs are the sum of the full actual values (ISWV),
-  while the fixed-cost records (ISWF) repeat money an actual value already
-  carries and must not be counted a second time, and the planned revenue
-  is the sum of the planned order values (KAWV), which are posted as
-  credits and therefore accumulate to a negative figure. The work in
+  reversed and counts for nothing. A posting that belongs to no production
+  order carries no status at all and counts normally; only an explicitly
+  cancelled one is disregarded. Every posting is one record of the source
+  dataset, while the target system expects one record per project, so the
+  figures of a project have to be accumulated over its postings first;
+  deliver the projects in ascending order of their legacy project number.
+  Which postings make up which figure is decided by the value type: the
+  actual costs are the sum of the full actual values (ISWV), while the
+  fixed-cost records (ISWF) repeat money an actual value already carries
+  and must not be counted a second time, and the planned revenue is the
+  sum of the planned order values (KAWV), which are posted as credits and
+  therefore accumulate to a negative figure. A project for which one of
+  the two value types does not occur at all carries zero for that figure
+  rather than an empty cell, and is created like any other. The work in
   progress is the actual costs of the project, capped at what the planned
   revenue covers and never below zero, and whatever the cap cuts off
   becomes an expected loss, so the two always add up to the actual costs

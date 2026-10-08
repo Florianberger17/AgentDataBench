@@ -47,7 +47,9 @@ business_rules:
   filtering:
     description: >
       Only postings that still stand, and only projects the target system
-      manages, take part in the determination.
+      manages, take part in the determination. A posting that belongs to no
+      production order carries an empty status and still stands: only an
+      explicitly cancelled order is excluded.
     rules:
       - field: production order status
         operator: "!="

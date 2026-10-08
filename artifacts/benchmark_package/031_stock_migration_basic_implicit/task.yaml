@@ -7,14 +7,36 @@ objective: >
   the source dataset and shall be resolved via the central material cross
   reference list. The value of the stock is invariant under the migration:
   the quantity shall be converted from the stock unit of the legacy system
-  into the base unit of the target system using the conversion factors of
-  that same list, and the valuation price shall then be derived from the
-  stock value, the converted quantity and the price unit, so that the
-  three together reproduce the stock value again. The posting month is
-  recorded without a leading zero in the legacy system and shall be filled
-  to two digits. Every record belongs to plant 4170 and company code 0454,
-  and carries the price control indicator V, the valuation type NEU and
-  the currency EUR. No formal source or target schema is given - infer the
+  into the base unit of the target system, and the valuation price shall
+  then be derived from the stock value, the converted quantity and the
+  price unit, so that the three together reproduce the stock value again.
+  Where the stock unit and the base unit denote the same unit the quantity
+  is adopted unchanged, which includes PCS and ST as two spellings of
+  pieces. Millimetres become metres by dividing by 1000 and square
+  centimetres become square metres by dividing by 10000. Material held in
+  pieces or in millimetres but valuated by weight is converted to
+  kilograms over the cross section of the bar: that cross section is pi
+  times the square of half the width for a round bar, where the width is
+  the diameter, and the width times the depth for a square bar. The weight
+  is then the quantity times the cross section times the length times the
+  density, divided by one million, for material held in pieces, and the
+  quantity times the cross section times the density, divided by one
+  million, for material held in millimetres. Material held in square
+  centimetres and valuated by weight is converted as the quantity times
+  100 times the depth times the density, divided by one million, where the
+  depth is the sheet thickness and the profile does not enter the
+  calculation. All dimensions are recorded in millimetres and the density
+  in grams per cubic centimetre, which is what the divisor of one million
+  accounts for; the density is taken from the cross reference list. Both
+  derived figures are calculated from the rounded values as they are
+  written to the file, not from unrounded intermediates: the valuation
+  price from the converted quantity rounded half up to three decimal
+  places, and the stock value from that quantity together with the
+  valuation price rounded half up to two. The posting month is recorded
+  without a leading zero in the legacy system and shall be filled to two
+  digits. Every record belongs to plant 4170 and company code 0454, and
+  carries the price control indicator V, the valuation type NEU and the
+  currency EUR. No formal source or target schema is given - infer the
   required structure, the field mapping and the value formats yourself by
   comparing the input dataset against the target example.
 

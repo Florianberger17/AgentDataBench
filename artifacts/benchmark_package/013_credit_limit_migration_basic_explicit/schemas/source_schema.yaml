@@ -6,10 +6,10 @@ description: >
   Source schema containing the sales order headers exported from the legacy
   ERP system. Each record represents one customer order, identified by its
   customer transaction number. The export spans several years of order
-  history, so a customer appears in as many records as orders were placed.
-  The dataset is the only record of the historical revenue a credit limit has
-  to be derived from. Decimal values are written with a comma as the decimal
-  separator and without a thousands separator.
+  history, so a customer appears in as many records as orders were placed. The
+  dataset is the only record of the historical revenue a credit limit has to
+  be derived from. Decimal values are written with a comma as the decimal
+  separator and a period as the thousands separator.
 
 attributes:
 

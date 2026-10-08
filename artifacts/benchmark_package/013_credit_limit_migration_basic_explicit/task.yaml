@@ -65,7 +65,9 @@ business_rules:
     description: >
       The target system keeps one credit master record per customer, not one
       per order. The orders of a customer are therefore accumulated into a
-      single record before any target field is derived.
+      single record before any target field is derived. Selection happens
+      before accumulation, so a customer none of whose orders survives the
+      filter has nothing to accumulate and receives no credit master record.
     key_fields:
       - customer no.
     aggregates:

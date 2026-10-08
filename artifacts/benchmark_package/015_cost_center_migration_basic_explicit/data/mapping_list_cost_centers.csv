@@ -1,108 +1,108 @@
 ﻿cost center legacy,cost center legacy description,target operating unit,cost center new,cost center new description,department,person in charge
-4444-2700,General Management,Location Management,4170-6200,Location Management,SP/BVI-ZS,EIBERDNI
-4444-2700,General Management,Marketing,0454-6400,Marketing Management,SP/HZA-ZOM,PUTZFAN
-4444-5930,Management Assistance,Location Management,4170-6205,Management Assistance,SP/BVI-ZS,EIBERDNI
-4444-8972,Corporate Strategy,Location Management,4170-6210,Corporate Strategy,SP/BVI-ZS,EIBERDNI
-4444-9577,Internal Audit,Finance & Controlling,4170-6300,Internal Audit,SP/BVI-ZSF,ZUBERMRK
-4444-7577,Legal Affairs and Compliance,Location Management,4170-6215,Legal Affairs and Compliance,SP/BVI-ZS,EIBERDNI
-4444-5577,Investor Relations,Location Management,4170-6220,Investor Relations,SP/BVI-ZS,EIBERDNI
-4444-8150,Business Development,Marketing,0454-6405,Market Development,SP/HZA-ZOM,PUTZFAN
-4444-8150,Business Development,Location Management,4170-6225,Corporate Development,SP/BVI-ZS,EIBERDNI
-4444-6022,Quality Management System,Quality,4170-3800,Quality Management System,SP/BVI-ZSQ,EIBERDNI
-4444-8833,Financial Accounting,Finance & Controlling,4170-6305,Financial Accounting,SP/BVI-ZSF,ZUBERMRK
-4444-1155,Controlling,Finance & Controlling,4170-6310,Controlling,SP/BVI-ZSF,ZUBERMRK
-4444-2798,Treasury and Cash Management,Finance & Controlling,4170-6315,,SP/BVI-ZSF,ZUBERMRK
-4444-7754,Payroll Accounting,Location Management,4170-6230,Payroll Accounting,SP/BVI-ZS,EIBERDNI
-4444-9119,Human Resources,Location Management,4170-6235,Human Resources Operations,SP/BVI-ZS,EIBERDNI
-4444-9119,Human Resources,Finance & Controlling,4170-6320,Personnel Controlling,SP/BVI-ZSF,ZUBERMRK
-4444-7739,Personnel Development,Location Management,4170-6240,Personnel Development,SP/BVI-ZS,EIBERDNI
-4444-9193,Information Technology,Location Management,4170-6245,Information Technology,SP/BVI-ZS,EIBERDNI
-4444-6408,IT Infrastructure and Networks,Location Management,4170-6250,IT Infrastructure and Networks,SP/BVI-ZS,EIBERDNI
-4444-4783,Occupational Safety and Health,Facility Management,4170-6400,Occupational Safety and Health,SP/BVI-ZSB,PUTZFAN
-4444-4799,Environmental Protection,Facility Management,4170-6405,Environmental Protection,SP/BVI-ZSB,PUTZFAN
-4444-5966,Insurance and Risk Management,Finance & Controlling,4170-6325,Insurance and Risk Management,SP/BVI-ZSF,ZUBERMRK
-4444-4767,Design Management,Mechanical Engineering,4170-3300,Design Management,SP/BVI-ZSD,POHLSFF
-4444-7211,Project Management Office,Mechanical Engineering,4170-3305,Engineering Coordination,SP/BVI-ZSD,POHLSFF
-4444-7211,Project Management Office,PMO,4170-3200,Project Management Office,SP/BVI-ZSX,HALLEFRA
-4444-2890,Project Management Machinery,PMO,4170-3205,Project Management Machinery,SP/BVI-ZSX,HALLEFRA
-4444-2109,Mechanical Design Machinery,Mechanical Engineering,4170-3310,Mechanical Design Machinery,SP/BVI-ZSD,POHLSFF
-4444-5184,Mechanical Design Tooling,Mechanical Engineering,4170-3315,Mechanical Design Tooling,SP/BVI-ZSD,POHLSFF
-4444-7971,Mechanical Design Fixtures,Mechanical Engineering,4170-3320,Mechanical Design Fixtures,SP/BVI-ZSD,POHLSFF
-4444-5609,Electrical Design Hardware,Electrical Engineering,4170-3400,Electrical Design Hardware,SP/BVI-ZSE,POHLSFF
-4444-8258,Electrical Design Software,Electrical Engineering,4170-3405,Electrical Design Software,SP/BVI-ZSE,POHLSFF
-4444-5223,Electrical Design Hardware and Software,After Sales & Service,4170-3700,Service Software Support,SP/BVI-ZSC,ROESNRLA
-4444-5223,Electrical Design Hardware and Software,Electrical Engineering,4170-3410,Electrical Design Hardware,SP/BVI-ZSE,POHLSFF
-4444-6585,Automation Engineering,Electrical Engineering,4170-3415,Automation Engineering,SP/BVI-ZSE,POHLSFF
-4444-4359,Control Cabinet Design,Electrical Engineering,4170-3420,Control Cabinet Design,SP/BVI-ZSE,POHLSFF
-4444-3126,Technical Documentation,Mechanical Engineering,4170-3325,Technical Documentation,SP/BVI-ZSD,POHLSFF
-4444-3126,Technical Documentation,After Sales & Service,4170-3705,Service Documentation,SP/BVI-ZSC,ROESNRLA
-4444-2746,Standards and Norms,Mechanical Engineering,4170-3330,,SP/BVI-ZSD,POHLSFF
-4444-1013,Research and Development,Mechanical Engineering,4170-3335,Research and Development,SP/BVI-ZSD,POHLSFF
-4444-3957,Prototype Shop,Manufacturing,4170-3900,Prototype Shop,SP/BVI-ZSM,WEBERKLA
-4444-9621,Apprentice Workshop,Location Management,4170-6255,Apprentice Workshop,SP/BVI-ZS,EIBERDNI
-4444-9693,Technical Training,Location Management,4170-6260,Technical Training,SP/BVI-ZS,EIBERDNI
-4444-1088,Engineering Change Management,PMO,4170-3210,Engineering Change Management,SP/BVI-ZSX,HALLEFRA
-4444-7410,CAD Administration,Mechanical Engineering,4170-3340,CAD Administration,SP/BVI-ZSD,POHLSFF
-4444-1159,Purchasing,Purchasing,4170-3500,Purchasing,SP/BVI-ZSY,KNOPPDMI
-4444-2307,Strategic Purchasing,Purchasing,4170-3505,Strategic Purchasing,SP/BVI-ZSY,KNOPPDMI
-4444-4642,Operational Purchasing,Purchasing,4170-3510,Operational Purchasing,SP/BVI-ZSY,KNOPPDMI
-4444-4670,Purchasing Electrical Parts,Purchasing,4170-3515,Purchasing Electrical Parts,SP/BVI-ZSY,KNOPPDMI
-4444-5047,Purchasing Mechanical Parts,Purchasing,4170-3520,Purchasing Mechanical Parts,SP/BVI-ZSY,KNOPPDMI
-4444-1532,Supplier Quality Assurance,Quality,4170-3805,Supplier Quality Assurance,SP/BVI-ZSQ,EIBERDNI
-4444-3175,Customs and Export Control,Purchasing,4170-3525,Customs and Export Control,SP/BVI-ZSY,KNOPPDMI
-4444-2031,Subcontracting,Purchasing,4170-3530,Subcontracting,SP/BVI-ZSY,KNOPPDMI
-4444-8692,Production and Assembly Management,Assembly,4170-3600,Assembly Management,SP/BVI-ZSA,KNOPPDMI
-4444-8692,Production and Assembly Management,Work Scheduling,4170-3000,Production Control,SP/BVI-ZSW,WEBERKLA
-4444-8692,Production and Assembly Management,Manufacturing,4170-3905,Machining Management,SP/BVI-ZSM,WEBERKLA
-4444-4351,Mechanical Assembly,Assembly,4170-3605,Mechanical Assembly,SP/BVI-ZSA,KNOPPDMI
-4444-7258,Electrical Assembly,Assembly,4170-3610,Electrical Assembly,SP/BVI-ZSA,KNOPPDMI
-4444-8765,Mechanical Commissioning,Assembly,4170-3615,Mechanical Commissioning,SP/BVI-ZSA,KNOPPDMI
-4444-8765,Mechanical Commissioning,After Sales & Service,4170-3710,Field Commissioning,SP/BVI-ZSC,ROESNRLA
-4444-7321,Final Assembly and Test,Assembly,4170-3620,Final Assembly and Test,SP/BVI-ZSA,KNOPPDMI
-4444-6631,Manufacturing General,Manufacturing,4170-3910,Manufacturing General,SP/BVI-ZSM,WEBERKLA
-4444-3089,Manufacturing Turning,Manufacturing,4170-3915,Manufacturing Turning,SP/BVI-ZSM,WEBERKLA
-4444-7940,Manufacturing Milling,Manufacturing,4170-3920,Manufacturing Milling,SP/BVI-ZSM,WEBERKLA
-4444-9511,Manufacturing Grinding,Manufacturing,4170-3925,Manufacturing Grinding,SP/BVI-ZSM,WEBERKLA
-4444-1537,Manufacturing EDM,Manufacturing,4170-3930,Manufacturing EDM,SP/BVI-ZSM,WEBERKLA
-4444-9883,Manufacturing Sheet Metal,Manufacturing,4170-3935,Manufacturing Sheet Metal,SP/BVI-ZSM,WEBERKLA
-4444-8129,Manufacturing Welding,Manufacturing,4170-3940,Manufacturing Welding,SP/BVI-ZSM,WEBERKLA
-4444-4773,Surface Treatment,Manufacturing,4170-3945,Surface Treatment,SP/BVI-ZSM,WEBERKLA
-4444-1883,Tool Shop,Manufacturing,4170-3950,Tool Shop,SP/BVI-ZSM,WEBERKLA
-4444-1453,Work Scheduling,Work Scheduling,4170-3005,Work Scheduling,SP/BVI-ZSW,WEBERKLA
-4444-6404,Production Planning and Control,Work Scheduling,4170-3010,Production Planning and Control,SP/BVI-ZSW,WEBERKLA
-4444-3341,NC Programming,Work Scheduling,4170-3015,NC Programming,SP/BVI-ZSW,WEBERKLA
-4444-9593,Maintenance and Repair,Facility Management,4170-6410,Maintenance and Repair,SP/BVI-ZSB,PUTZFAN
-4444-8017,Facility Services,Facility Management,4170-6415,Facility Services,SP/BVI-ZSB,PUTZFAN
-4444-7978,Energy Management,Facility Management,4170-6420,Energy Management,SP/BVI-ZSB,PUTZFAN
-4444-1668,Goods Receipt and Inspection,Purchasing,4170-3535,Goods Receipt and Inspection,SP/BVI-ZSY,KNOPPDMI
-4444-3801,Warehouse Raw Material,Purchasing,4170-3540,,SP/BVI-ZSY,KNOPPDMI
-4444-3148,Warehouse Finished Goods,Purchasing,4170-3545,Warehouse Finished Goods,SP/BVI-ZSY,KNOPPDMI
-4444-3924,Logistics and Shipping,Purchasing,4170-3550,Logistics and Shipping,SP/BVI-ZSY,KNOPPDMI
-4444-5139,Vehicle Fleet,Facility Management,4170-6425,Vehicle Fleet,SP/BVI-ZSB,PUTZFAN
-4444-6457,Scrap and Waste Disposal,Facility Management,4170-6430,Scrap and Waste Disposal,SP/BVI-ZSB,PUTZFAN
-4444-4335,Quality Assurance,Quality,4170-3810,Quality Assurance,SP/BVI-ZSQ,EIBERDNI
-4444-4092,Incoming Goods Inspection,Quality,4170-3815,Incoming Goods Inspection,SP/BVI-ZSQ,EIBERDNI
-4444-1739,Measuring Room,Quality,4170-3820,,SP/BVI-ZSQ,EIBERDNI
-4444-3704,Customer Complaint Handling,Quality,4170-3825,Customer Complaint Handling,SP/BVI-ZSQ,EIBERDNI
-4444-3704,Customer Complaint Handling,After Sales & Service,4170-3715,Warranty Processing,SP/BVI-ZSC,ROESNRLA
-4444-6374,Calibration Service,Quality,4170-3830,Calibration Service,SP/BVI-ZSQ,EIBERDNI
-4444-8192,Service Center,After Sales & Service,4170-3720,Service Center,SP/BVI-ZSC,ROESNRLA
-4444-9047,Spare Parts Management,After Sales & Service,4170-3725,Spare Parts Management,SP/BVI-ZSC,ROESNRLA
-4444-1260,Field Service,After Sales & Service,4170-3730,Field Service,SP/BVI-ZSC,ROESNRLA
-4444-5559,Service Hotline,After Sales & Service,4170-3735,Service Hotline,SP/BVI-ZSC,ROESNRLA
-4444-3094,Retrofit and Modernisation,After Sales & Service,4170-3740,Retrofit and Modernisation,SP/BVI-ZSC,ROESNRLA
-4444-3094,Retrofit and Modernisation,Technical Sales,0454-5500,Modernisation Sales,SP/HZA-ZOT1,OGUZOZH
-4444-1418,Repair Shop,After Sales & Service,4170-3745,Repair Shop,SP/BVI-ZSC,ROESNRLA
-4444-5774,Sales Management,Sales & KAM External,0454-5600,Sales Management,SP/HZA-ZOS2,MARQUMIC
-4444-9770,Technical Clarification,Technical Sales,0454-5505,Technical Clarification,SP/HZA-ZOT1,OGUZOZH
-4444-8989,Technical Sales,Sales & KAM External,0454-5605,Sales External Partners,SP/HZA-ZOS2,MARQUMIC
-4444-8989,Technical Sales,Technical Sales,0454-5510,Technical Sales,SP/HZA-ZOT1,OGUZOZH
-4444-1405,Key Account Management,Sales & KAM External,0454-5610,Key Account Management,SP/HZA-ZOS2,MARQUMIC
-4444-3456,Inside Sales,Order Management,0454-5700,Inside Sales,SP/HZA-ZOO,MARQUMIC
-4444-2164,Order Processing,Order Management,0454-5705,,SP/HZA-ZOO,MARQUMIC
-4444-9126,Quotation Management,Order Management,0454-5710,Quotation Processing,SP/HZA-ZOO,MARQUMIC
-4444-9126,Quotation Management,Technical Sales,0454-5515,Technical Quotation,SP/HZA-ZOT1,OGUZOZH
-4444-6738,Marketing and Communications,Marketing,0454-6410,Marketing and Communications,SP/HZA-ZOM,PUTZFAN
-4444-5387,Trade Fairs and Events,Marketing,0454-6415,Trade Fairs and Events,SP/HZA-ZOM,PUTZFAN
-4444-8832,Product Management,Marketing,0454-6420,Product Management,SP/HZA-ZOM,PUTZFAN
-4444-8832,Product Management,Sales & KAM External,0454-5615,Product Portfolio Sales,SP/HZA-ZOS2,MARQUMIC
+4444-2700,General Management,Location Management,4170-8000,Location Management,DV/GRA-UA,RESPUSRA
+4444-2700,General Management,Marketing,0454-7000,Marketing Management,DV/GRB-UBM,RESPUSI
+4444-5930,Management Assistance,Location Management,4170-8005,Management Assistance,DV/GRA-UA,RESPUSRA
+4444-8972,Corporate Strategy,Location Management,4170-8010,Corporate Strategy,DV/GRA-UA,RESPUSRA
+4444-9577,Internal Audit,Finance & Controlling,4170-8065,Internal Audit,DV/GRA-UAF,RESPUSRF
+4444-7577,Legal Affairs and Compliance,Location Management,4170-8015,Legal Affairs and Compliance,DV/GRA-UA,RESPUSRA
+4444-5577,Investor Relations,Location Management,4170-8020,Investor Relations,DV/GRA-UA,RESPUSRA
+4444-8150,Business Development,Marketing,0454-7005,Market Development,DV/GRB-UBM,RESPUSI
+4444-8150,Business Development,Location Management,4170-8025,Corporate Development,DV/GRA-UA,RESPUSRA
+4444-6022,Quality Management System,Quality,4170-1235,Quality Management System,DV/GRA-UAQ,RESPUSRA
+4444-8833,Financial Accounting,Finance & Controlling,4170-8070,Financial Accounting,DV/GRA-UAF,RESPUSRF
+4444-1155,Controlling,Finance & Controlling,4170-8075,Controlling,DV/GRA-UAF,RESPUSRF
+4444-2798,Treasury and Cash Management,Finance & Controlling,4170-8080,,DV/GRA-UAF,RESPUSRF
+4444-7754,Payroll Accounting,Location Management,4170-8030,Payroll Accounting,DV/GRA-UA,RESPUSRA
+4444-9119,Human Resources,Location Management,4170-8035,Human Resources Operations,DV/GRA-UA,RESPUSRA
+4444-9119,Human Resources,Finance & Controlling,4170-8085,Personnel Controlling,DV/GRA-UAF,RESPUSRF
+4444-7739,Personnel Development,Location Management,4170-8040,Personnel Development,DV/GRA-UA,RESPUSRA
+4444-9193,Information Technology,Location Management,4170-8045,Information Technology,DV/GRA-UA,RESPUSRA
+4444-6408,IT Infrastructure and Networks,Location Management,4170-8050,IT Infrastructure and Networks,DV/GRA-UA,RESPUSRA
+4444-4783,Occupational Safety and Health,Facility Management,4170-8095,Occupational Safety and Health,DV/GRA-UAB,RESPUSI
+4444-4799,Environmental Protection,Facility Management,4170-8100,Environmental Protection,DV/GRA-UAB,RESPUSI
+4444-5966,Insurance and Risk Management,Finance & Controlling,4170-8090,Insurance and Risk Management,DV/GRA-UAF,RESPUSRF
+4444-4767,Design Management,Mechanical Engineering,4170-1035,Design Management,DV/GRA-UAD,RESPUSH
+4444-7211,Project Management Office,Mechanical Engineering,4170-1040,Engineering Coordination,DV/GRA-UAD,RESPUSH
+4444-7211,Project Management Office,PMO,4170-1020,Project Management Office,DV/GRA-UAX,RESPUSRG
+4444-2890,Project Management Machinery,PMO,4170-1025,Project Management Machinery,DV/GRA-UAX,RESPUSRG
+4444-2109,Mechanical Design Machinery,Mechanical Engineering,4170-1045,Mechanical Design Machinery,DV/GRA-UAD,RESPUSH
+4444-5184,Mechanical Design Tooling,Mechanical Engineering,4170-1050,Mechanical Design Tooling,DV/GRA-UAD,RESPUSH
+4444-7971,Mechanical Design Fixtures,Mechanical Engineering,4170-1055,Mechanical Design Fixtures,DV/GRA-UAD,RESPUSH
+4444-5609,Electrical Design Hardware,Electrical Engineering,4170-1080,Electrical Design Hardware,DV/GRA-UAE,RESPUSH
+4444-8258,Electrical Design Software,Electrical Engineering,4170-1085,Electrical Design Software,DV/GRA-UAE,RESPUSH
+4444-5223,Electrical Design Hardware and Software,After Sales & Service,4170-1185,Service Software Support,DV/GRA-UAC,RESPUSRD
+4444-5223,Electrical Design Hardware and Software,Electrical Engineering,4170-1090,Electrical Design Hardware,DV/GRA-UAE,RESPUSH
+4444-6585,Automation Engineering,Electrical Engineering,4170-1095,Automation Engineering,DV/GRA-UAE,RESPUSH
+4444-4359,Control Cabinet Design,Electrical Engineering,4170-1100,Control Cabinet Design,DV/GRA-UAE,RESPUSH
+4444-3126,Technical Documentation,Mechanical Engineering,4170-1060,Technical Documentation,DV/GRA-UAD,RESPUSH
+4444-3126,Technical Documentation,After Sales & Service,4170-1190,Service Documentation,DV/GRA-UAC,RESPUSRD
+4444-2746,Standards and Norms,Mechanical Engineering,4170-1065,,DV/GRA-UAD,RESPUSH
+4444-1013,Research and Development,Mechanical Engineering,4170-1070,Research and Development,DV/GRA-UAD,RESPUSH
+4444-3957,Prototype Shop,Manufacturing,4170-1270,Prototype Shop,DV/GRA-UAM,RESPUSRC
+4444-9621,Apprentice Workshop,Location Management,4170-8055,Apprentice Workshop,DV/GRA-UA,RESPUSRA
+4444-9693,Technical Training,Location Management,4170-8060,Technical Training,DV/GRA-UA,RESPUSRA
+4444-1088,Engineering Change Management,PMO,4170-1030,Engineering Change Management,DV/GRA-UAX,RESPUSRG
+4444-7410,CAD Administration,Mechanical Engineering,4170-1075,CAD Administration,DV/GRA-UAD,RESPUSH
+4444-1159,Purchasing,Purchasing,4170-1105,Purchasing,DV/GRA-UAY,RESPUSRB
+4444-2307,Strategic Purchasing,Purchasing,4170-1110,Strategic Purchasing,DV/GRA-UAY,RESPUSRB
+4444-4642,Operational Purchasing,Purchasing,4170-1115,Operational Purchasing,DV/GRA-UAY,RESPUSRB
+4444-4670,Purchasing Electrical Parts,Purchasing,4170-1120,Purchasing Electrical Parts,DV/GRA-UAY,RESPUSRB
+4444-5047,Purchasing Mechanical Parts,Purchasing,4170-1125,Purchasing Mechanical Parts,DV/GRA-UAY,RESPUSRB
+4444-1532,Supplier Quality Assurance,Quality,4170-1240,Supplier Quality Assurance,DV/GRA-UAQ,RESPUSRA
+4444-3175,Customs and Export Control,Purchasing,4170-1130,Customs and Export Control,DV/GRA-UAY,RESPUSRB
+4444-2031,Subcontracting,Purchasing,4170-1135,Subcontracting,DV/GRA-UAY,RESPUSRB
+4444-8692,Production and Assembly Management,Assembly,4170-1160,Assembly Management,DV/GRA-UAA,RESPUSRB
+4444-8692,Production and Assembly Management,Work Scheduling,4170-1000,Production Control,DV/GRA-UAW,RESPUSRC
+4444-8692,Production and Assembly Management,Manufacturing,4170-1275,Machining Management,DV/GRA-UAM,RESPUSRC
+4444-4351,Mechanical Assembly,Assembly,4170-1165,Mechanical Assembly,DV/GRA-UAA,RESPUSRB
+4444-7258,Electrical Assembly,Assembly,4170-1170,Electrical Assembly,DV/GRA-UAA,RESPUSRB
+4444-8765,Mechanical Commissioning,Assembly,4170-1175,Mechanical Commissioning,DV/GRA-UAA,RESPUSRB
+4444-8765,Mechanical Commissioning,After Sales & Service,4170-1195,Field Commissioning,DV/GRA-UAC,RESPUSRD
+4444-7321,Final Assembly and Test,Assembly,4170-1180,Final Assembly and Test,DV/GRA-UAA,RESPUSRB
+4444-6631,Manufacturing General,Manufacturing,4170-1280,Manufacturing General,DV/GRA-UAM,RESPUSRC
+4444-3089,Manufacturing Turning,Manufacturing,4170-1285,Manufacturing Turning,DV/GRA-UAM,RESPUSRC
+4444-7940,Manufacturing Milling,Manufacturing,4170-1290,Manufacturing Milling,DV/GRA-UAM,RESPUSRC
+4444-9511,Manufacturing Grinding,Manufacturing,4170-1295,Manufacturing Grinding,DV/GRA-UAM,RESPUSRC
+4444-1537,Manufacturing EDM,Manufacturing,4170-1300,Manufacturing EDM,DV/GRA-UAM,RESPUSRC
+4444-9883,Manufacturing Sheet Metal,Manufacturing,4170-1305,Manufacturing Sheet Metal,DV/GRA-UAM,RESPUSRC
+4444-8129,Manufacturing Welding,Manufacturing,4170-1310,Manufacturing Welding,DV/GRA-UAM,RESPUSRC
+4444-4773,Surface Treatment,Manufacturing,4170-1315,Surface Treatment,DV/GRA-UAM,RESPUSRC
+4444-1883,Tool Shop,Manufacturing,4170-1320,Tool Shop,DV/GRA-UAM,RESPUSRC
+4444-1453,Work Scheduling,Work Scheduling,4170-1005,Work Scheduling,DV/GRA-UAW,RESPUSRC
+4444-6404,Production Planning and Control,Work Scheduling,4170-1010,Production Planning and Control,DV/GRA-UAW,RESPUSRC
+4444-3341,NC Programming,Work Scheduling,4170-1015,NC Programming,DV/GRA-UAW,RESPUSRC
+4444-9593,Maintenance and Repair,Facility Management,4170-8105,Maintenance and Repair,DV/GRA-UAB,RESPUSI
+4444-8017,Facility Services,Facility Management,4170-8110,Facility Services,DV/GRA-UAB,RESPUSI
+4444-7978,Energy Management,Facility Management,4170-8115,Energy Management,DV/GRA-UAB,RESPUSI
+4444-1668,Goods Receipt and Inspection,Purchasing,4170-1140,Goods Receipt and Inspection,DV/GRA-UAY,RESPUSRB
+4444-3801,Warehouse Raw Material,Purchasing,4170-1145,,DV/GRA-UAY,RESPUSRB
+4444-3148,Warehouse Finished Goods,Purchasing,4170-1150,Warehouse Finished Goods,DV/GRA-UAY,RESPUSRB
+4444-3924,Logistics and Shipping,Purchasing,4170-1155,Logistics and Shipping,DV/GRA-UAY,RESPUSRB
+4444-5139,Vehicle Fleet,Facility Management,4170-8120,Vehicle Fleet,DV/GRA-UAB,RESPUSI
+4444-6457,Scrap and Waste Disposal,Facility Management,4170-8125,Scrap and Waste Disposal,DV/GRA-UAB,RESPUSI
+4444-4335,Quality Assurance,Quality,4170-1245,Quality Assurance,DV/GRA-UAQ,RESPUSRA
+4444-4092,Incoming Goods Inspection,Quality,4170-1250,Incoming Goods Inspection,DV/GRA-UAQ,RESPUSRA
+4444-1739,Measuring Room,Quality,4170-1255,,DV/GRA-UAQ,RESPUSRA
+4444-3704,Customer Complaint Handling,Quality,4170-1260,Customer Complaint Handling,DV/GRA-UAQ,RESPUSRA
+4444-3704,Customer Complaint Handling,After Sales & Service,4170-1200,Warranty Processing,DV/GRA-UAC,RESPUSRD
+4444-6374,Calibration Service,Quality,4170-1265,Calibration Service,DV/GRA-UAQ,RESPUSRA
+4444-8192,Service Center,After Sales & Service,4170-1205,Service Center,DV/GRA-UAC,RESPUSRD
+4444-9047,Spare Parts Management,After Sales & Service,4170-1210,Spare Parts Management,DV/GRA-UAC,RESPUSRD
+4444-1260,Field Service,After Sales & Service,4170-1215,Field Service,DV/GRA-UAC,RESPUSRD
+4444-5559,Service Hotline,After Sales & Service,4170-1220,Service Hotline,DV/GRA-UAC,RESPUSRD
+4444-3094,Retrofit and Modernisation,After Sales & Service,4170-1225,Retrofit and Modernisation,DV/GRA-UAC,RESPUSRD
+4444-3094,Retrofit and Modernisation,Technical Sales,0454-2000,Modernisation Sales,DV/GRB-UBT1,RESPUSJ
+4444-1418,Repair Shop,After Sales & Service,4170-1230,Repair Shop,DV/GRA-UAC,RESPUSRD
+4444-5774,Sales Management,Sales & KAM External,0454-2020,Sales Management,DV/GRB-UBS2,RESPUSRE
+4444-9770,Technical Clarification,Technical Sales,0454-2005,Technical Clarification,DV/GRB-UBT1,RESPUSJ
+4444-8989,Technical Sales,Sales & KAM External,0454-2025,Sales External Partners,DV/GRB-UBS2,RESPUSRE
+4444-8989,Technical Sales,Technical Sales,0454-2010,Technical Sales,DV/GRB-UBT1,RESPUSJ
+4444-1405,Key Account Management,Sales & KAM External,0454-2030,Key Account Management,DV/GRB-UBS2,RESPUSRE
+4444-3456,Inside Sales,Order Management,0454-2040,Inside Sales,DV/GRB-UBO,RESPUSRE
+4444-2164,Order Processing,Order Management,0454-2045,,DV/GRB-UBO,RESPUSRE
+4444-9126,Quotation Management,Order Management,0454-2050,Quotation Processing,DV/GRB-UBO,RESPUSRE
+4444-9126,Quotation Management,Technical Sales,0454-2015,Technical Quotation,DV/GRB-UBT1,RESPUSJ
+4444-6738,Marketing and Communications,Marketing,0454-7010,Marketing and Communications,DV/GRB-UBM,RESPUSI
+4444-5387,Trade Fairs and Events,Marketing,0454-7015,Trade Fairs and Events,DV/GRB-UBM,RESPUSI
+4444-8832,Product Management,Marketing,0454-7020,Product Management,DV/GRB-UBM,RESPUSI
+4444-8832,Product Management,Sales & KAM External,0454-2035,Product Portfolio Sales,DV/GRB-UBS2,RESPUSRE

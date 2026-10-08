@@ -14,10 +14,14 @@ objective: >
   the local currency and no translation is needed. Every document belongs
   to company code 4170, carries the header text Invoice migration, the
   application NEWGL and the transaction UK with activity K. In the legacy
-  system a two-digit year stands for the year 20YY. No formal source or
-  target schema is given - infer the required structure, the field mapping
-  and the value formats yourself by comparing the input dataset against
-  the target example.
+  system a two-digit year stands for the year 20YY. The item text consists
+  of the customer transaction followed by the customer name, separated by
+  a single blank. The invoice date of the legacy record becomes the
+  document date and its posting date the posting date; the two differ
+  where an invoice was booked a few days after it was issued. No formal
+  source or target schema is given - infer the required structure, the
+  field mapping and the value formats yourself by comparing the input
+  dataset against the target example.
 
 input:
   source_dataset: data/dataset.csv

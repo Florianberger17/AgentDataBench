@@ -11,24 +11,26 @@ objective: >
   placed is one record of the source dataset, while the target system
   expects one record per customer, so the order values of a customer have
   to be accumulated into a historical revenue first; deliver the customers
-  in ascending order of their legacy customer number. The business partner
-  number and the payment behaviour of a customer come from the central
-  customer cross reference list, and a customer absent from that list is
-  not migrated. The credit limit follows from the historical revenue in
-  five classes: below 5.000 euro the limit is 1, from 5.000 to below
-  10.000 it is 3.000, from 10.000 to below 25.000 it is 10.000, from
-  25.000 to below 100.000 it is 50.000, and from 100.000 upwards it is
-  100.000. The risk class follows from the payment behaviour together with
-  that limit: a blocked customer is always C; a good payer with a limit of
-  50.000 or 100.000 is AA and otherwise A; a poor payer with a limit of
-  50.000 or 100.000 is B and otherwise C. A blocked customer additionally
-  carries the credit block and the block reason Poor payment history. Risk
-  classes B and C are marked as critical. The follow-up date is 31.03.2028
-  for AA, 30.09.2027 for A, 31.03.2027 for B and 31.12.2026 for C. Every
-  record belongs to credit segment 454 and its limit is valid without a
-  restriction in time. No formal source or target schema is given - infer
-  the required structure, the field mapping and the value formats yourself
-  by comparing the input dataset against the target example.
+  in ascending order of their legacy customer number. A customer none of
+  whose orders survives that selection receives no credit master record.
+  The business partner number and the payment behaviour of a customer come
+  from the central customer cross reference list, and a customer absent
+  from that list is not migrated. The credit limit follows from the
+  historical revenue in five classes: below 5.000 euro the limit is 1,
+  from 5.000 to below 10.000 it is 3.000, from 10.000 to below 25.000 it
+  is 10.000, from 25.000 to below 100.000 it is 50.000, and from 100.000
+  upwards it is 100.000. The risk class follows from the payment behaviour
+  together with that limit: a blocked customer is always C; a good payer
+  with a limit of 50.000 or 100.000 is AA and otherwise A; a poor payer
+  with a limit of 50.000 or 100.000 is B and otherwise C. A blocked
+  customer additionally carries the credit block and the block reason Poor
+  payment history. Risk classes B and C are marked as critical. The
+  follow-up date is 31.03.2028 for AA, 30.09.2027 for A, 31.03.2027 for B
+  and 31.12.2026 for C. Every record belongs to credit segment 454 and its
+  limit is valid without a restriction in time. No formal source or target
+  schema is given - infer the required structure, the field mapping and
+  the value formats yourself by comparing the input dataset against the
+  target example.
 
 input:
   source_dataset: data/dataset.csv

@@ -36,14 +36,24 @@ columns:
 
   # Decides which employees this migration wave covers at all, so it is
   # carried over unchanged. A company code is an organisational key.
+  # Both of these carried real values before: `identity` published them
+  # verbatim, and `categorical_resample` only reshuffles the real labels
+  # instead of replacing them. `numeric_mapping` draws one synthetic code per
+  # distinct real value, so the repetition survives and no real code does.
   - column: company code
-    strategy: identity
+    strategy: numeric_mapping
+    format: "0{:03d}"
+    min: 100
+    max: 999
 
   # Not read by any rule of the task. Resampled rather than carried over,
   # since the cost center is what would place an employee inside the real
   # organisation.
   - column: cost center
-    strategy: categorical_resample
+    strategy: numeric_mapping
+    format: "8800-{:04d}"
+    min: 1000
+    max: 9999
 
   # The entry date decides which employees have joined by the migration date,
   # and the leaving date which of them are still with the company - the

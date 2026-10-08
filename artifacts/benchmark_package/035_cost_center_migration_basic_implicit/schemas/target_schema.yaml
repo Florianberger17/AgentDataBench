@@ -123,7 +123,9 @@ attributes:
     required: true
     description: >
       Short name of the cost center as the target system displays it, at most
-      twenty characters long, so a longer description is cut to fit.
+      twenty characters long, so a longer description is cut to fit. A name cut
+      to that length is adopted unchanged, including a blank character the cut
+      happens to fall on.
 
   - name: DESCRIPT
     type: string
