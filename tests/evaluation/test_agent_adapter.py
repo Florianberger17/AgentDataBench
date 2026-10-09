@@ -16,6 +16,7 @@ import pandas as pd
 import yaml
 
 from agentdatabench.domain.benchmark_package import BenchmarkPackage
+from agentdatabench.domain.task import BusinessRules, MappingRule
 from agentdatabench.evaluation.agent_adapter import (
     OUTPUT_FILENAME,
     SOLUTION_SCRIPT_FILENAME,
@@ -352,3 +353,51 @@ def test_prompt_mentions_target_example_and_infer_note_instead_of_schemas(pkg1_r
     assert "Infer the target structure and field mapping yourself" in prompt
     assert "Source schema:" not in prompt
     assert "Target schema:" not in prompt
+
+
+def test_render_ranges_spells_out_half_open_brackets():
+    """RangeMappingHandler reads `to` as exclusive, but that convention lives
+    in the handler where an agent never sees it: rendered as bare mappings,
+    {'to': 2} beside {'from': 2} reads as though 2 belonged to both."""
+    adapter = _PromptCapturingFakeAdapter()
+
+    lines = adapter._render_ranges(
+        [{"to": 2, "value": ""}, {"from": 2, "value": "S"}]
+    )
+
+    assert [line.strip() for line in lines] == [
+        "below 2: an empty value",
+        "2 and above: 'S'",
+    ]
+
+
+def test_render_ranges_describes_a_closed_bracket_by_both_bounds():
+    adapter = _PromptCapturingFakeAdapter()
+
+    lines = adapter._render_ranges([{"from": 5000, "to": 10000, "value": "3"}])
+
+    assert lines[0].strip() == "from 5000 up to but excluding 10000: '3'"
+
+
+def test_business_rules_section_spells_out_the_brackets():
+    """The bracket a value falls into decides the output, so the rendered
+    rule has to state the bounds the way the handler applies them - not just
+    dump the mapping the handler reads."""
+    adapter = _PromptCapturingFakeAdapter()
+    rules = BusinessRules(
+        mappings=[
+            MappingRule(
+                source_field="capacity units",
+                target_field="unit identifier",
+                transformation={
+                    "type": "range_mapping",
+                    "ranges": [{"to": 2, "value": ""}, {"from": 2, "value": "S"}],
+                },
+            )
+        ]
+    )
+
+    rendered = adapter._render_business_rules(rules)
+
+    assert any("below 2: an empty value" in line for line in rendered)
+    assert any("2 and above: 'S'" in line for line in rendered)

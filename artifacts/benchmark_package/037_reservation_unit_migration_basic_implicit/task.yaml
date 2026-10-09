@@ -11,17 +11,18 @@ objective: >
   still booked against a cost center the new controlling chart no longer
   carries: the central cost center list decides that, and it also supplies
   the cost element the confirmed hours are posted under. Deliver the units
-  in ascending order of their number. The legacy system holds no capacity
-  figure, only the shift arrangement, so the capacity has to be determined
-  from it: one shift contributes its gross length less its breaks, which
-  are recorded in minutes and have to be brought to hours first, and that
-  net shift time applies to every shift of a working day, to every working
-  day of the week and to every workplace the operation is performed on. A
-  bought-in operation runs on no workplace of the plant, so its workplace
-  count is zero and its capacity comes out at zero with it - and having no
-  capacity to schedule against, such a unit is scheduled by its lead time
-  while every other is scheduled against its capacity. A unit holding two
-  or more workplaces is marked as a pooled unit. The number of shifts is
+  in ascending order of their number, read as a number rather than as
+  text. The legacy system holds no capacity figure, only the shift
+  arrangement, so the capacity has to be determined from it: one shift
+  contributes its gross length less its breaks, which are recorded in
+  minutes and have to be brought to hours first, and that net shift time
+  applies to every shift of a working day, to every working day of the
+  week and to every workplace the operation is performed on. A bought-in
+  operation runs on no workplace of the plant, so its workplace count is
+  zero and its capacity comes out at zero with it - and having no capacity
+  to schedule against, such a unit is scheduled by its lead time while
+  every other is scheduled against its capacity. A unit holding two or
+  more workplaces is marked as a pooled unit. The number of shifts is
   carried over as the shift factor, and the two planning correction
   factors follow from the planning profile: a standard work center is
   planned at 0,90 in the rough-cut run and 1,00 in the detailed run, a

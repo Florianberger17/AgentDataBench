@@ -105,8 +105,8 @@ attributes:
       - in process
       - partly confirmed
     description: >
-      Status the order is created with, which follows from how far it had got
-      on the shop floor in the legacy system.
+      Status the order is created with, which follows from the status the
+      legacy system recorded for it.
 
   - name: planner
     type: string

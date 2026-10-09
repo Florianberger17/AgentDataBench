@@ -329,6 +329,33 @@ class AgentAdapter(ABC):
             condition += f" (source field format: {rule.field_format})"
         return condition
 
+    def _render_ranges(self, ranges: list[dict]) -> list[str]:
+        """The brackets of a ``range_mapping`` in words.
+
+        RangeMappingHandler reads them as half-open - ``from`` inclusive,
+        ``to`` exclusive - so two adjacent brackets share a boundary without
+        overlapping. That convention lives in the handler, where an agent
+        never sees it: rendered as a bare mapping, ``{'to': 2, 'value': ''}``
+        beside ``{'from': 2, 'value': 'S'}`` reads as though the boundary
+        belonged to both. Spelling the bounds out removes the guess, the same
+        way _render_filter_rule does for a filter condition.
+        """
+        lines = []
+        for bracket in ranges:
+            lower, upper = bracket.get("from"), bracket.get("to")
+            if lower is not None and upper is not None:
+                condition = f"from {lower} up to but excluding {upper}"
+            elif upper is not None:
+                condition = f"below {upper}"
+            elif lower is not None:
+                condition = f"{lower} and above"
+            else:
+                condition = "any value"
+            value = bracket.get("value")
+            rendered = "an empty value" if value == "" else repr(value)
+            lines.append(f"      {condition}: {rendered}")
+        return lines
+
     def _render_business_rules(self, business_rules: BusinessRules) -> list[str]:
         """Renders task.business_rules into natural language. Without this,
         an agent only sees the schemas and has to guess exact filter cutoffs
@@ -440,6 +467,10 @@ class AgentAdapter(ABC):
                     f"  - {source or '(no source field)'} -> "
                     f"{mapping.target_field}: {transformation}"
                 )
+                if transformation.get("type") == "range_mapping":
+                    lines.extend(
+                        self._render_ranges(transformation.get("ranges") or [])
+                    )
                 if mapping.description:
                     lines.append(f"    ({mapping.description.strip()})")
             lines.append("")

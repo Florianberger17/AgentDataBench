@@ -72,9 +72,15 @@ attributes:
       - started
       - partly finished
     description: >
-      How far the order has got on the shop floor. An activated order has not
-      been touched, a started one is being worked on, and a partly finished
-      one has already delivered part of its quantity.
+      How far the order has got on the shop floor as the legacy system
+      records it: activated for an order that has not been taken up, started
+      for one being worked on, and partly finished for one that has already
+      delivered part of its quantity. The flag is kept by hand on the shop
+      floor and is never recalculated from the bookings, so it does not
+      always agree with the quantities on the same record - an order can
+      carry activated although something has already been booked against it,
+      or partly finished although nothing has been delivered yet. The flag as
+      it stands is what the order status of the new system follows from.
 
   - name: release flag
     type: string

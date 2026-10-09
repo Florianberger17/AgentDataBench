@@ -183,10 +183,13 @@ business_rules:
           "started": "in process"
           "partly finished": "partly confirmed"
       description: >
-        The status the order is created with follows from how far it had got
-        on the shop floor: one that was never touched is simply created, one
-        being worked on is in process, and one that already delivered part of
-        its quantity is partly confirmed.
+        The status the order is created with follows from the status the
+        legacy system records for it: one that was never touched is simply
+        created, one being worked on is in process, and one that already
+        delivered part of its quantity is partly confirmed. The legacy flag
+        is taken over as it stands and is not reconciled with the quantities
+        on the record, which are kept separately and do not always agree
+        with it.
 
     - source_field: planner
       target_field: planner

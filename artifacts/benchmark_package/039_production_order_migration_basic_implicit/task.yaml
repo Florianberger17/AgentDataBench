@@ -19,14 +19,16 @@ objective: >
   What the new system has to schedule is the quantity still to be
   produced, which is the order quantity less what has already been
   delivered to stock and what was scrapped along the way. The order status
-  follows from how far the order had got on the shop floor: one that was
-  never touched is created, one being worked on is in process, and one
-  that already delivered part of its quantity is partly confirmed. The
-  legacy system writes pieces as STK, the new one in the international
-  notation. Every order belongs to plant 4444 and replenishes stock. No
-  formal source or target schema is given - infer the required structure,
-  the field mapping and the value formats yourself by comparing the input
-  dataset against the target example.
+  follows from the status the legacy system records for the order, taken
+  over as it stands: activated becomes created, started becomes in
+  process, and partly finished becomes partly confirmed. That flag is
+  kept separately from the booked quantities and does not always agree
+  with them, so it is not to be recalculated from them. The legacy system
+  writes pieces as STK, the new one in the international notation. Every
+  order belongs to plant 4444 and replenishes stock. No formal source or
+  target schema is given - infer the required structure, the field mapping
+  and the value formats yourself by comparing the input dataset against
+  the target example.
 
 input:
   source_dataset: data/dataset.csv
