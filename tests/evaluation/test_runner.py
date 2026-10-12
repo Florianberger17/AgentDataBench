@@ -46,6 +46,15 @@ class _GarbageFakeAdapter(AgentAdapter):
         pd.DataFrame({"nonsense": ["a", "b"]}).to_csv(workspace / OUTPUT_FILENAME, index=False)
 
 
+class _EmptyOutputFakeAdapter(AgentAdapter):
+    """Writes a present-but-empty solution.csv - AgentAdapter only checks the
+    file exists, not that it parses, so this exercises the runner's own
+    guard against a malformed output crashing the whole batch script."""
+
+    async def _invoke(self, prompt: str, workspace: Path) -> None:
+        (workspace / OUTPUT_FILENAME).write_text("")
+
+
 class _FailingFakeAdapter(AgentAdapter):
     async def _invoke(self, prompt: str, workspace: Path) -> None:
         raise RuntimeError("boom")
@@ -111,6 +120,19 @@ def test_runner_fails_when_agent_produces_garbage(pkg1_root):
     # with a 0.0 reproducibility result rather than a crash.
     assert result.reproducibility is not None
     assert result.reproducibility.score == 0.0
+
+
+def test_runner_records_agent_failure_when_output_is_unreadable(pkg1_root):
+    package = BenchmarkPackage.load(pkg1_root)
+    adapter = _EmptyOutputFakeAdapter(name="empty-output")
+
+    result = asyncio.run(EvaluationRunner().run(package, adapter))
+
+    assert not result.passed
+    assert result.metrics == []
+    assert result.reproducibility is None
+    assert "solution.csv" in result.error
+    assert result.duration_seconds >= 0.0
 
 
 def test_runner_records_agent_failure_without_computing_metrics(pkg1_root):

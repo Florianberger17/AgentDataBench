@@ -1,0 +1,3079 @@
+{
+  "generated_at": "2026-10-12T18:28:06.188151Z",
+  "results": [
+    {
+      "task_id": "001_CUSTOMER_MIGRATION_BASIC_EXPLICIT",
+      "agent_name": "ag2",
+      "metrics": [
+        {
+          "name": "schema_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_columns": [
+              "CustomerID",
+              "Name",
+              "Street",
+              "City",
+              "PostalCode",
+              "Country",
+              "LastBusinessActivityDate",
+              "Status"
+            ],
+            "actual_columns": [
+              "CustomerID",
+              "Name",
+              "Street",
+              "City",
+              "PostalCode",
+              "Country",
+              "LastBusinessActivityDate",
+              "Status"
+            ]
+          }
+        },
+        {
+          "name": "row_accuracy",
+          "score": 1.0,
+          "details": {
+            "matched_rows": 45,
+            "expected_rows": 45
+          }
+        },
+        {
+          "name": "filtering_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_rows": 45,
+            "actual_rows": 45
+          }
+        },
+        {
+          "name": "field_mapping_accuracy",
+          "score": 1.0,
+          "details": {
+            "populated_fraction_by_column": {
+              "CustomerID": 1.0,
+              "Name": 1.0,
+              "Street": 1.0,
+              "City": 1.0,
+              "PostalCode": 1.0,
+              "Country": 1.0,
+              "LastBusinessActivityDate": 1.0,
+              "Status": 1.0
+            },
+            "expected_fraction_by_column": {
+              "CustomerID": 1.0,
+              "Name": 1.0,
+              "Street": 1.0,
+              "City": 1.0,
+              "PostalCode": 1.0,
+              "Country": 1.0,
+              "LastBusinessActivityDate": 1.0,
+              "Status": 1.0
+            },
+            "score_by_column": {
+              "CustomerID": 1.0,
+              "Name": 1.0,
+              "Street": 1.0,
+              "City": 1.0,
+              "PostalCode": 1.0,
+              "Country": 1.0,
+              "LastBusinessActivityDate": 1.0,
+              "Status": 1.0
+            }
+          }
+        },
+        {
+          "name": "transformation_accuracy",
+          "score": 1.0,
+          "details": {
+            "matched_cells": 360,
+            "total_cells": 360
+          }
+        },
+        {
+          "name": "record_accuracy",
+          "score": 1.0,
+          "details": {
+            "near_matches": 45,
+            "total_records": 45,
+            "threshold": 0.8
+          }
+        },
+        {
+          "name": "error_correction_accuracy",
+          "score": 1.0,
+          "details": {
+            "applicable": false,
+            "reason": "no noise_configuration.yaml"
+          }
+        }
+      ],
+      "passed": true,
+      "timestamp": "2026-10-12T18:14:43.139803Z",
+      "error": null,
+      "reproducibility": {
+        "name": "reproducibility",
+        "score": 1.0,
+        "details": {
+          "matched_rows": 45,
+          "total_rows": 45
+        }
+      },
+      "duration_seconds": 31.06129987500026,
+      "metadata": {
+        "steps": 10,
+        "llm_calls": 5,
+        "total_cost": 0,
+        "prompt_tokens": 14712,
+        "completion_tokens": 2903,
+        "total_tokens": 17615,
+        "model": "gpt-6-luna"
+      }
+    },
+    {
+      "task_id": "002_SUPPLIER_MIGRATION_BASIC_EXPLICIT",
+      "agent_name": "ag2",
+      "metrics": [
+        {
+          "name": "schema_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_columns": [
+              "bp_no",
+              "name",
+              "country",
+              "post_code",
+              "city",
+              "street",
+              "house_num1",
+              "additional_info"
+            ],
+            "actual_columns": [
+              "bp_no",
+              "name",
+              "country",
+              "post_code",
+              "city",
+              "street",
+              "house_num1",
+              "additional_info"
+            ]
+          }
+        },
+        {
+          "name": "row_accuracy",
+          "score": 1.0,
+          "details": {
+            "matched_rows": 65,
+            "expected_rows": 65
+          }
+        },
+        {
+          "name": "filtering_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_rows": 65,
+            "actual_rows": 65
+          }
+        },
+        {
+          "name": "field_mapping_accuracy",
+          "score": 1.0,
+          "details": {
+            "populated_fraction_by_column": {
+              "bp_no": 1.0,
+              "name": 1.0,
+              "country": 1.0,
+              "post_code": 1.0,
+              "city": 1.0,
+              "street": 1.0,
+              "house_num1": 1.0,
+              "additional_info": 1.0
+            },
+            "expected_fraction_by_column": {
+              "bp_no": 1.0,
+              "name": 1.0,
+              "country": 1.0,
+              "post_code": 1.0,
+              "city": 1.0,
+              "street": 1.0,
+              "house_num1": 1.0,
+              "additional_info": 1.0
+            },
+            "score_by_column": {
+              "bp_no": 1.0,
+              "name": 1.0,
+              "country": 1.0,
+              "post_code": 1.0,
+              "city": 1.0,
+              "street": 1.0,
+              "house_num1": 1.0,
+              "additional_info": 1.0
+            }
+          }
+        },
+        {
+          "name": "transformation_accuracy",
+          "score": 1.0,
+          "details": {
+            "matched_cells": 520,
+            "total_cells": 520
+          }
+        },
+        {
+          "name": "record_accuracy",
+          "score": 1.0,
+          "details": {
+            "near_matches": 65,
+            "total_records": 65,
+            "threshold": 0.8
+          }
+        },
+        {
+          "name": "error_correction_accuracy",
+          "score": 1.0,
+          "details": {
+            "applicable": false,
+            "reason": "no noise_configuration.yaml"
+          }
+        }
+      ],
+      "passed": true,
+      "timestamp": "2026-10-12T18:15:13.642465Z",
+      "error": null,
+      "reproducibility": {
+        "name": "reproducibility",
+        "score": 1.0,
+        "details": {
+          "matched_rows": 65,
+          "total_rows": 65
+        }
+      },
+      "duration_seconds": 30.46211863699955,
+      "metadata": {
+        "steps": 8,
+        "llm_calls": 4,
+        "total_cost": 0,
+        "prompt_tokens": 21015,
+        "completion_tokens": 2883,
+        "total_tokens": 23898,
+        "model": "gpt-6-luna"
+      }
+    },
+    {
+      "task_id": "003_MATERIAL_MIGRATION_BASIC_EXPLICIT",
+      "agent_name": "ag2",
+      "metrics": [
+        {
+          "name": "schema_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_columns": [
+              "erp no",
+              "description",
+              "unit",
+              "material type",
+              "status",
+              "generation date"
+            ],
+            "actual_columns": [
+              "erp no",
+              "description",
+              "unit",
+              "material type",
+              "status",
+              "generation date"
+            ]
+          }
+        },
+        {
+          "name": "row_accuracy",
+          "score": 1.0,
+          "details": {
+            "matched_rows": 68,
+            "expected_rows": 68
+          }
+        },
+        {
+          "name": "filtering_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_rows": 68,
+            "actual_rows": 68
+          }
+        },
+        {
+          "name": "field_mapping_accuracy",
+          "score": 1.0,
+          "details": {
+            "populated_fraction_by_column": {
+              "erp no": 1.0,
+              "description": 1.0,
+              "unit": 1.0,
+              "material type": 1.0,
+              "status": 1.0,
+              "generation date": 1.0
+            },
+            "expected_fraction_by_column": {
+              "erp no": 1.0,
+              "description": 1.0,
+              "unit": 1.0,
+              "material type": 1.0,
+              "status": 1.0,
+              "generation date": 1.0
+            },
+            "score_by_column": {
+              "erp no": 1.0,
+              "description": 1.0,
+              "unit": 1.0,
+              "material type": 1.0,
+              "status": 1.0,
+              "generation date": 1.0
+            }
+          }
+        },
+        {
+          "name": "transformation_accuracy",
+          "score": 1.0,
+          "details": {
+            "matched_cells": 408,
+            "total_cells": 408
+          }
+        },
+        {
+          "name": "record_accuracy",
+          "score": 1.0,
+          "details": {
+            "near_matches": 68,
+            "total_records": 68,
+            "threshold": 0.8
+          }
+        },
+        {
+          "name": "error_correction_accuracy",
+          "score": 1.0,
+          "details": {
+            "applicable": false,
+            "reason": "no noise_configuration.yaml"
+          }
+        }
+      ],
+      "passed": true,
+      "timestamp": "2026-10-12T18:15:51.757309Z",
+      "error": null,
+      "reproducibility": {
+        "name": "reproducibility",
+        "score": 1.0,
+        "details": {
+          "matched_rows": 68,
+          "total_rows": 68
+        }
+      },
+      "duration_seconds": 38.07821162900018,
+      "metadata": {
+        "steps": 10,
+        "llm_calls": 5,
+        "total_cost": 0,
+        "prompt_tokens": 28964,
+        "completion_tokens": 4218,
+        "total_tokens": 33182,
+        "model": "gpt-6-luna"
+      }
+    },
+    {
+      "task_id": "004_PROJECT_MIGRATION_BASIC_EXPLICIT",
+      "agent_name": "ag2",
+      "metrics": [
+        {
+          "name": "schema_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_columns": [
+              "Project Definition",
+              "Project Profile",
+              "Short Description",
+              "Person Responsible ID",
+              "Company Code",
+              "Project Currency",
+              "Start Date",
+              "Finish Date",
+              "Factory Calendar Key",
+              "Planning Profile",
+              "Network Assignment"
+            ],
+            "actual_columns": [
+              "Project Definition",
+              "Project Profile",
+              "Short Description",
+              "Person Responsible ID",
+              "Company Code",
+              "Project Currency",
+              "Start Date",
+              "Finish Date",
+              "Factory Calendar Key",
+              "Planning Profile",
+              "Network Assignment"
+            ]
+          }
+        },
+        {
+          "name": "row_accuracy",
+          "score": 1.0,
+          "details": {
+            "matched_rows": 100,
+            "expected_rows": 100
+          }
+        },
+        {
+          "name": "filtering_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_rows": 100,
+            "actual_rows": 100
+          }
+        },
+        {
+          "name": "field_mapping_accuracy",
+          "score": 1.0,
+          "details": {
+            "populated_fraction_by_column": {
+              "Project Definition": 1.0,
+              "Project Profile": 1.0,
+              "Short Description": 1.0,
+              "Person Responsible ID": 1.0,
+              "Company Code": 1.0,
+              "Project Currency": 1.0,
+              "Start Date": 1.0,
+              "Finish Date": 1.0,
+              "Factory Calendar Key": 1.0,
+              "Planning Profile": 1.0,
+              "Network Assignment": 1.0
+            },
+            "expected_fraction_by_column": {
+              "Project Definition": 1.0,
+              "Project Profile": 1.0,
+              "Short Description": 1.0,
+              "Person Responsible ID": 1.0,
+              "Company Code": 1.0,
+              "Project Currency": 1.0,
+              "Start Date": 1.0,
+              "Finish Date": 1.0,
+              "Factory Calendar Key": 1.0,
+              "Planning Profile": 1.0,
+              "Network Assignment": 1.0
+            },
+            "score_by_column": {
+              "Project Definition": 1.0,
+              "Project Profile": 1.0,
+              "Short Description": 1.0,
+              "Person Responsible ID": 1.0,
+              "Company Code": 1.0,
+              "Project Currency": 1.0,
+              "Start Date": 1.0,
+              "Finish Date": 1.0,
+              "Factory Calendar Key": 1.0,
+              "Planning Profile": 1.0,
+              "Network Assignment": 1.0
+            }
+          }
+        },
+        {
+          "name": "transformation_accuracy",
+          "score": 1.0,
+          "details": {
+            "matched_cells": 1100,
+            "total_cells": 1100
+          }
+        },
+        {
+          "name": "record_accuracy",
+          "score": 1.0,
+          "details": {
+            "near_matches": 100,
+            "total_records": 100,
+            "threshold": 0.8
+          }
+        },
+        {
+          "name": "error_correction_accuracy",
+          "score": 1.0,
+          "details": {
+            "applicable": false,
+            "reason": "no noise_configuration.yaml"
+          }
+        }
+      ],
+      "passed": true,
+      "timestamp": "2026-10-12T18:16:37.861375Z",
+      "error": null,
+      "reproducibility": {
+        "name": "reproducibility",
+        "score": 1.0,
+        "details": {
+          "matched_rows": 100,
+          "total_rows": 100
+        }
+      },
+      "duration_seconds": 46.042747727999995,
+      "metadata": {
+        "steps": 6,
+        "llm_calls": 3,
+        "total_cost": 0,
+        "prompt_tokens": 6490,
+        "completion_tokens": 4243,
+        "total_tokens": 10733,
+        "model": "gpt-6-luna"
+      }
+    },
+    {
+      "task_id": "005_PURCHASE_ORDER_MIGRATION_BASIC_EXPLICIT",
+      "agent_name": "ag2",
+      "metrics": [
+        {
+          "name": "schema_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_columns": [
+              "PO_NUMBER",
+              "COMP_CODE",
+              "DOC_TYPE",
+              "VENDOR",
+              "PURCH_ORG",
+              "PUR_GROUP",
+              "CURRENCY",
+              "CREAT_DATE",
+              "LANGU",
+              "INCOTERMS1",
+              "INCOTERMS2",
+              "OUR_REF"
+            ],
+            "actual_columns": [
+              "PO_NUMBER",
+              "COMP_CODE",
+              "DOC_TYPE",
+              "VENDOR",
+              "PURCH_ORG",
+              "PUR_GROUP",
+              "CURRENCY",
+              "CREAT_DATE",
+              "LANGU",
+              "INCOTERMS1",
+              "INCOTERMS2",
+              "OUR_REF"
+            ]
+          }
+        },
+        {
+          "name": "row_accuracy",
+          "score": 1.0,
+          "details": {
+            "matched_rows": 90,
+            "expected_rows": 90
+          }
+        },
+        {
+          "name": "filtering_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_rows": 90,
+            "actual_rows": 90
+          }
+        },
+        {
+          "name": "field_mapping_accuracy",
+          "score": 1.0,
+          "details": {
+            "populated_fraction_by_column": {
+              "PO_NUMBER": 1.0,
+              "COMP_CODE": 1.0,
+              "DOC_TYPE": 1.0,
+              "VENDOR": 1.0,
+              "PURCH_ORG": 1.0,
+              "PUR_GROUP": 1.0,
+              "CURRENCY": 1.0,
+              "CREAT_DATE": 1.0,
+              "LANGU": 1.0,
+              "INCOTERMS1": 1.0,
+              "INCOTERMS2": 1.0,
+              "OUR_REF": 1.0
+            },
+            "expected_fraction_by_column": {
+              "PO_NUMBER": 1.0,
+              "COMP_CODE": 1.0,
+              "DOC_TYPE": 1.0,
+              "VENDOR": 1.0,
+              "PURCH_ORG": 1.0,
+              "PUR_GROUP": 1.0,
+              "CURRENCY": 1.0,
+              "CREAT_DATE": 1.0,
+              "LANGU": 1.0,
+              "INCOTERMS1": 1.0,
+              "INCOTERMS2": 1.0,
+              "OUR_REF": 1.0
+            },
+            "score_by_column": {
+              "PO_NUMBER": 1.0,
+              "COMP_CODE": 1.0,
+              "DOC_TYPE": 1.0,
+              "VENDOR": 1.0,
+              "PURCH_ORG": 1.0,
+              "PUR_GROUP": 1.0,
+              "CURRENCY": 1.0,
+              "CREAT_DATE": 1.0,
+              "LANGU": 1.0,
+              "INCOTERMS1": 1.0,
+              "INCOTERMS2": 1.0,
+              "OUR_REF": 1.0
+            }
+          }
+        },
+        {
+          "name": "transformation_accuracy",
+          "score": 1.0,
+          "details": {
+            "matched_cells": 1080,
+            "total_cells": 1080
+          }
+        },
+        {
+          "name": "record_accuracy",
+          "score": 1.0,
+          "details": {
+            "near_matches": 90,
+            "total_records": 90,
+            "threshold": 0.8
+          }
+        },
+        {
+          "name": "error_correction_accuracy",
+          "score": 1.0,
+          "details": {
+            "applicable": false,
+            "reason": "no noise_configuration.yaml"
+          }
+        }
+      ],
+      "passed": true,
+      "timestamp": "2026-10-12T18:17:29.663010Z",
+      "error": null,
+      "reproducibility": {
+        "name": "reproducibility",
+        "score": 1.0,
+        "details": {
+          "matched_rows": 90,
+          "total_rows": 90
+        }
+      },
+      "duration_seconds": 51.75188621500001,
+      "metadata": {
+        "steps": 12,
+        "llm_calls": 6,
+        "total_cost": 0,
+        "prompt_tokens": 29136,
+        "completion_tokens": 5900,
+        "total_tokens": 35036,
+        "model": "gpt-6-luna"
+      }
+    },
+    {
+      "task_id": "006_PURCHASE_ORDER_MIGRATION_BASIC_EXPLICIT",
+      "agent_name": "ag2",
+      "metrics": [
+        {
+          "name": "schema_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_columns": [
+              "PO_NUMBER",
+              "PO_ITEM",
+              "ACCTASSCAT",
+              "MATERIAL",
+              "SHORT_TEXT",
+              "PO_UNIT",
+              "PRICE_UNIT",
+              "COSTCENTER",
+              "PLANT",
+              "QUANTITY",
+              "GR_PRICE",
+              "DELIVERY_DATE",
+              "ZZNAME_TLF"
+            ],
+            "actual_columns": [
+              "PO_NUMBER",
+              "PO_ITEM",
+              "ACCTASSCAT",
+              "MATERIAL",
+              "SHORT_TEXT",
+              "PO_UNIT",
+              "PRICE_UNIT",
+              "COSTCENTER",
+              "PLANT",
+              "QUANTITY",
+              "GR_PRICE",
+              "DELIVERY_DATE",
+              "ZZNAME_TLF"
+            ]
+          }
+        },
+        {
+          "name": "row_accuracy",
+          "score": 1.0,
+          "details": {
+            "matched_rows": 100,
+            "expected_rows": 100
+          }
+        },
+        {
+          "name": "filtering_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_rows": 100,
+            "actual_rows": 100
+          }
+        },
+        {
+          "name": "field_mapping_accuracy",
+          "score": 1.0,
+          "details": {
+            "populated_fraction_by_column": {
+              "PO_NUMBER": 1.0,
+              "PO_ITEM": 1.0,
+              "ACCTASSCAT": 1.0,
+              "MATERIAL": 0.71,
+              "SHORT_TEXT": 0.29,
+              "PO_UNIT": 1.0,
+              "PRICE_UNIT": 1.0,
+              "COSTCENTER": 0.1,
+              "PLANT": 1.0,
+              "QUANTITY": 1.0,
+              "GR_PRICE": 1.0,
+              "DELIVERY_DATE": 1.0,
+              "ZZNAME_TLF": 1.0
+            },
+            "expected_fraction_by_column": {
+              "PO_NUMBER": 1.0,
+              "PO_ITEM": 1.0,
+              "ACCTASSCAT": 1.0,
+              "MATERIAL": 0.71,
+              "SHORT_TEXT": 0.29,
+              "PO_UNIT": 1.0,
+              "PRICE_UNIT": 1.0,
+              "COSTCENTER": 0.1,
+              "PLANT": 1.0,
+              "QUANTITY": 1.0,
+              "GR_PRICE": 1.0,
+              "DELIVERY_DATE": 1.0,
+              "ZZNAME_TLF": 1.0
+            },
+            "score_by_column": {
+              "PO_NUMBER": 1.0,
+              "PO_ITEM": 1.0,
+              "ACCTASSCAT": 1.0,
+              "MATERIAL": 1.0,
+              "SHORT_TEXT": 1.0,
+              "PO_UNIT": 1.0,
+              "PRICE_UNIT": 1.0,
+              "COSTCENTER": 1.0,
+              "PLANT": 1.0,
+              "QUANTITY": 1.0,
+              "GR_PRICE": 1.0,
+              "DELIVERY_DATE": 1.0,
+              "ZZNAME_TLF": 1.0
+            }
+          }
+        },
+        {
+          "name": "transformation_accuracy",
+          "score": 0.8538461538461538,
+          "details": {
+            "matched_cells": 1110,
+            "total_cells": 1300
+          }
+        },
+        {
+          "name": "record_accuracy",
+          "score": 1.0,
+          "details": {
+            "near_matches": 100,
+            "total_records": 100,
+            "threshold": 0.8
+          }
+        },
+        {
+          "name": "error_correction_accuracy",
+          "score": 1.0,
+          "details": {
+            "applicable": false,
+            "reason": "no noise_configuration.yaml"
+          }
+        }
+      ],
+      "passed": false,
+      "timestamp": "2026-10-12T18:18:16.468015Z",
+      "error": null,
+      "reproducibility": {
+        "name": "reproducibility",
+        "score": 1.0,
+        "details": {
+          "matched_rows": 100,
+          "total_rows": 100
+        }
+      },
+      "duration_seconds": 46.744491828999344,
+      "metadata": {
+        "steps": 10,
+        "llm_calls": 5,
+        "total_cost": 0,
+        "prompt_tokens": 56753,
+        "completion_tokens": 5520,
+        "total_tokens": 62273,
+        "model": "gpt-6-luna"
+      }
+    },
+    {
+      "task_id": "007_BOM_MIGRATION_BASIC_EXPLICIT",
+      "agent_name": "ag2",
+      "metrics": [
+        {
+          "name": "schema_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_columns": [
+              "MATNR",
+              "MAKTX",
+              "POSNR",
+              "POSTP",
+              "IDNRK",
+              "MAKTX_COMP",
+              "MENGE",
+              "MEINS_POS",
+              "POTX1"
+            ],
+            "actual_columns": [
+              "MATNR",
+              "MAKTX",
+              "POSNR",
+              "POSTP",
+              "IDNRK",
+              "MAKTX_COMP",
+              "MENGE",
+              "MEINS_POS",
+              "POTX1"
+            ]
+          }
+        },
+        {
+          "name": "row_accuracy",
+          "score": 1.0,
+          "details": {
+            "matched_rows": 98,
+            "expected_rows": 98
+          }
+        },
+        {
+          "name": "filtering_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_rows": 98,
+            "actual_rows": 98
+          }
+        },
+        {
+          "name": "field_mapping_accuracy",
+          "score": 1.0,
+          "details": {
+            "populated_fraction_by_column": {
+              "MATNR": 1.0,
+              "MAKTX": 1.0,
+              "POSNR": 1.0,
+              "POSTP": 1.0,
+              "IDNRK": 0.9285714285714286,
+              "MAKTX_COMP": 0.9285714285714286,
+              "MENGE": 1.0,
+              "MEINS_POS": 1.0,
+              "POTX1": 0.07142857142857142
+            },
+            "expected_fraction_by_column": {
+              "MATNR": 1.0,
+              "MAKTX": 1.0,
+              "POSNR": 1.0,
+              "POSTP": 1.0,
+              "IDNRK": 0.9285714285714286,
+              "MAKTX_COMP": 0.9285714285714286,
+              "MENGE": 1.0,
+              "MEINS_POS": 1.0,
+              "POTX1": 0.07142857142857142
+            },
+            "score_by_column": {
+              "MATNR": 1.0,
+              "MAKTX": 1.0,
+              "POSNR": 1.0,
+              "POSTP": 1.0,
+              "IDNRK": 1.0,
+              "MAKTX_COMP": 1.0,
+              "MENGE": 1.0,
+              "MEINS_POS": 1.0,
+              "POTX1": 1.0
+            }
+          }
+        },
+        {
+          "name": "transformation_accuracy",
+          "score": 0.8809523809523809,
+          "details": {
+            "matched_cells": 777,
+            "total_cells": 882
+          }
+        },
+        {
+          "name": "record_accuracy",
+          "score": 0.9285714285714286,
+          "details": {
+            "near_matches": 91,
+            "total_records": 98,
+            "threshold": 0.8
+          }
+        },
+        {
+          "name": "error_correction_accuracy",
+          "score": 1.0,
+          "details": {
+            "applicable": false,
+            "reason": "no noise_configuration.yaml"
+          }
+        }
+      ],
+      "passed": false,
+      "timestamp": "2026-10-12T18:18:59.480035Z",
+      "error": null,
+      "reproducibility": {
+        "name": "reproducibility",
+        "score": 1.0,
+        "details": {
+          "matched_rows": 98,
+          "total_rows": 98
+        }
+      },
+      "duration_seconds": 42.94982278399948,
+      "metadata": {
+        "steps": 6,
+        "llm_calls": 3,
+        "total_cost": 0,
+        "prompt_tokens": 9469,
+        "completion_tokens": 4696,
+        "total_tokens": 14165,
+        "model": "gpt-6-luna"
+      }
+    },
+    {
+      "task_id": "008_PRICE_LIST_MIGRATION_BASIC_EXPLICIT",
+      "agent_name": "ag2",
+      "metrics": [
+        {
+          "name": "schema_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_columns": [
+              "PRICE_LIST",
+              "MATERIAL",
+              "MATERIAL_DESC",
+              "VALID_FROM",
+              "VALID_TO",
+              "COND_AMOUNT",
+              "COND_CURR",
+              "PRICE_UNIT",
+              "UOM"
+            ],
+            "actual_columns": [
+              "PRICE_LIST",
+              "MATERIAL",
+              "MATERIAL_DESC",
+              "VALID_FROM",
+              "VALID_TO",
+              "COND_AMOUNT",
+              "COND_CURR",
+              "PRICE_UNIT",
+              "UOM"
+            ]
+          }
+        },
+        {
+          "name": "row_accuracy",
+          "score": 1.0,
+          "details": {
+            "matched_rows": 99,
+            "expected_rows": 99
+          }
+        },
+        {
+          "name": "filtering_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_rows": 99,
+            "actual_rows": 99
+          }
+        },
+        {
+          "name": "field_mapping_accuracy",
+          "score": 1.0,
+          "details": {
+            "populated_fraction_by_column": {
+              "PRICE_LIST": 1.0,
+              "MATERIAL": 1.0,
+              "MATERIAL_DESC": 1.0,
+              "VALID_FROM": 1.0,
+              "VALID_TO": 1.0,
+              "COND_AMOUNT": 1.0,
+              "COND_CURR": 1.0,
+              "PRICE_UNIT": 1.0,
+              "UOM": 1.0
+            },
+            "expected_fraction_by_column": {
+              "PRICE_LIST": 1.0,
+              "MATERIAL": 1.0,
+              "MATERIAL_DESC": 1.0,
+              "VALID_FROM": 1.0,
+              "VALID_TO": 1.0,
+              "COND_AMOUNT": 1.0,
+              "COND_CURR": 1.0,
+              "PRICE_UNIT": 1.0,
+              "UOM": 1.0
+            },
+            "score_by_column": {
+              "PRICE_LIST": 1.0,
+              "MATERIAL": 1.0,
+              "MATERIAL_DESC": 1.0,
+              "VALID_FROM": 1.0,
+              "VALID_TO": 1.0,
+              "COND_AMOUNT": 1.0,
+              "COND_CURR": 1.0,
+              "PRICE_UNIT": 1.0,
+              "UOM": 1.0
+            }
+          }
+        },
+        {
+          "name": "transformation_accuracy",
+          "score": 1.0,
+          "details": {
+            "matched_cells": 891,
+            "total_cells": 891
+          }
+        },
+        {
+          "name": "record_accuracy",
+          "score": 1.0,
+          "details": {
+            "near_matches": 99,
+            "total_records": 99,
+            "threshold": 0.8
+          }
+        },
+        {
+          "name": "error_correction_accuracy",
+          "score": 1.0,
+          "details": {
+            "applicable": false,
+            "reason": "no noise_configuration.yaml"
+          }
+        }
+      ],
+      "passed": true,
+      "timestamp": "2026-10-12T18:19:44.927996Z",
+      "error": null,
+      "reproducibility": {
+        "name": "reproducibility",
+        "score": 1.0,
+        "details": {
+          "matched_rows": 99,
+          "total_rows": 99
+        }
+      },
+      "duration_seconds": 45.39973901099984,
+      "metadata": {
+        "steps": 12,
+        "llm_calls": 6,
+        "total_cost": 0,
+        "prompt_tokens": 23025,
+        "completion_tokens": 4512,
+        "total_tokens": 27537,
+        "model": "gpt-6-luna"
+      }
+    },
+    {
+      "task_id": "009_MATERIAL_MOVEMENTS_MIGRATION_BASIC_EXPLICIT",
+      "agent_name": "ag2",
+      "metrics": [
+        {
+          "name": "schema_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_columns": [
+              "MBLNR",
+              "BUDAT",
+              "BWART",
+              "MATNR",
+              "WERKS",
+              "LGORT",
+              "ERFMG",
+              "ERFME",
+              "DMBTR",
+              "KOSTL",
+              "SGTXT"
+            ],
+            "actual_columns": [
+              "MBLNR",
+              "BUDAT",
+              "BWART",
+              "MATNR",
+              "WERKS",
+              "LGORT",
+              "ERFMG",
+              "ERFME",
+              "DMBTR",
+              "KOSTL",
+              "SGTXT"
+            ]
+          }
+        },
+        {
+          "name": "row_accuracy",
+          "score": 1.0,
+          "details": {
+            "matched_rows": 92,
+            "expected_rows": 92
+          }
+        },
+        {
+          "name": "filtering_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_rows": 92,
+            "actual_rows": 92
+          }
+        },
+        {
+          "name": "field_mapping_accuracy",
+          "score": 1.0,
+          "details": {
+            "populated_fraction_by_column": {
+              "MBLNR": 1.0,
+              "BUDAT": 1.0,
+              "BWART": 1.0,
+              "MATNR": 1.0,
+              "WERKS": 1.0,
+              "LGORT": 0.7065217391304348,
+              "ERFMG": 1.0,
+              "ERFME": 1.0,
+              "DMBTR": 1.0,
+              "KOSTL": 0.14130434782608695,
+              "SGTXT": 1.0
+            },
+            "expected_fraction_by_column": {
+              "MBLNR": 1.0,
+              "BUDAT": 1.0,
+              "BWART": 1.0,
+              "MATNR": 1.0,
+              "WERKS": 1.0,
+              "LGORT": 0.7065217391304348,
+              "ERFMG": 1.0,
+              "ERFME": 1.0,
+              "DMBTR": 1.0,
+              "KOSTL": 0.14130434782608695,
+              "SGTXT": 1.0
+            },
+            "score_by_column": {
+              "MBLNR": 1.0,
+              "BUDAT": 1.0,
+              "BWART": 1.0,
+              "MATNR": 1.0,
+              "WERKS": 1.0,
+              "LGORT": 1.0,
+              "ERFMG": 1.0,
+              "ERFME": 1.0,
+              "DMBTR": 1.0,
+              "KOSTL": 1.0,
+              "SGTXT": 1.0
+            }
+          }
+        },
+        {
+          "name": "transformation_accuracy",
+          "score": 0.8952569169960475,
+          "details": {
+            "matched_cells": 906,
+            "total_cells": 1012
+          }
+        },
+        {
+          "name": "record_accuracy",
+          "score": 1.0,
+          "details": {
+            "near_matches": 92,
+            "total_records": 92,
+            "threshold": 0.8
+          }
+        },
+        {
+          "name": "error_correction_accuracy",
+          "score": 1.0,
+          "details": {
+            "applicable": false,
+            "reason": "no noise_configuration.yaml"
+          }
+        }
+      ],
+      "passed": false,
+      "timestamp": "2026-10-12T18:20:27.135474Z",
+      "error": null,
+      "reproducibility": {
+        "name": "reproducibility",
+        "score": 1.0,
+        "details": {
+          "matched_rows": 92,
+          "total_rows": 92
+        }
+      },
+      "duration_seconds": 42.14415413700044,
+      "metadata": {
+        "steps": 8,
+        "llm_calls": 4,
+        "total_cost": 0,
+        "prompt_tokens": 13086,
+        "completion_tokens": 4326,
+        "total_tokens": 17412,
+        "model": "gpt-6-luna"
+      }
+    },
+    {
+      "task_id": "010_SALES_ORDER_MIGRATION_BASIC_EXPLICIT",
+      "agent_name": "ag2",
+      "metrics": [
+        {
+          "name": "schema_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_columns": [
+              "VBELN",
+              "POSNR",
+              "AUART",
+              "VKORG",
+              "KUNNR",
+              "BSTKD",
+              "MATNR",
+              "ARKTX",
+              "KWMENG",
+              "NETWR",
+              "VDATU"
+            ],
+            "actual_columns": [
+              "VBELN",
+              "POSNR",
+              "AUART",
+              "VKORG",
+              "KUNNR",
+              "BSTKD",
+              "MATNR",
+              "ARKTX",
+              "KWMENG",
+              "NETWR",
+              "VDATU"
+            ]
+          }
+        },
+        {
+          "name": "row_accuracy",
+          "score": 1.0,
+          "details": {
+            "matched_rows": 85,
+            "expected_rows": 85
+          }
+        },
+        {
+          "name": "filtering_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_rows": 85,
+            "actual_rows": 85
+          }
+        },
+        {
+          "name": "field_mapping_accuracy",
+          "score": 1.0,
+          "details": {
+            "populated_fraction_by_column": {
+              "VBELN": 1.0,
+              "POSNR": 1.0,
+              "AUART": 1.0,
+              "VKORG": 1.0,
+              "KUNNR": 1.0,
+              "BSTKD": 1.0,
+              "MATNR": 1.0,
+              "ARKTX": 1.0,
+              "KWMENG": 1.0,
+              "NETWR": 1.0,
+              "VDATU": 1.0
+            },
+            "expected_fraction_by_column": {
+              "VBELN": 1.0,
+              "POSNR": 1.0,
+              "AUART": 1.0,
+              "VKORG": 1.0,
+              "KUNNR": 1.0,
+              "BSTKD": 1.0,
+              "MATNR": 1.0,
+              "ARKTX": 1.0,
+              "KWMENG": 1.0,
+              "NETWR": 1.0,
+              "VDATU": 1.0
+            },
+            "score_by_column": {
+              "VBELN": 1.0,
+              "POSNR": 1.0,
+              "AUART": 1.0,
+              "VKORG": 1.0,
+              "KUNNR": 1.0,
+              "BSTKD": 1.0,
+              "MATNR": 1.0,
+              "ARKTX": 1.0,
+              "KWMENG": 1.0,
+              "NETWR": 1.0,
+              "VDATU": 1.0
+            }
+          }
+        },
+        {
+          "name": "transformation_accuracy",
+          "score": 1.0,
+          "details": {
+            "matched_cells": 935,
+            "total_cells": 935
+          }
+        },
+        {
+          "name": "record_accuracy",
+          "score": 1.0,
+          "details": {
+            "near_matches": 85,
+            "total_records": 85,
+            "threshold": 0.8
+          }
+        },
+        {
+          "name": "error_correction_accuracy",
+          "score": 1.0,
+          "details": {
+            "applicable": false,
+            "reason": "no noise_configuration.yaml"
+          }
+        }
+      ],
+      "passed": true,
+      "timestamp": "2026-10-12T18:21:16.954661Z",
+      "error": null,
+      "reproducibility": {
+        "name": "reproducibility",
+        "score": 1.0,
+        "details": {
+          "matched_rows": 85,
+          "total_rows": 85
+        }
+      },
+      "duration_seconds": 49.769278859000224,
+      "metadata": {
+        "steps": 12,
+        "llm_calls": 6,
+        "total_cost": 0,
+        "prompt_tokens": 34417,
+        "completion_tokens": 6081,
+        "total_tokens": 40498,
+        "model": "gpt-6-luna"
+      }
+    },
+    {
+      "task_id": "011_STOCK_MIGRATION_BASIC_EXPLICIT",
+      "agent_name": "ag2",
+      "metrics": [
+        {
+          "name": "schema_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_columns": [
+              "WERKS",
+              "MATNR",
+              "LGORT",
+              "LFGJA",
+              "LFMON",
+              "LBKUM",
+              "MEINS",
+              "VERPR",
+              "PEINH",
+              "SALK3",
+              "VPRSV",
+              "BWTAR",
+              "BUKRS",
+              "WAERS"
+            ],
+            "actual_columns": [
+              "WERKS",
+              "MATNR",
+              "LGORT",
+              "LFGJA",
+              "LFMON",
+              "LBKUM",
+              "MEINS",
+              "VERPR",
+              "PEINH",
+              "SALK3",
+              "VPRSV",
+              "BWTAR",
+              "BUKRS",
+              "WAERS"
+            ]
+          }
+        },
+        {
+          "name": "row_accuracy",
+          "score": 1.0,
+          "details": {
+            "matched_rows": 100,
+            "expected_rows": 100
+          }
+        },
+        {
+          "name": "filtering_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_rows": 100,
+            "actual_rows": 100
+          }
+        },
+        {
+          "name": "field_mapping_accuracy",
+          "score": 1.0,
+          "details": {
+            "populated_fraction_by_column": {
+              "WERKS": 1.0,
+              "MATNR": 1.0,
+              "LGORT": 1.0,
+              "LFGJA": 1.0,
+              "LFMON": 1.0,
+              "LBKUM": 1.0,
+              "MEINS": 1.0,
+              "VERPR": 1.0,
+              "PEINH": 1.0,
+              "SALK3": 1.0,
+              "VPRSV": 1.0,
+              "BWTAR": 1.0,
+              "BUKRS": 1.0,
+              "WAERS": 1.0
+            },
+            "expected_fraction_by_column": {
+              "WERKS": 1.0,
+              "MATNR": 1.0,
+              "LGORT": 1.0,
+              "LFGJA": 1.0,
+              "LFMON": 1.0,
+              "LBKUM": 1.0,
+              "MEINS": 1.0,
+              "VERPR": 1.0,
+              "PEINH": 1.0,
+              "SALK3": 1.0,
+              "VPRSV": 1.0,
+              "BWTAR": 1.0,
+              "BUKRS": 1.0,
+              "WAERS": 1.0
+            },
+            "score_by_column": {
+              "WERKS": 1.0,
+              "MATNR": 1.0,
+              "LGORT": 1.0,
+              "LFGJA": 1.0,
+              "LFMON": 1.0,
+              "LBKUM": 1.0,
+              "MEINS": 1.0,
+              "VERPR": 1.0,
+              "PEINH": 1.0,
+              "SALK3": 1.0,
+              "VPRSV": 1.0,
+              "BWTAR": 1.0,
+              "BUKRS": 1.0,
+              "WAERS": 1.0
+            }
+          }
+        },
+        {
+          "name": "transformation_accuracy",
+          "score": 1.0,
+          "details": {
+            "matched_cells": 1400,
+            "total_cells": 1400
+          }
+        },
+        {
+          "name": "record_accuracy",
+          "score": 1.0,
+          "details": {
+            "near_matches": 100,
+            "total_records": 100,
+            "threshold": 0.8
+          }
+        },
+        {
+          "name": "error_correction_accuracy",
+          "score": 1.0,
+          "details": {
+            "applicable": false,
+            "reason": "no noise_configuration.yaml"
+          }
+        }
+      ],
+      "passed": true,
+      "timestamp": "2026-10-12T18:22:15.571707Z",
+      "error": null,
+      "reproducibility": {
+        "name": "reproducibility",
+        "score": 1.0,
+        "details": {
+          "matched_rows": 100,
+          "total_rows": 100
+        }
+      },
+      "duration_seconds": 58.55581024100047,
+      "metadata": {
+        "steps": 10,
+        "llm_calls": 5,
+        "total_cost": 0,
+        "prompt_tokens": 65968,
+        "completion_tokens": 7129,
+        "total_tokens": 73097,
+        "model": "gpt-6-luna"
+      }
+    },
+    {
+      "task_id": "012_INVOICE_MIGRATION_BASIC_EXPLICIT",
+      "agent_name": "ag2",
+      "metrics": [
+        {
+          "name": "schema_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_columns": [
+              "ANWID",
+              "VORG1",
+              "VORG2",
+              "SHKZG",
+              "BUKRS",
+              "BLDAT",
+              "BUDAT",
+              "BSCHL",
+              "BKTXT",
+              "KONTO",
+              "WAERS",
+              "WRBTR",
+              "DMBTR",
+              "DMBE2",
+              "ZFBDT",
+              "XBLNR",
+              "SGTXT",
+              "ZLSCH",
+              "ZTERM"
+            ],
+            "actual_columns": [
+              "ANWID",
+              "VORG1",
+              "VORG2",
+              "SHKZG",
+              "BUKRS",
+              "BLDAT",
+              "BUDAT",
+              "BSCHL",
+              "BKTXT",
+              "KONTO",
+              "WAERS",
+              "WRBTR",
+              "DMBTR",
+              "DMBE2",
+              "ZFBDT",
+              "XBLNR",
+              "SGTXT",
+              "ZLSCH",
+              "ZTERM"
+            ]
+          }
+        },
+        {
+          "name": "row_accuracy",
+          "score": 1.0,
+          "details": {
+            "matched_rows": 100,
+            "expected_rows": 100
+          }
+        },
+        {
+          "name": "filtering_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_rows": 100,
+            "actual_rows": 100
+          }
+        },
+        {
+          "name": "field_mapping_accuracy",
+          "score": 1.0,
+          "details": {
+            "populated_fraction_by_column": {
+              "ANWID": 1.0,
+              "VORG1": 1.0,
+              "VORG2": 1.0,
+              "SHKZG": 1.0,
+              "BUKRS": 1.0,
+              "BLDAT": 1.0,
+              "BUDAT": 1.0,
+              "BSCHL": 1.0,
+              "BKTXT": 1.0,
+              "KONTO": 1.0,
+              "WAERS": 1.0,
+              "WRBTR": 1.0,
+              "DMBTR": 1.0,
+              "DMBE2": 1.0,
+              "ZFBDT": 1.0,
+              "XBLNR": 1.0,
+              "SGTXT": 1.0,
+              "ZLSCH": 1.0,
+              "ZTERM": 1.0
+            },
+            "expected_fraction_by_column": {
+              "ANWID": 1.0,
+              "VORG1": 1.0,
+              "VORG2": 1.0,
+              "SHKZG": 1.0,
+              "BUKRS": 1.0,
+              "BLDAT": 1.0,
+              "BUDAT": 1.0,
+              "BSCHL": 1.0,
+              "BKTXT": 1.0,
+              "KONTO": 1.0,
+              "WAERS": 1.0,
+              "WRBTR": 1.0,
+              "DMBTR": 1.0,
+              "DMBE2": 1.0,
+              "ZFBDT": 1.0,
+              "XBLNR": 1.0,
+              "SGTXT": 1.0,
+              "ZLSCH": 1.0,
+              "ZTERM": 1.0
+            },
+            "score_by_column": {
+              "ANWID": 1.0,
+              "VORG1": 1.0,
+              "VORG2": 1.0,
+              "SHKZG": 1.0,
+              "BUKRS": 1.0,
+              "BLDAT": 1.0,
+              "BUDAT": 1.0,
+              "BSCHL": 1.0,
+              "BKTXT": 1.0,
+              "KONTO": 1.0,
+              "WAERS": 1.0,
+              "WRBTR": 1.0,
+              "DMBTR": 1.0,
+              "DMBE2": 1.0,
+              "ZFBDT": 1.0,
+              "XBLNR": 1.0,
+              "SGTXT": 1.0,
+              "ZLSCH": 1.0,
+              "ZTERM": 1.0
+            }
+          }
+        },
+        {
+          "name": "transformation_accuracy",
+          "score": 1.0,
+          "details": {
+            "matched_cells": 1900,
+            "total_cells": 1900
+          }
+        },
+        {
+          "name": "record_accuracy",
+          "score": 1.0,
+          "details": {
+            "near_matches": 100,
+            "total_records": 100,
+            "threshold": 0.8
+          }
+        },
+        {
+          "name": "error_correction_accuracy",
+          "score": 1.0,
+          "details": {
+            "applicable": false,
+            "reason": "no noise_configuration.yaml"
+          }
+        }
+      ],
+      "passed": true,
+      "timestamp": "2026-10-12T18:22:55.863661Z",
+      "error": null,
+      "reproducibility": {
+        "name": "reproducibility",
+        "score": 1.0,
+        "details": {
+          "matched_rows": 100,
+          "total_rows": 100
+        }
+      },
+      "duration_seconds": 40.22155176999968,
+      "metadata": {
+        "steps": 12,
+        "llm_calls": 6,
+        "total_cost": 0,
+        "prompt_tokens": 35097,
+        "completion_tokens": 4054,
+        "total_tokens": 39151,
+        "model": "gpt-6-luna"
+      }
+    },
+    {
+      "task_id": "013_CREDIT_LIMIT_MIGRATION_BASIC_EXPLICIT",
+      "agent_name": "ag2",
+      "metrics": [
+        {
+          "name": "schema_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_columns": [
+              "PARTNER",
+              "CREDIT_SGMNT",
+              "CREDIT_LIMIT",
+              "Risk Class",
+              "XBLOCKED",
+              "LIMIT_VALID_DATE",
+              "XCRITICAL",
+              "BLOCK_REASON",
+              "FOLLOW_UP_DT"
+            ],
+            "actual_columns": [
+              "PARTNER",
+              "CREDIT_SGMNT",
+              "CREDIT_LIMIT",
+              "Risk Class",
+              "XBLOCKED",
+              "LIMIT_VALID_DATE",
+              "XCRITICAL",
+              "BLOCK_REASON",
+              "FOLLOW_UP_DT"
+            ]
+          }
+        },
+        {
+          "name": "row_accuracy",
+          "score": 0.3888888888888889,
+          "details": {
+            "matched_rows": 7,
+            "expected_rows": 18
+          }
+        },
+        {
+          "name": "filtering_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_rows": 18,
+            "actual_rows": 18
+          }
+        },
+        {
+          "name": "field_mapping_accuracy",
+          "score": 1.0,
+          "details": {
+            "populated_fraction_by_column": {
+              "PARTNER": 1.0,
+              "CREDIT_SGMNT": 1.0,
+              "CREDIT_LIMIT": 1.0,
+              "Risk Class": 1.0,
+              "XBLOCKED": 0.1111111111111111,
+              "LIMIT_VALID_DATE": 1.0,
+              "XCRITICAL": 0.6666666666666666,
+              "BLOCK_REASON": 0.1111111111111111,
+              "FOLLOW_UP_DT": 1.0
+            },
+            "expected_fraction_by_column": {
+              "PARTNER": 1.0,
+              "CREDIT_SGMNT": 1.0,
+              "CREDIT_LIMIT": 1.0,
+              "Risk Class": 1.0,
+              "XBLOCKED": 0.1111111111111111,
+              "LIMIT_VALID_DATE": 1.0,
+              "XCRITICAL": 0.6666666666666666,
+              "BLOCK_REASON": 0.1111111111111111,
+              "FOLLOW_UP_DT": 1.0
+            },
+            "score_by_column": {
+              "PARTNER": 1.0,
+              "CREDIT_SGMNT": 1.0,
+              "CREDIT_LIMIT": 1.0,
+              "Risk Class": 1.0,
+              "XBLOCKED": 1.0,
+              "LIMIT_VALID_DATE": 1.0,
+              "XCRITICAL": 1.0,
+              "BLOCK_REASON": 1.0,
+              "FOLLOW_UP_DT": 1.0
+            }
+          }
+        },
+        {
+          "name": "transformation_accuracy",
+          "score": 0.6358024691358025,
+          "details": {
+            "matched_cells": 103,
+            "total_cells": 162
+          }
+        },
+        {
+          "name": "record_accuracy",
+          "score": 0.1111111111111111,
+          "details": {
+            "near_matches": 2,
+            "total_records": 18,
+            "threshold": 0.8
+          }
+        },
+        {
+          "name": "error_correction_accuracy",
+          "score": 1.0,
+          "details": {
+            "applicable": false,
+            "reason": "no noise_configuration.yaml"
+          }
+        }
+      ],
+      "passed": false,
+      "timestamp": "2026-10-12T18:23:33.250306Z",
+      "error": null,
+      "reproducibility": {
+        "name": "reproducibility",
+        "score": 1.0,
+        "details": {
+          "matched_rows": 18,
+          "total_rows": 18
+        }
+      },
+      "duration_seconds": 37.330055234999236,
+      "metadata": {
+        "steps": 6,
+        "llm_calls": 3,
+        "total_cost": 0,
+        "prompt_tokens": 12854,
+        "completion_tokens": 4641,
+        "total_tokens": 17495,
+        "model": "gpt-6-luna"
+      }
+    },
+    {
+      "task_id": "014_WIP_MIGRATION_BASIC_EXPLICIT",
+      "agent_name": "ag2",
+      "metrics": [
+        {
+          "name": "schema_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_columns": [
+              "project no. legacy",
+              "WBS element",
+              "description",
+              "posting period",
+              "currency",
+              "actual costs",
+              "planned revenue",
+              "WIP",
+              "expected loss"
+            ],
+            "actual_columns": [
+              "project no. legacy",
+              "WBS element",
+              "description",
+              "posting period",
+              "currency",
+              "actual costs",
+              "planned revenue",
+              "WIP",
+              "expected loss"
+            ]
+          }
+        },
+        {
+          "name": "row_accuracy",
+          "score": 1.0,
+          "details": {
+            "matched_rows": 17,
+            "expected_rows": 17
+          }
+        },
+        {
+          "name": "filtering_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_rows": 17,
+            "actual_rows": 17
+          }
+        },
+        {
+          "name": "field_mapping_accuracy",
+          "score": 1.0,
+          "details": {
+            "populated_fraction_by_column": {
+              "project no. legacy": 1.0,
+              "WBS element": 1.0,
+              "description": 1.0,
+              "posting period": 1.0,
+              "currency": 1.0,
+              "actual costs": 1.0,
+              "planned revenue": 1.0,
+              "WIP": 1.0,
+              "expected loss": 1.0
+            },
+            "expected_fraction_by_column": {
+              "project no. legacy": 1.0,
+              "WBS element": 1.0,
+              "description": 1.0,
+              "posting period": 1.0,
+              "currency": 1.0,
+              "actual costs": 1.0,
+              "planned revenue": 1.0,
+              "WIP": 1.0,
+              "expected loss": 1.0
+            },
+            "score_by_column": {
+              "project no. legacy": 1.0,
+              "WBS element": 1.0,
+              "description": 1.0,
+              "posting period": 1.0,
+              "currency": 1.0,
+              "actual costs": 1.0,
+              "planned revenue": 1.0,
+              "WIP": 1.0,
+              "expected loss": 1.0
+            }
+          }
+        },
+        {
+          "name": "transformation_accuracy",
+          "score": 1.0,
+          "details": {
+            "matched_cells": 153,
+            "total_cells": 153
+          }
+        },
+        {
+          "name": "record_accuracy",
+          "score": 1.0,
+          "details": {
+            "near_matches": 17,
+            "total_records": 17,
+            "threshold": 0.8
+          }
+        },
+        {
+          "name": "error_correction_accuracy",
+          "score": 1.0,
+          "details": {
+            "applicable": false,
+            "reason": "no noise_configuration.yaml"
+          }
+        }
+      ],
+      "passed": true,
+      "timestamp": "2026-10-12T18:24:13.617199Z",
+      "error": null,
+      "reproducibility": {
+        "name": "reproducibility",
+        "score": 1.0,
+        "details": {
+          "matched_rows": 17,
+          "total_rows": 17
+        }
+      },
+      "duration_seconds": 40.32943399400028,
+      "metadata": {
+        "steps": 8,
+        "llm_calls": 4,
+        "total_cost": 0,
+        "prompt_tokens": 17913,
+        "completion_tokens": 4411,
+        "total_tokens": 22324,
+        "model": "gpt-6-luna"
+      }
+    },
+    {
+      "task_id": "015_COST_CENTER_MIGRATION_BASIC_EXPLICIT",
+      "agent_name": "ag2",
+      "metrics": [
+        {
+          "name": "schema_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_columns": [
+              "KOKRS",
+              "COSTCENTER",
+              "VALID_FROM",
+              "VALID_TO",
+              "DEPARTMENT",
+              "COSTCENTER_TYPE",
+              "COSTCTR_HIER_GRP",
+              "COMP_CODE",
+              "CURRENCY",
+              "PROFIT_CTR",
+              "RECORD_QUANTITY",
+              "LOCK_IND_ACTUAL_REVENUES",
+              "LOCK_IND_PLAN_REVENUES",
+              "APPLICATION",
+              "NAME",
+              "DESCRIPT",
+              "FUNC_AREA",
+              "PERSON_IN_CHARGE_USER"
+            ],
+            "actual_columns": [
+              "KOKRS",
+              "COSTCENTER",
+              "VALID_FROM",
+              "VALID_TO",
+              "DEPARTMENT",
+              "COSTCENTER_TYPE",
+              "COSTCTR_HIER_GRP",
+              "COMP_CODE",
+              "CURRENCY",
+              "PROFIT_CTR",
+              "RECORD_QUANTITY",
+              "LOCK_IND_ACTUAL_REVENUES",
+              "LOCK_IND_PLAN_REVENUES",
+              "APPLICATION",
+              "NAME",
+              "DESCRIPT",
+              "FUNC_AREA",
+              "PERSON_IN_CHARGE_USER"
+            ]
+          }
+        },
+        {
+          "name": "row_accuracy",
+          "score": 1.0,
+          "details": {
+            "matched_rows": 87,
+            "expected_rows": 87
+          }
+        },
+        {
+          "name": "filtering_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_rows": 87,
+            "actual_rows": 87
+          }
+        },
+        {
+          "name": "field_mapping_accuracy",
+          "score": 1.0,
+          "details": {
+            "populated_fraction_by_column": {
+              "KOKRS": 1.0,
+              "COSTCENTER": 1.0,
+              "VALID_FROM": 1.0,
+              "VALID_TO": 1.0,
+              "DEPARTMENT": 1.0,
+              "COSTCENTER_TYPE": 1.0,
+              "COSTCTR_HIER_GRP": 1.0,
+              "COMP_CODE": 1.0,
+              "CURRENCY": 1.0,
+              "PROFIT_CTR": 1.0,
+              "RECORD_QUANTITY": 1.0,
+              "LOCK_IND_ACTUAL_REVENUES": 0.8735632183908046,
+              "LOCK_IND_PLAN_REVENUES": 0.8735632183908046,
+              "APPLICATION": 1.0,
+              "NAME": 1.0,
+              "DESCRIPT": 1.0,
+              "FUNC_AREA": 1.0,
+              "PERSON_IN_CHARGE_USER": 1.0
+            },
+            "expected_fraction_by_column": {
+              "KOKRS": 1.0,
+              "COSTCENTER": 1.0,
+              "VALID_FROM": 1.0,
+              "VALID_TO": 1.0,
+              "DEPARTMENT": 1.0,
+              "COSTCENTER_TYPE": 1.0,
+              "COSTCTR_HIER_GRP": 1.0,
+              "COMP_CODE": 1.0,
+              "CURRENCY": 1.0,
+              "PROFIT_CTR": 1.0,
+              "RECORD_QUANTITY": 1.0,
+              "LOCK_IND_ACTUAL_REVENUES": 0.8735632183908046,
+              "LOCK_IND_PLAN_REVENUES": 0.8735632183908046,
+              "APPLICATION": 1.0,
+              "NAME": 1.0,
+              "DESCRIPT": 1.0,
+              "FUNC_AREA": 1.0,
+              "PERSON_IN_CHARGE_USER": 1.0
+            },
+            "score_by_column": {
+              "KOKRS": 1.0,
+              "COSTCENTER": 1.0,
+              "VALID_FROM": 1.0,
+              "VALID_TO": 1.0,
+              "DEPARTMENT": 1.0,
+              "COSTCENTER_TYPE": 1.0,
+              "COSTCTR_HIER_GRP": 1.0,
+              "COMP_CODE": 1.0,
+              "CURRENCY": 1.0,
+              "PROFIT_CTR": 1.0,
+              "RECORD_QUANTITY": 1.0,
+              "LOCK_IND_ACTUAL_REVENUES": 1.0,
+              "LOCK_IND_PLAN_REVENUES": 1.0,
+              "APPLICATION": 1.0,
+              "NAME": 1.0,
+              "DESCRIPT": 1.0,
+              "FUNC_AREA": 1.0,
+              "PERSON_IN_CHARGE_USER": 1.0
+            }
+          }
+        },
+        {
+          "name": "transformation_accuracy",
+          "score": 0.9859514687100894,
+          "details": {
+            "matched_cells": 1544,
+            "total_cells": 1566
+          }
+        },
+        {
+          "name": "record_accuracy",
+          "score": 1.0,
+          "details": {
+            "near_matches": 87,
+            "total_records": 87,
+            "threshold": 0.8
+          }
+        },
+        {
+          "name": "error_correction_accuracy",
+          "score": 1.0,
+          "details": {
+            "applicable": false,
+            "reason": "no noise_configuration.yaml"
+          }
+        }
+      ],
+      "passed": false,
+      "timestamp": "2026-10-12T18:25:16.415093Z",
+      "error": null,
+      "reproducibility": {
+        "name": "reproducibility",
+        "score": 1.0,
+        "details": {
+          "matched_rows": 87,
+          "total_rows": 87
+        }
+      },
+      "duration_seconds": 62.71927953300019,
+      "metadata": {
+        "steps": 12,
+        "llm_calls": 6,
+        "total_cost": 0,
+        "prompt_tokens": 34624,
+        "completion_tokens": 7345,
+        "total_tokens": 41969,
+        "model": "gpt-6-luna"
+      }
+    },
+    {
+      "task_id": "016_EMPLOYEE_CREDITOR_MIGRATION_BASIC_EXPLICIT",
+      "agent_name": "ag2",
+      "metrics": [
+        {
+          "name": "schema_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_columns": [
+              "creditor no.",
+              "creditor name",
+              "creditor type",
+              "company designation",
+              "tax type",
+              "payment method",
+              "collective account 1",
+              "collective account 2"
+            ],
+            "actual_columns": [
+              "creditor no.",
+              "creditor name",
+              "creditor type",
+              "company designation",
+              "tax type",
+              "payment method",
+              "collective account 1",
+              "collective account 2"
+            ]
+          }
+        },
+        {
+          "name": "row_accuracy",
+          "score": 1.0,
+          "details": {
+            "matched_rows": 54,
+            "expected_rows": 54
+          }
+        },
+        {
+          "name": "filtering_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_rows": 54,
+            "actual_rows": 54
+          }
+        },
+        {
+          "name": "field_mapping_accuracy",
+          "score": 1.0,
+          "details": {
+            "populated_fraction_by_column": {
+              "creditor no.": 1.0,
+              "creditor name": 1.0,
+              "creditor type": 1.0,
+              "company designation": 1.0,
+              "tax type": 1.0,
+              "payment method": 0.8703703703703703,
+              "collective account 1": 1.0,
+              "collective account 2": 1.0
+            },
+            "expected_fraction_by_column": {
+              "creditor no.": 1.0,
+              "creditor name": 1.0,
+              "creditor type": 1.0,
+              "company designation": 1.0,
+              "tax type": 1.0,
+              "payment method": 0.8703703703703703,
+              "collective account 1": 1.0,
+              "collective account 2": 1.0
+            },
+            "score_by_column": {
+              "creditor no.": 1.0,
+              "creditor name": 1.0,
+              "creditor type": 1.0,
+              "company designation": 1.0,
+              "tax type": 1.0,
+              "payment method": 1.0,
+              "collective account 1": 1.0,
+              "collective account 2": 1.0
+            }
+          }
+        },
+        {
+          "name": "transformation_accuracy",
+          "score": 0.9837962962962963,
+          "details": {
+            "matched_cells": 425,
+            "total_cells": 432
+          }
+        },
+        {
+          "name": "record_accuracy",
+          "score": 1.0,
+          "details": {
+            "near_matches": 54,
+            "total_records": 54,
+            "threshold": 0.8
+          }
+        },
+        {
+          "name": "error_correction_accuracy",
+          "score": 1.0,
+          "details": {
+            "applicable": false,
+            "reason": "no noise_configuration.yaml"
+          }
+        }
+      ],
+      "passed": false,
+      "timestamp": "2026-10-12T18:25:56.955800Z",
+      "error": null,
+      "reproducibility": {
+        "name": "reproducibility",
+        "score": 1.0,
+        "details": {
+          "matched_rows": 54,
+          "total_rows": 54
+        }
+      },
+      "duration_seconds": 40.48801496299984,
+      "metadata": {
+        "steps": 6,
+        "llm_calls": 3,
+        "total_cost": 0,
+        "prompt_tokens": 10433,
+        "completion_tokens": 4811,
+        "total_tokens": 15244,
+        "model": "gpt-6-luna"
+      }
+    },
+    {
+      "task_id": "017_RESERVATION_UNIT_MIGRATION_BASIC_EXPLICIT",
+      "agent_name": "ag2",
+      "metrics": [
+        {
+          "name": "schema_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_columns": [
+              "reservation unit no.",
+              "designation",
+              "unit type",
+              "bottleneck unit",
+              "capacity",
+              "time unit",
+              "capacity units",
+              "shift factor",
+              "rough planning factor",
+              "detailed planning factor",
+              "overload factor",
+              "scheduling key",
+              "validity indicator",
+              "cost center",
+              "cost element",
+              "confirmation indicator",
+              "unit identifier",
+              "period indicator"
+            ],
+            "actual_columns": [
+              "reservation unit no.",
+              "designation",
+              "unit type",
+              "bottleneck unit",
+              "capacity",
+              "time unit",
+              "capacity units",
+              "shift factor",
+              "rough planning factor",
+              "detailed planning factor",
+              "overload factor",
+              "scheduling key",
+              "validity indicator",
+              "cost center",
+              "cost element",
+              "confirmation indicator",
+              "unit identifier",
+              "period indicator"
+            ]
+          }
+        },
+        {
+          "name": "row_accuracy",
+          "score": 1.0,
+          "details": {
+            "matched_rows": 64,
+            "expected_rows": 64
+          }
+        },
+        {
+          "name": "filtering_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_rows": 64,
+            "actual_rows": 64
+          }
+        },
+        {
+          "name": "field_mapping_accuracy",
+          "score": 1.0,
+          "details": {
+            "populated_fraction_by_column": {
+              "reservation unit no.": 1.0,
+              "designation": 1.0,
+              "unit type": 1.0,
+              "bottleneck unit": 1.0,
+              "capacity": 1.0,
+              "time unit": 1.0,
+              "capacity units": 1.0,
+              "shift factor": 1.0,
+              "rough planning factor": 1.0,
+              "detailed planning factor": 1.0,
+              "overload factor": 1.0,
+              "scheduling key": 1.0,
+              "validity indicator": 1.0,
+              "cost center": 1.0,
+              "cost element": 1.0,
+              "confirmation indicator": 1.0,
+              "unit identifier": 0.609375,
+              "period indicator": 1.0
+            },
+            "expected_fraction_by_column": {
+              "reservation unit no.": 1.0,
+              "designation": 1.0,
+              "unit type": 1.0,
+              "bottleneck unit": 1.0,
+              "capacity": 1.0,
+              "time unit": 1.0,
+              "capacity units": 1.0,
+              "shift factor": 1.0,
+              "rough planning factor": 1.0,
+              "detailed planning factor": 1.0,
+              "overload factor": 1.0,
+              "scheduling key": 1.0,
+              "validity indicator": 1.0,
+              "cost center": 1.0,
+              "cost element": 1.0,
+              "confirmation indicator": 1.0,
+              "unit identifier": 0.609375,
+              "period indicator": 1.0
+            },
+            "score_by_column": {
+              "reservation unit no.": 1.0,
+              "designation": 1.0,
+              "unit type": 1.0,
+              "bottleneck unit": 1.0,
+              "capacity": 1.0,
+              "time unit": 1.0,
+              "capacity units": 1.0,
+              "shift factor": 1.0,
+              "rough planning factor": 1.0,
+              "detailed planning factor": 1.0,
+              "overload factor": 1.0,
+              "scheduling key": 1.0,
+              "validity indicator": 1.0,
+              "cost center": 1.0,
+              "cost element": 1.0,
+              "confirmation indicator": 1.0,
+              "unit identifier": 1.0,
+              "period indicator": 1.0
+            }
+          }
+        },
+        {
+          "name": "transformation_accuracy",
+          "score": 0.9782986111111112,
+          "details": {
+            "matched_cells": 1127,
+            "total_cells": 1152
+          }
+        },
+        {
+          "name": "record_accuracy",
+          "score": 1.0,
+          "details": {
+            "near_matches": 64,
+            "total_records": 64,
+            "threshold": 0.8
+          }
+        },
+        {
+          "name": "error_correction_accuracy",
+          "score": 1.0,
+          "details": {
+            "applicable": false,
+            "reason": "no noise_configuration.yaml"
+          }
+        }
+      ],
+      "passed": false,
+      "timestamp": "2026-10-12T18:26:29.107309Z",
+      "error": null,
+      "reproducibility": {
+        "name": "reproducibility",
+        "score": 1.0,
+        "details": {
+          "matched_rows": 64,
+          "total_rows": 64
+        }
+      },
+      "duration_seconds": 32.0957969229994,
+      "metadata": {
+        "steps": 10,
+        "llm_calls": 5,
+        "total_cost": 0,
+        "prompt_tokens": 32512,
+        "completion_tokens": 3636,
+        "total_tokens": 36148,
+        "model": "gpt-6-luna"
+      }
+    },
+    {
+      "task_id": "018_WORK_PLAN_MIGRATION_BASIC_EXPLICIT",
+      "agent_name": "ag2",
+      "metrics": [
+        {
+          "name": "schema_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_columns": [
+              "routing no.",
+              "operation no.",
+              "operation text 1",
+              "operation text 2",
+              "reservation unit no.",
+              "reservation unit designation",
+              "reference type",
+              "setup time",
+              "time per unit",
+              "time unit",
+              "time base",
+              "wage time per unit",
+              "lead time",
+              "overlap type",
+              "validity indicator",
+              "confirmation indicator",
+              "scheduling key",
+              "cost center",
+              "material no.",
+              "material description",
+              "unit identifier"
+            ],
+            "actual_columns": [
+              "routing no.",
+              "operation no.",
+              "operation text 1",
+              "operation text 2",
+              "reservation unit no.",
+              "reservation unit designation",
+              "reference type",
+              "setup time",
+              "time per unit",
+              "time unit",
+              "time base",
+              "wage time per unit",
+              "lead time",
+              "overlap type",
+              "validity indicator",
+              "confirmation indicator",
+              "scheduling key",
+              "cost center",
+              "material no.",
+              "material description",
+              "unit identifier"
+            ]
+          }
+        },
+        {
+          "name": "row_accuracy",
+          "score": 1.0,
+          "details": {
+            "matched_rows": 73,
+            "expected_rows": 73
+          }
+        },
+        {
+          "name": "filtering_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_rows": 73,
+            "actual_rows": 73
+          }
+        },
+        {
+          "name": "field_mapping_accuracy",
+          "score": 1.0,
+          "details": {
+            "populated_fraction_by_column": {
+              "routing no.": 1.0,
+              "operation no.": 1.0,
+              "operation text 1": 1.0,
+              "operation text 2": 0.4794520547945205,
+              "reservation unit no.": 1.0,
+              "reservation unit designation": 1.0,
+              "reference type": 1.0,
+              "setup time": 1.0,
+              "time per unit": 1.0,
+              "time unit": 1.0,
+              "time base": 1.0,
+              "wage time per unit": 1.0,
+              "lead time": 1.0,
+              "overlap type": 0.0,
+              "validity indicator": 1.0,
+              "confirmation indicator": 1.0,
+              "scheduling key": 1.0,
+              "cost center": 1.0,
+              "material no.": 0.684931506849315,
+              "material description": 1.0,
+              "unit identifier": 0.3698630136986301
+            },
+            "expected_fraction_by_column": {
+              "routing no.": 1.0,
+              "operation no.": 1.0,
+              "operation text 1": 1.0,
+              "operation text 2": 0.4794520547945205,
+              "reservation unit no.": 1.0,
+              "reservation unit designation": 1.0,
+              "reference type": 1.0,
+              "setup time": 1.0,
+              "time per unit": 1.0,
+              "time unit": 1.0,
+              "time base": 1.0,
+              "wage time per unit": 1.0,
+              "lead time": 1.0,
+              "overlap type": 0.0,
+              "validity indicator": 1.0,
+              "confirmation indicator": 1.0,
+              "scheduling key": 1.0,
+              "cost center": 1.0,
+              "material no.": 0.684931506849315,
+              "material description": 1.0,
+              "unit identifier": 0.3698630136986301
+            },
+            "score_by_column": {
+              "routing no.": 1.0,
+              "operation no.": 1.0,
+              "operation text 1": 1.0,
+              "operation text 2": 1.0,
+              "reservation unit no.": 1.0,
+              "reservation unit designation": 1.0,
+              "reference type": 1.0,
+              "setup time": 1.0,
+              "time per unit": 1.0,
+              "time unit": 1.0,
+              "time base": 1.0,
+              "wage time per unit": 1.0,
+              "lead time": 1.0,
+              "overlap type": 1.0,
+              "validity indicator": 1.0,
+              "confirmation indicator": 1.0,
+              "scheduling key": 1.0,
+              "cost center": 1.0,
+              "material no.": 1.0,
+              "material description": 1.0,
+              "unit identifier": 1.0
+            }
+          }
+        },
+        {
+          "name": "transformation_accuracy",
+          "score": 0.9302022178734507,
+          "details": {
+            "matched_cells": 1426,
+            "total_cells": 1533
+          }
+        },
+        {
+          "name": "record_accuracy",
+          "score": 1.0,
+          "details": {
+            "near_matches": 73,
+            "total_records": 73,
+            "threshold": 0.8
+          }
+        },
+        {
+          "name": "error_correction_accuracy",
+          "score": 1.0,
+          "details": {
+            "applicable": false,
+            "reason": "no noise_configuration.yaml"
+          }
+        }
+      ],
+      "passed": false,
+      "timestamp": "2026-10-12T18:27:02.597784Z",
+      "error": null,
+      "reproducibility": {
+        "name": "reproducibility",
+        "score": 1.0,
+        "details": {
+          "matched_rows": 73,
+          "total_rows": 73
+        }
+      },
+      "duration_seconds": 33.42896790600025,
+      "metadata": {
+        "steps": 12,
+        "llm_calls": 6,
+        "total_cost": 0,
+        "prompt_tokens": 38637,
+        "completion_tokens": 3678,
+        "total_tokens": 42315,
+        "model": "gpt-6-luna"
+      }
+    },
+    {
+      "task_id": "019_PRODUCTION_ORDER_MIGRATION_BASIC_EXPLICIT",
+      "agent_name": "ag2",
+      "metrics": [
+        {
+          "name": "schema_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_columns": [
+              "confirmation no.",
+              "confirmation no. legacy",
+              "material no.",
+              "material description",
+              "order quantity",
+              "delivered quantity",
+              "scrap quantity",
+              "open quantity",
+              "unit of measure",
+              "start date",
+              "end date",
+              "order status",
+              "planner",
+              "plant",
+              "order category"
+            ],
+            "actual_columns": [
+              "confirmation no.",
+              "confirmation no. legacy",
+              "material no.",
+              "material description",
+              "order quantity",
+              "delivered quantity",
+              "scrap quantity",
+              "open quantity",
+              "unit of measure",
+              "start date",
+              "end date",
+              "order status",
+              "planner",
+              "plant",
+              "order category"
+            ]
+          }
+        },
+        {
+          "name": "row_accuracy",
+          "score": 1.0,
+          "details": {
+            "matched_rows": 67,
+            "expected_rows": 67
+          }
+        },
+        {
+          "name": "filtering_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_rows": 67,
+            "actual_rows": 67
+          }
+        },
+        {
+          "name": "field_mapping_accuracy",
+          "score": 1.0,
+          "details": {
+            "populated_fraction_by_column": {
+              "confirmation no.": 1.0,
+              "confirmation no. legacy": 1.0,
+              "material no.": 1.0,
+              "material description": 1.0,
+              "order quantity": 1.0,
+              "delivered quantity": 1.0,
+              "scrap quantity": 1.0,
+              "open quantity": 1.0,
+              "unit of measure": 1.0,
+              "start date": 1.0,
+              "end date": 1.0,
+              "order status": 1.0,
+              "planner": 1.0,
+              "plant": 1.0,
+              "order category": 1.0
+            },
+            "expected_fraction_by_column": {
+              "confirmation no.": 1.0,
+              "confirmation no. legacy": 1.0,
+              "material no.": 1.0,
+              "material description": 1.0,
+              "order quantity": 1.0,
+              "delivered quantity": 1.0,
+              "scrap quantity": 1.0,
+              "open quantity": 1.0,
+              "unit of measure": 1.0,
+              "start date": 1.0,
+              "end date": 1.0,
+              "order status": 1.0,
+              "planner": 1.0,
+              "plant": 1.0,
+              "order category": 1.0
+            },
+            "score_by_column": {
+              "confirmation no.": 1.0,
+              "confirmation no. legacy": 1.0,
+              "material no.": 1.0,
+              "material description": 1.0,
+              "order quantity": 1.0,
+              "delivered quantity": 1.0,
+              "scrap quantity": 1.0,
+              "open quantity": 1.0,
+              "unit of measure": 1.0,
+              "start date": 1.0,
+              "end date": 1.0,
+              "order status": 1.0,
+              "planner": 1.0,
+              "plant": 1.0,
+              "order category": 1.0
+            }
+          }
+        },
+        {
+          "name": "transformation_accuracy",
+          "score": 1.0,
+          "details": {
+            "matched_cells": 1005,
+            "total_cells": 1005
+          }
+        },
+        {
+          "name": "record_accuracy",
+          "score": 1.0,
+          "details": {
+            "near_matches": 67,
+            "total_records": 67,
+            "threshold": 0.8
+          }
+        },
+        {
+          "name": "error_correction_accuracy",
+          "score": 1.0,
+          "details": {
+            "applicable": false,
+            "reason": "no noise_configuration.yaml"
+          }
+        }
+      ],
+      "passed": true,
+      "timestamp": "2026-10-12T18:27:40.071718Z",
+      "error": null,
+      "reproducibility": {
+        "name": "reproducibility",
+        "score": 1.0,
+        "details": {
+          "matched_rows": 67,
+          "total_rows": 67
+        }
+      },
+      "duration_seconds": 37.418861172000106,
+      "metadata": {
+        "steps": 10,
+        "llm_calls": 5,
+        "total_cost": 0,
+        "prompt_tokens": 28458,
+        "completion_tokens": 4279,
+        "total_tokens": 32737,
+        "model": "gpt-6-luna"
+      }
+    },
+    {
+      "task_id": "020_FIXED_ASSETS_MIGRATION_BASIC_EXPLICIT",
+      "agent_name": "ag2",
+      "metrics": [
+        {
+          "name": "schema_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_columns": [
+              "BUKRS",
+              "ANLKL",
+              "GD_MARK",
+              "AIBN1",
+              "MEINS",
+              "MENGE",
+              "AKTIV",
+              "TXT50",
+              "KOSTL",
+              "PRCTR",
+              "WERKS",
+              "STORT",
+              "AFASL01",
+              "AFABG01",
+              "NDJAR01",
+              "NDPER01",
+              "KANSW01",
+              "KNAFA01",
+              "net book value",
+              "ELBT"
+            ],
+            "actual_columns": [
+              "BUKRS",
+              "ANLKL",
+              "GD_MARK",
+              "AIBN1",
+              "MEINS",
+              "MENGE",
+              "AKTIV",
+              "TXT50",
+              "KOSTL",
+              "PRCTR",
+              "WERKS",
+              "STORT",
+              "AFASL01",
+              "AFABG01",
+              "NDJAR01",
+              "NDPER01",
+              "KANSW01",
+              "KNAFA01",
+              "net book value",
+              "ELBT"
+            ]
+          }
+        },
+        {
+          "name": "row_accuracy",
+          "score": 1.0,
+          "details": {
+            "matched_rows": 75,
+            "expected_rows": 75
+          }
+        },
+        {
+          "name": "filtering_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_rows": 75,
+            "actual_rows": 75
+          }
+        },
+        {
+          "name": "field_mapping_accuracy",
+          "score": 1.0,
+          "details": {
+            "populated_fraction_by_column": {
+              "BUKRS": 1.0,
+              "ANLKL": 1.0,
+              "GD_MARK": 1.0,
+              "AIBN1": 1.0,
+              "MEINS": 1.0,
+              "MENGE": 1.0,
+              "AKTIV": 1.0,
+              "TXT50": 1.0,
+              "KOSTL": 1.0,
+              "PRCTR": 1.0,
+              "WERKS": 1.0,
+              "STORT": 1.0,
+              "AFASL01": 1.0,
+              "AFABG01": 1.0,
+              "NDJAR01": 1.0,
+              "NDPER01": 1.0,
+              "KANSW01": 1.0,
+              "KNAFA01": 1.0,
+              "net book value": 1.0,
+              "ELBT": 1.0
+            },
+            "expected_fraction_by_column": {
+              "BUKRS": 1.0,
+              "ANLKL": 1.0,
+              "GD_MARK": 1.0,
+              "AIBN1": 1.0,
+              "MEINS": 1.0,
+              "MENGE": 1.0,
+              "AKTIV": 1.0,
+              "TXT50": 1.0,
+              "KOSTL": 1.0,
+              "PRCTR": 1.0,
+              "WERKS": 1.0,
+              "STORT": 1.0,
+              "AFASL01": 1.0,
+              "AFABG01": 1.0,
+              "NDJAR01": 1.0,
+              "NDPER01": 1.0,
+              "KANSW01": 1.0,
+              "KNAFA01": 1.0,
+              "net book value": 1.0,
+              "ELBT": 1.0
+            },
+            "score_by_column": {
+              "BUKRS": 1.0,
+              "ANLKL": 1.0,
+              "GD_MARK": 1.0,
+              "AIBN1": 1.0,
+              "MEINS": 1.0,
+              "MENGE": 1.0,
+              "AKTIV": 1.0,
+              "TXT50": 1.0,
+              "KOSTL": 1.0,
+              "PRCTR": 1.0,
+              "WERKS": 1.0,
+              "STORT": 1.0,
+              "AFASL01": 1.0,
+              "AFABG01": 1.0,
+              "NDJAR01": 1.0,
+              "NDPER01": 1.0,
+              "KANSW01": 1.0,
+              "KNAFA01": 1.0,
+              "net book value": 1.0,
+              "ELBT": 1.0
+            }
+          }
+        },
+        {
+          "name": "transformation_accuracy",
+          "score": 1.0,
+          "details": {
+            "matched_cells": 1500,
+            "total_cells": 1500
+          }
+        },
+        {
+          "name": "record_accuracy",
+          "score": 1.0,
+          "details": {
+            "near_matches": 75,
+            "total_records": 75,
+            "threshold": 0.8
+          }
+        },
+        {
+          "name": "error_correction_accuracy",
+          "score": 1.0,
+          "details": {
+            "applicable": false,
+            "reason": "no noise_configuration.yaml"
+          }
+        }
+      ],
+      "passed": true,
+      "timestamp": "2026-10-12T18:28:06.188011Z",
+      "error": null,
+      "reproducibility": {
+        "name": "reproducibility",
+        "score": 1.0,
+        "details": {
+          "matched_rows": 75,
+          "total_rows": 75
+        }
+      },
+      "duration_seconds": 26.05503612800021,
+      "metadata": {
+        "steps": 8,
+        "llm_calls": 4,
+        "total_cost": 0,
+        "prompt_tokens": 23019,
+        "completion_tokens": 2977,
+        "total_tokens": 25996,
+        "model": "gpt-6-luna"
+      }
+    }
+  ],
+  "summaries": [
+    {
+      "agent_name": "ag2",
+      "total_tasks": 20,
+      "passed_tasks": 12,
+      "failed_tasks": 8,
+      "pass_rate": 0.6,
+      "success_rate": 1.0,
+      "average_duration_seconds": 41.65232792844995,
+      "average_metric_scores": {
+        "schema_accuracy": 1.0,
+        "row_accuracy": 0.9694444444444444,
+        "filtering_accuracy": 1.0,
+        "field_mapping_accuracy": 1.0,
+        "transformation_accuracy": 0.9572053257460666,
+        "record_accuracy": 0.951984126984127,
+        "error_correction_accuracy": 1.0,
+        "reproducibility": 1.0
+      },
+      "average_metadata": {
+        "steps": 9.4,
+        "llm_calls": 4.7,
+        "total_cost": 0.0,
+        "prompt_tokens": 26829.1,
+        "completion_tokens": 4612.15,
+        "total_tokens": 31441.25
+      }
+    }
+  ]
+}

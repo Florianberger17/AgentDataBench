@@ -57,7 +57,29 @@ class EvaluationRunner:
                 metadata=agent_result.metadata,
             )
 
-        output_df = Dataset(agent_result.output_dataset_path).df
+        try:
+            output_df = Dataset(agent_result.output_dataset_path).df
+        except Exception as exc:
+            # A present-but-empty/malformed CSV (e.g. pandas.errors.
+            # EmptyDataError) is an agent-level failure, same as producing no
+            # file at all - AgentAdapter only checks the file exists, not
+            # that it parses, so that has to happen here. Letting this
+            # exception propagate previously crashed the whole batch script,
+            # losing every remaining package's result along with it.
+            return EvaluationResult(
+                task_id=package.task.task_id,
+                agent_name=agent_result.agent_name,
+                metrics=[],
+                passed=False,
+                error=(
+                    f"Could not read agent output "
+                    f"'{agent_result.output_dataset_path.name}': "
+                    f"{type(exc).__name__}: {exc}"
+                ),
+                timestamp=datetime.now(timezone.utc),
+                duration_seconds=agent_result.duration_seconds,
+                metadata=agent_result.metadata,
+            )
         ground_truth_df = package.ground_truth.df
 
         metric_results = [

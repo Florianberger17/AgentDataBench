@@ -1,0 +1,2951 @@
+{
+  "generated_at": "2026-10-12T17:51:21.492370Z",
+  "results": [
+    {
+      "task_id": "021_CUSTOMER_MIGRATION_BASIC_IMPLICIT",
+      "agent_name": "ag2",
+      "metrics": [
+        {
+          "name": "schema_accuracy",
+          "score": 0.25,
+          "details": {
+            "expected_columns": [
+              "CustomerID",
+              "Name",
+              "Street",
+              "City",
+              "PostalCode",
+              "Country",
+              "LastBusinessActivityDate",
+              "Status"
+            ],
+            "actual_columns": [
+              "CustomerID",
+              "Name",
+              "Status",
+              "LastOrderDate"
+            ]
+          }
+        },
+        {
+          "name": "row_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch",
+            "expected_columns": [
+              "CustomerID",
+              "Name",
+              "Street",
+              "City",
+              "PostalCode",
+              "Country",
+              "LastBusinessActivityDate",
+              "Status"
+            ],
+            "actual_columns": [
+              "CustomerID",
+              "Name",
+              "Status",
+              "LastOrderDate"
+            ]
+          }
+        },
+        {
+          "name": "filtering_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_rows": 45,
+            "actual_rows": 45
+          }
+        },
+        {
+          "name": "field_mapping_accuracy",
+          "score": 0.375,
+          "details": {
+            "populated_fraction_by_column": {
+              "CustomerID": 1.0,
+              "Name": 1.0,
+              "Street": 0.0,
+              "City": 0.0,
+              "PostalCode": 0.0,
+              "Country": 0.0,
+              "LastBusinessActivityDate": 0.0,
+              "Status": 1.0
+            },
+            "expected_fraction_by_column": {
+              "CustomerID": 1.0,
+              "Name": 1.0,
+              "Street": 1.0,
+              "City": 1.0,
+              "PostalCode": 1.0,
+              "Country": 1.0,
+              "LastBusinessActivityDate": 1.0,
+              "Status": 1.0
+            },
+            "score_by_column": {
+              "CustomerID": 1.0,
+              "Name": 1.0,
+              "Street": 0.0,
+              "City": 0.0,
+              "PostalCode": 0.0,
+              "Country": 0.0,
+              "LastBusinessActivityDate": 0.0,
+              "Status": 1.0
+            }
+          }
+        },
+        {
+          "name": "transformation_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch"
+          }
+        },
+        {
+          "name": "record_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch"
+          }
+        },
+        {
+          "name": "error_correction_accuracy",
+          "score": 1.0,
+          "details": {
+            "applicable": false,
+            "reason": "no noise_configuration.yaml"
+          }
+        }
+      ],
+      "passed": false,
+      "timestamp": "2026-10-12T17:30:54.928000Z",
+      "error": null,
+      "reproducibility": {
+        "name": "reproducibility",
+        "score": 1.0,
+        "details": {
+          "matched_rows": 45,
+          "total_rows": 45
+        }
+      },
+      "duration_seconds": 24.333705712999745,
+      "metadata": {
+        "steps": 12,
+        "llm_calls": 6,
+        "total_cost": 0.0038282999999999998,
+        "prompt_tokens": 16426,
+        "completion_tokens": 2274,
+        "total_tokens": 18700,
+        "model": "gpt-4o-mini"
+      }
+    },
+    {
+      "task_id": "022_SUPPLIER_MIGRATION_BASIC_IMPLICIT",
+      "agent_name": "ag2",
+      "metrics": [
+        {
+          "name": "schema_accuracy",
+          "score": 0.0,
+          "details": {
+            "expected_columns": [
+              "bp_no",
+              "name",
+              "country",
+              "post_code",
+              "city",
+              "street",
+              "house_num1",
+              "additional_info"
+            ],
+            "actual_columns": [
+              "business_partner",
+              "company_name",
+              "last_activity"
+            ]
+          }
+        },
+        {
+          "name": "row_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch",
+            "expected_columns": [
+              "bp_no",
+              "name",
+              "country",
+              "post_code",
+              "city",
+              "street",
+              "house_num1",
+              "additional_info"
+            ],
+            "actual_columns": [
+              "business_partner",
+              "company_name",
+              "last_activity"
+            ]
+          }
+        },
+        {
+          "name": "filtering_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_rows": 65,
+            "actual_rows": 65
+          }
+        },
+        {
+          "name": "field_mapping_accuracy",
+          "score": 0.0,
+          "details": {
+            "populated_fraction_by_column": {
+              "bp_no": 0.0,
+              "name": 0.0,
+              "country": 0.0,
+              "post_code": 0.0,
+              "city": 0.0,
+              "street": 0.0,
+              "house_num1": 0.0,
+              "additional_info": 0.0
+            },
+            "expected_fraction_by_column": {
+              "bp_no": 1.0,
+              "name": 1.0,
+              "country": 1.0,
+              "post_code": 1.0,
+              "city": 1.0,
+              "street": 1.0,
+              "house_num1": 1.0,
+              "additional_info": 1.0
+            },
+            "score_by_column": {
+              "bp_no": 0.0,
+              "name": 0.0,
+              "country": 0.0,
+              "post_code": 0.0,
+              "city": 0.0,
+              "street": 0.0,
+              "house_num1": 0.0,
+              "additional_info": 0.0
+            }
+          }
+        },
+        {
+          "name": "transformation_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch"
+          }
+        },
+        {
+          "name": "record_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch"
+          }
+        },
+        {
+          "name": "error_correction_accuracy",
+          "score": 1.0,
+          "details": {
+            "applicable": false,
+            "reason": "no noise_configuration.yaml"
+          }
+        }
+      ],
+      "passed": false,
+      "timestamp": "2026-10-12T17:31:04.146628Z",
+      "error": null,
+      "reproducibility": {
+        "name": "reproducibility",
+        "score": 1.0,
+        "details": {
+          "matched_rows": 65,
+          "total_rows": 65
+        }
+      },
+      "duration_seconds": 8.994552443999964,
+      "metadata": {
+        "steps": 6,
+        "llm_calls": 3,
+        "total_cost": 0.0010715999999999998,
+        "prompt_tokens": 4312,
+        "completion_tokens": 708,
+        "total_tokens": 5020,
+        "model": "gpt-4o-mini"
+      }
+    },
+    {
+      "task_id": "023_MATERIAL_MIGRATION_BASIC_IMPLICIT",
+      "agent_name": "ag2",
+      "metrics": [
+        {
+          "name": "schema_accuracy",
+          "score": 0.0,
+          "details": {
+            "expected_columns": [
+              "erp no",
+              "description",
+              "unit",
+              "material type",
+              "status",
+              "generation date"
+            ],
+            "actual_columns": [
+              "erp_number",
+              "name",
+              "approval",
+              "material_type"
+            ]
+          }
+        },
+        {
+          "name": "row_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch",
+            "expected_columns": [
+              "erp no",
+              "description",
+              "unit",
+              "material type",
+              "status",
+              "generation date"
+            ],
+            "actual_columns": [
+              "erp_number",
+              "name",
+              "approval",
+              "material_type"
+            ]
+          }
+        },
+        {
+          "name": "filtering_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_rows": 68,
+            "actual_rows": 68
+          }
+        },
+        {
+          "name": "field_mapping_accuracy",
+          "score": 0.0,
+          "details": {
+            "populated_fraction_by_column": {
+              "erp no": 0.0,
+              "description": 0.0,
+              "unit": 0.0,
+              "material type": 0.0,
+              "status": 0.0,
+              "generation date": 0.0
+            },
+            "expected_fraction_by_column": {
+              "erp no": 1.0,
+              "description": 1.0,
+              "unit": 1.0,
+              "material type": 1.0,
+              "status": 1.0,
+              "generation date": 1.0
+            },
+            "score_by_column": {
+              "erp no": 0.0,
+              "description": 0.0,
+              "unit": 0.0,
+              "material type": 0.0,
+              "status": 0.0,
+              "generation date": 0.0
+            }
+          }
+        },
+        {
+          "name": "transformation_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch"
+          }
+        },
+        {
+          "name": "record_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch"
+          }
+        },
+        {
+          "name": "error_correction_accuracy",
+          "score": 1.0,
+          "details": {
+            "applicable": false,
+            "reason": "no noise_configuration.yaml"
+          }
+        }
+      ],
+      "passed": false,
+      "timestamp": "2026-10-12T17:31:49.289302Z",
+      "error": null,
+      "reproducibility": {
+        "name": "reproducibility",
+        "score": 1.0,
+        "details": {
+          "matched_rows": 68,
+          "total_rows": 68
+        }
+      },
+      "duration_seconds": 44.93462694800019,
+      "metadata": {
+        "steps": 16,
+        "llm_calls": 8,
+        "total_cost": 0.0081897,
+        "prompt_tokens": 35634,
+        "completion_tokens": 4741,
+        "total_tokens": 40375,
+        "model": "gpt-4o-mini"
+      }
+    },
+    {
+      "task_id": "024_PROJECT_MIGRATION_BASIC_IMPLICIT",
+      "agent_name": "ag2",
+      "metrics": [
+        {
+          "name": "schema_accuracy",
+          "score": 0.0,
+          "details": {
+            "expected_columns": [
+              "Project Definition",
+              "Project Profile",
+              "Short Description",
+              "Person Responsible ID",
+              "Company Code",
+              "Project Currency",
+              "Start Date",
+              "Finish Date",
+              "Factory Calendar Key",
+              "Planning Profile",
+              "Network Assignment"
+            ],
+            "actual_columns": [
+              "ProjectNumber",
+              "ProjectProfile",
+              "CompanyCode",
+              "FactoryCalendarKey",
+              "PlanningProfile",
+              "NetworkAssignment",
+              "ResponsiblePerson"
+            ]
+          }
+        },
+        {
+          "name": "row_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch",
+            "expected_columns": [
+              "Project Definition",
+              "Project Profile",
+              "Short Description",
+              "Person Responsible ID",
+              "Company Code",
+              "Project Currency",
+              "Start Date",
+              "Finish Date",
+              "Factory Calendar Key",
+              "Planning Profile",
+              "Network Assignment"
+            ],
+            "actual_columns": [
+              "ProjectNumber",
+              "ProjectProfile",
+              "CompanyCode",
+              "FactoryCalendarKey",
+              "PlanningProfile",
+              "NetworkAssignment",
+              "ResponsiblePerson"
+            ]
+          }
+        },
+        {
+          "name": "filtering_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_rows": 100,
+            "actual_rows": 100
+          }
+        },
+        {
+          "name": "field_mapping_accuracy",
+          "score": 0.0,
+          "details": {
+            "populated_fraction_by_column": {
+              "Project Definition": 0.0,
+              "Project Profile": 0.0,
+              "Short Description": 0.0,
+              "Person Responsible ID": 0.0,
+              "Company Code": 0.0,
+              "Project Currency": 0.0,
+              "Start Date": 0.0,
+              "Finish Date": 0.0,
+              "Factory Calendar Key": 0.0,
+              "Planning Profile": 0.0,
+              "Network Assignment": 0.0
+            },
+            "expected_fraction_by_column": {
+              "Project Definition": 1.0,
+              "Project Profile": 1.0,
+              "Short Description": 1.0,
+              "Person Responsible ID": 1.0,
+              "Company Code": 1.0,
+              "Project Currency": 1.0,
+              "Start Date": 1.0,
+              "Finish Date": 1.0,
+              "Factory Calendar Key": 1.0,
+              "Planning Profile": 1.0,
+              "Network Assignment": 1.0
+            },
+            "score_by_column": {
+              "Project Definition": 0.0,
+              "Project Profile": 0.0,
+              "Short Description": 0.0,
+              "Person Responsible ID": 0.0,
+              "Company Code": 0.0,
+              "Project Currency": 0.0,
+              "Start Date": 0.0,
+              "Finish Date": 0.0,
+              "Factory Calendar Key": 0.0,
+              "Planning Profile": 0.0,
+              "Network Assignment": 0.0
+            }
+          }
+        },
+        {
+          "name": "transformation_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch"
+          }
+        },
+        {
+          "name": "record_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch"
+          }
+        },
+        {
+          "name": "error_correction_accuracy",
+          "score": 1.0,
+          "details": {
+            "applicable": false,
+            "reason": "no noise_configuration.yaml"
+          }
+        }
+      ],
+      "passed": false,
+      "timestamp": "2026-10-12T17:32:09.054814Z",
+      "error": null,
+      "reproducibility": {
+        "name": "reproducibility",
+        "score": 1.0,
+        "details": {
+          "matched_rows": 100,
+          "total_rows": 100
+        }
+      },
+      "duration_seconds": 19.55504152100002,
+      "metadata": {
+        "steps": 10,
+        "llm_calls": 5,
+        "total_cost": 0.0027830999999999997,
+        "prompt_tokens": 12058,
+        "completion_tokens": 1624,
+        "total_tokens": 13682,
+        "model": "gpt-4o-mini"
+      }
+    },
+    {
+      "task_id": "025_PURCHASE_ORDER_MIGRATION_BASIC_IMPLICIT",
+      "agent_name": "ag2",
+      "metrics": [
+        {
+          "name": "schema_accuracy",
+          "score": 0.0,
+          "details": {
+            "expected_columns": [
+              "PO_NUMBER",
+              "COMP_CODE",
+              "DOC_TYPE",
+              "VENDOR",
+              "PURCH_ORG",
+              "PUR_GROUP",
+              "CURRENCY",
+              "CREAT_DATE",
+              "LANGU",
+              "INCOTERMS1",
+              "INCOTERMS2",
+              "OUR_REF"
+            ],
+            "actual_columns": [
+              "Purchase Order Number",
+              "Supplier Number",
+              "Company Code",
+              "Document Type",
+              "Purchasing Organization",
+              "Purchasing Group",
+              "Currency",
+              "Creation Date",
+              "Incoterm Location",
+              "Incoterm Code"
+            ]
+          }
+        },
+        {
+          "name": "row_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch",
+            "expected_columns": [
+              "PO_NUMBER",
+              "COMP_CODE",
+              "DOC_TYPE",
+              "VENDOR",
+              "PURCH_ORG",
+              "PUR_GROUP",
+              "CURRENCY",
+              "CREAT_DATE",
+              "LANGU",
+              "INCOTERMS1",
+              "INCOTERMS2",
+              "OUR_REF"
+            ],
+            "actual_columns": [
+              "Purchase Order Number",
+              "Supplier Number",
+              "Company Code",
+              "Document Type",
+              "Purchasing Organization",
+              "Purchasing Group",
+              "Currency",
+              "Creation Date",
+              "Incoterm Location",
+              "Incoterm Code"
+            ]
+          }
+        },
+        {
+          "name": "filtering_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_rows": 90,
+            "actual_rows": 90
+          }
+        },
+        {
+          "name": "field_mapping_accuracy",
+          "score": 0.0,
+          "details": {
+            "populated_fraction_by_column": {
+              "PO_NUMBER": 0.0,
+              "COMP_CODE": 0.0,
+              "DOC_TYPE": 0.0,
+              "VENDOR": 0.0,
+              "PURCH_ORG": 0.0,
+              "PUR_GROUP": 0.0,
+              "CURRENCY": 0.0,
+              "CREAT_DATE": 0.0,
+              "LANGU": 0.0,
+              "INCOTERMS1": 0.0,
+              "INCOTERMS2": 0.0,
+              "OUR_REF": 0.0
+            },
+            "expected_fraction_by_column": {
+              "PO_NUMBER": 1.0,
+              "COMP_CODE": 1.0,
+              "DOC_TYPE": 1.0,
+              "VENDOR": 1.0,
+              "PURCH_ORG": 1.0,
+              "PUR_GROUP": 1.0,
+              "CURRENCY": 1.0,
+              "CREAT_DATE": 1.0,
+              "LANGU": 1.0,
+              "INCOTERMS1": 1.0,
+              "INCOTERMS2": 1.0,
+              "OUR_REF": 1.0
+            },
+            "score_by_column": {
+              "PO_NUMBER": 0.0,
+              "COMP_CODE": 0.0,
+              "DOC_TYPE": 0.0,
+              "VENDOR": 0.0,
+              "PURCH_ORG": 0.0,
+              "PUR_GROUP": 0.0,
+              "CURRENCY": 0.0,
+              "CREAT_DATE": 0.0,
+              "LANGU": 0.0,
+              "INCOTERMS1": 0.0,
+              "INCOTERMS2": 0.0,
+              "OUR_REF": 0.0
+            }
+          }
+        },
+        {
+          "name": "transformation_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch"
+          }
+        },
+        {
+          "name": "record_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch"
+          }
+        },
+        {
+          "name": "error_correction_accuracy",
+          "score": 1.0,
+          "details": {
+            "applicable": false,
+            "reason": "no noise_configuration.yaml"
+          }
+        }
+      ],
+      "passed": false,
+      "timestamp": "2026-10-12T17:32:45.259662Z",
+      "error": null,
+      "reproducibility": {
+        "name": "reproducibility",
+        "score": 1.0,
+        "details": {
+          "matched_rows": 90,
+          "total_rows": 90
+        }
+      },
+      "duration_seconds": 35.99109925699986,
+      "metadata": {
+        "steps": 16,
+        "llm_calls": 8,
+        "total_cost": 0.006671399999999999,
+        "prompt_tokens": 31844,
+        "completion_tokens": 3158,
+        "total_tokens": 35002,
+        "model": "gpt-4o-mini"
+      }
+    },
+    {
+      "task_id": "026_PURCHASE_ORDER_MIGRATION_BASIC_IMPLICIT",
+      "agent_name": "ag2",
+      "metrics": [
+        {
+          "name": "schema_accuracy",
+          "score": 0.0,
+          "details": {
+            "expected_columns": [
+              "PO_NUMBER",
+              "PO_ITEM",
+              "ACCTASSCAT",
+              "MATERIAL",
+              "SHORT_TEXT",
+              "PO_UNIT",
+              "PRICE_UNIT",
+              "COSTCENTER",
+              "PLANT",
+              "QUANTITY",
+              "GR_PRICE",
+              "DELIVERY_DATE",
+              "ZZNAME_TLF"
+            ],
+            "actual_columns": [
+              "purchase_order_number",
+              "item_number",
+              "material_number",
+              "cost_center_number",
+              "plant",
+              "telephone_number",
+              "valuation_price",
+              "unit_of_measure"
+            ]
+          }
+        },
+        {
+          "name": "row_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch",
+            "expected_columns": [
+              "PO_NUMBER",
+              "PO_ITEM",
+              "ACCTASSCAT",
+              "MATERIAL",
+              "SHORT_TEXT",
+              "PO_UNIT",
+              "PRICE_UNIT",
+              "COSTCENTER",
+              "PLANT",
+              "QUANTITY",
+              "GR_PRICE",
+              "DELIVERY_DATE",
+              "ZZNAME_TLF"
+            ],
+            "actual_columns": [
+              "purchase_order_number",
+              "item_number",
+              "material_number",
+              "cost_center_number",
+              "plant",
+              "telephone_number",
+              "valuation_price",
+              "unit_of_measure"
+            ]
+          }
+        },
+        {
+          "name": "filtering_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_rows": 100,
+            "actual_rows": 100
+          }
+        },
+        {
+          "name": "field_mapping_accuracy",
+          "score": 0.0,
+          "details": {
+            "populated_fraction_by_column": {
+              "PO_NUMBER": 0.0,
+              "PO_ITEM": 0.0,
+              "ACCTASSCAT": 0.0,
+              "MATERIAL": 0.0,
+              "SHORT_TEXT": 0.0,
+              "PO_UNIT": 0.0,
+              "PRICE_UNIT": 0.0,
+              "COSTCENTER": 0.0,
+              "PLANT": 0.0,
+              "QUANTITY": 0.0,
+              "GR_PRICE": 0.0,
+              "DELIVERY_DATE": 0.0,
+              "ZZNAME_TLF": 0.0
+            },
+            "expected_fraction_by_column": {
+              "PO_NUMBER": 1.0,
+              "PO_ITEM": 1.0,
+              "ACCTASSCAT": 1.0,
+              "MATERIAL": 0.71,
+              "SHORT_TEXT": 0.29,
+              "PO_UNIT": 1.0,
+              "PRICE_UNIT": 1.0,
+              "COSTCENTER": 0.1,
+              "PLANT": 1.0,
+              "QUANTITY": 1.0,
+              "GR_PRICE": 1.0,
+              "DELIVERY_DATE": 1.0,
+              "ZZNAME_TLF": 1.0
+            },
+            "score_by_column": {
+              "PO_NUMBER": 0.0,
+              "PO_ITEM": 0.0,
+              "ACCTASSCAT": 0.0,
+              "MATERIAL": 0.0,
+              "SHORT_TEXT": 0.0,
+              "PO_UNIT": 0.0,
+              "PRICE_UNIT": 0.0,
+              "COSTCENTER": 0.0,
+              "PLANT": 0.0,
+              "QUANTITY": 0.0,
+              "GR_PRICE": 0.0,
+              "DELIVERY_DATE": 0.0,
+              "ZZNAME_TLF": 0.0
+            }
+          }
+        },
+        {
+          "name": "transformation_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch"
+          }
+        },
+        {
+          "name": "record_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch"
+          }
+        },
+        {
+          "name": "error_correction_accuracy",
+          "score": 1.0,
+          "details": {
+            "applicable": false,
+            "reason": "no noise_configuration.yaml"
+          }
+        }
+      ],
+      "passed": false,
+      "timestamp": "2026-10-12T17:34:22.204401Z",
+      "error": null,
+      "reproducibility": {
+        "name": "reproducibility",
+        "score": 1.0,
+        "details": {
+          "matched_rows": 100,
+          "total_rows": 100
+        }
+      },
+      "duration_seconds": 96.7044859130001,
+      "metadata": {
+        "steps": 22,
+        "llm_calls": 11,
+        "total_cost": 0.02050275,
+        "prompt_tokens": 99849,
+        "completion_tokens": 9209,
+        "total_tokens": 109058,
+        "model": "gpt-4o-mini"
+      }
+    },
+    {
+      "task_id": "027_BOM_MIGRATION_BASIC_IMPLICIT",
+      "agent_name": "ag2",
+      "metrics": [
+        {
+          "name": "schema_accuracy",
+          "score": 0.0,
+          "details": {
+            "expected_columns": [
+              "MATNR",
+              "MAKTX",
+              "POSNR",
+              "POSTP",
+              "IDNRK",
+              "MAKTX_COMP",
+              "MENGE",
+              "MEINS_POS",
+              "POTX1"
+            ],
+            "actual_columns": [
+              "material_no",
+              "description",
+              "quantity",
+              "unit"
+            ]
+          }
+        },
+        {
+          "name": "row_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch",
+            "expected_columns": [
+              "MATNR",
+              "MAKTX",
+              "POSNR",
+              "POSTP",
+              "IDNRK",
+              "MAKTX_COMP",
+              "MENGE",
+              "MEINS_POS",
+              "POTX1"
+            ],
+            "actual_columns": [
+              "material_no",
+              "description",
+              "quantity",
+              "unit"
+            ]
+          }
+        },
+        {
+          "name": "filtering_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_rows": 98,
+            "actual_rows": 98
+          }
+        },
+        {
+          "name": "field_mapping_accuracy",
+          "score": 0.0,
+          "details": {
+            "populated_fraction_by_column": {
+              "MATNR": 0.0,
+              "MAKTX": 0.0,
+              "POSNR": 0.0,
+              "POSTP": 0.0,
+              "IDNRK": 0.0,
+              "MAKTX_COMP": 0.0,
+              "MENGE": 0.0,
+              "MEINS_POS": 0.0,
+              "POTX1": 0.0
+            },
+            "expected_fraction_by_column": {
+              "MATNR": 1.0,
+              "MAKTX": 1.0,
+              "POSNR": 1.0,
+              "POSTP": 1.0,
+              "IDNRK": 0.9285714285714286,
+              "MAKTX_COMP": 0.9285714285714286,
+              "MENGE": 1.0,
+              "MEINS_POS": 1.0,
+              "POTX1": 0.07142857142857142
+            },
+            "score_by_column": {
+              "MATNR": 0.0,
+              "MAKTX": 0.0,
+              "POSNR": 0.0,
+              "POSTP": 0.0,
+              "IDNRK": 0.0,
+              "MAKTX_COMP": 0.0,
+              "MENGE": 0.0,
+              "MEINS_POS": 0.0,
+              "POTX1": 0.0
+            }
+          }
+        },
+        {
+          "name": "transformation_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch"
+          }
+        },
+        {
+          "name": "record_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch"
+          }
+        },
+        {
+          "name": "error_correction_accuracy",
+          "score": 1.0,
+          "details": {
+            "applicable": false,
+            "reason": "no noise_configuration.yaml"
+          }
+        }
+      ],
+      "passed": false,
+      "timestamp": "2026-10-12T17:34:42.636455Z",
+      "error": null,
+      "reproducibility": {
+        "name": "reproducibility",
+        "score": 1.0,
+        "details": {
+          "matched_rows": 98,
+          "total_rows": 98
+        }
+      },
+      "duration_seconds": 20.220694686000115,
+      "metadata": {
+        "steps": 10,
+        "llm_calls": 5,
+        "total_cost": 0.00328635,
+        "prompt_tokens": 13757,
+        "completion_tokens": 2038,
+        "total_tokens": 15795,
+        "model": "gpt-4o-mini"
+      }
+    },
+    {
+      "task_id": "028_PRICE_LIST_MIGRATION_BASIC_IMPLICIT",
+      "agent_name": "ag2",
+      "metrics": [
+        {
+          "name": "schema_accuracy",
+          "score": 0.0,
+          "details": {
+            "expected_columns": [
+              "PRICE_LIST",
+              "MATERIAL",
+              "MATERIAL_DESC",
+              "VALID_FROM",
+              "VALID_TO",
+              "COND_AMOUNT",
+              "COND_CURR",
+              "PRICE_UNIT",
+              "UOM"
+            ],
+            "actual_columns": [
+              "part_no",
+              "valid_from",
+              "valid_to",
+              "unit_of_measure",
+              "price_list_number",
+              "price"
+            ]
+          }
+        },
+        {
+          "name": "row_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch",
+            "expected_columns": [
+              "PRICE_LIST",
+              "MATERIAL",
+              "MATERIAL_DESC",
+              "VALID_FROM",
+              "VALID_TO",
+              "COND_AMOUNT",
+              "COND_CURR",
+              "PRICE_UNIT",
+              "UOM"
+            ],
+            "actual_columns": [
+              "part_no",
+              "valid_from",
+              "valid_to",
+              "unit_of_measure",
+              "price_list_number",
+              "price"
+            ]
+          }
+        },
+        {
+          "name": "filtering_accuracy",
+          "score": 0.98989898989899,
+          "details": {
+            "expected_rows": 99,
+            "actual_rows": 100
+          }
+        },
+        {
+          "name": "field_mapping_accuracy",
+          "score": 0.0,
+          "details": {
+            "populated_fraction_by_column": {
+              "PRICE_LIST": 0.0,
+              "MATERIAL": 0.0,
+              "MATERIAL_DESC": 0.0,
+              "VALID_FROM": 0.0,
+              "VALID_TO": 0.0,
+              "COND_AMOUNT": 0.0,
+              "COND_CURR": 0.0,
+              "PRICE_UNIT": 0.0,
+              "UOM": 0.0
+            },
+            "expected_fraction_by_column": {
+              "PRICE_LIST": 1.0,
+              "MATERIAL": 1.0,
+              "MATERIAL_DESC": 1.0,
+              "VALID_FROM": 1.0,
+              "VALID_TO": 1.0,
+              "COND_AMOUNT": 1.0,
+              "COND_CURR": 1.0,
+              "PRICE_UNIT": 1.0,
+              "UOM": 1.0
+            },
+            "score_by_column": {
+              "PRICE_LIST": 0.0,
+              "MATERIAL": 0.0,
+              "MATERIAL_DESC": 0.0,
+              "VALID_FROM": 0.0,
+              "VALID_TO": 0.0,
+              "COND_AMOUNT": 0.0,
+              "COND_CURR": 0.0,
+              "PRICE_UNIT": 0.0,
+              "UOM": 0.0
+            }
+          }
+        },
+        {
+          "name": "transformation_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch"
+          }
+        },
+        {
+          "name": "record_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch"
+          }
+        },
+        {
+          "name": "error_correction_accuracy",
+          "score": 1.0,
+          "details": {
+            "applicable": false,
+            "reason": "no noise_configuration.yaml"
+          }
+        }
+      ],
+      "passed": false,
+      "timestamp": "2026-10-12T17:35:03.726269Z",
+      "error": null,
+      "reproducibility": {
+        "name": "reproducibility",
+        "score": 1.0,
+        "details": {
+          "matched_rows": 100,
+          "total_rows": 100
+        }
+      },
+      "duration_seconds": 20.874950610999804,
+      "metadata": {
+        "steps": 10,
+        "llm_calls": 5,
+        "total_cost": 0.0030779999999999996,
+        "prompt_tokens": 12880,
+        "completion_tokens": 1910,
+        "total_tokens": 14790,
+        "model": "gpt-4o-mini"
+      }
+    },
+    {
+      "task_id": "029_MATERIAL_MOVEMENTS_MIGRATION_BASIC_IMPLICIT",
+      "agent_name": "ag2",
+      "metrics": [
+        {
+          "name": "schema_accuracy",
+          "score": 0.0,
+          "details": {
+            "expected_columns": [
+              "MBLNR",
+              "BUDAT",
+              "BWART",
+              "MATNR",
+              "WERKS",
+              "LGORT",
+              "ERFMG",
+              "ERFME",
+              "DMBTR",
+              "KOSTL",
+              "SGTXT"
+            ],
+            "actual_columns": [
+              "material_doc_no",
+              "plant",
+              "part_no",
+              "part_no.1",
+              "movement_type",
+              "quantity",
+              "unit",
+              "posting date",
+              "journal no.",
+              "material_no"
+            ]
+          }
+        },
+        {
+          "name": "row_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch",
+            "expected_columns": [
+              "MBLNR",
+              "BUDAT",
+              "BWART",
+              "MATNR",
+              "WERKS",
+              "LGORT",
+              "ERFMG",
+              "ERFME",
+              "DMBTR",
+              "KOSTL",
+              "SGTXT"
+            ],
+            "actual_columns": [
+              "material_doc_no",
+              "plant",
+              "part_no",
+              "part_no.1",
+              "movement_type",
+              "quantity",
+              "unit",
+              "posting date",
+              "journal no.",
+              "material_no"
+            ]
+          }
+        },
+        {
+          "name": "filtering_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_rows": 92,
+            "actual_rows": 92
+          }
+        },
+        {
+          "name": "field_mapping_accuracy",
+          "score": 0.0,
+          "details": {
+            "populated_fraction_by_column": {
+              "MBLNR": 0.0,
+              "BUDAT": 0.0,
+              "BWART": 0.0,
+              "MATNR": 0.0,
+              "WERKS": 0.0,
+              "LGORT": 0.0,
+              "ERFMG": 0.0,
+              "ERFME": 0.0,
+              "DMBTR": 0.0,
+              "KOSTL": 0.0,
+              "SGTXT": 0.0
+            },
+            "expected_fraction_by_column": {
+              "MBLNR": 1.0,
+              "BUDAT": 1.0,
+              "BWART": 1.0,
+              "MATNR": 1.0,
+              "WERKS": 1.0,
+              "LGORT": 0.7065217391304348,
+              "ERFMG": 1.0,
+              "ERFME": 1.0,
+              "DMBTR": 1.0,
+              "KOSTL": 0.14130434782608695,
+              "SGTXT": 1.0
+            },
+            "score_by_column": {
+              "MBLNR": 0.0,
+              "BUDAT": 0.0,
+              "BWART": 0.0,
+              "MATNR": 0.0,
+              "WERKS": 0.0,
+              "LGORT": 0.0,
+              "ERFMG": 0.0,
+              "ERFME": 0.0,
+              "DMBTR": 0.0,
+              "KOSTL": 0.0,
+              "SGTXT": 0.0
+            }
+          }
+        },
+        {
+          "name": "transformation_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch"
+          }
+        },
+        {
+          "name": "record_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch"
+          }
+        },
+        {
+          "name": "error_correction_accuracy",
+          "score": 1.0,
+          "details": {
+            "applicable": false,
+            "reason": "no noise_configuration.yaml"
+          }
+        }
+      ],
+      "passed": false,
+      "timestamp": "2026-10-12T17:36:00.586517Z",
+      "error": null,
+      "reproducibility": {
+        "name": "reproducibility",
+        "score": 1.0,
+        "details": {
+          "matched_rows": 92,
+          "total_rows": 92
+        }
+      },
+      "duration_seconds": 56.64409411800034,
+      "metadata": {
+        "steps": 16,
+        "llm_calls": 8,
+        "total_cost": 0.00889275,
+        "prompt_tokens": 38109,
+        "completion_tokens": 5294,
+        "total_tokens": 43403,
+        "model": "gpt-4o-mini"
+      }
+    },
+    {
+      "task_id": "030_SALES_ORDER_MIGRATION_BASIC_IMPLICIT",
+      "agent_name": "ag2",
+      "metrics": [],
+      "passed": false,
+      "timestamp": "2026-10-12T17:36:40.002666Z",
+      "error": "Agent did not produce solution.csv in the workspace",
+      "reproducibility": null,
+      "duration_seconds": 39.41305574600028,
+      "metadata": {
+        "steps": 22,
+        "llm_calls": 11,
+        "total_cost": 0.010885049999999999,
+        "prompt_tokens": 57347,
+        "completion_tokens": 3805,
+        "total_tokens": 61152,
+        "model": "gpt-4o-mini"
+      }
+    },
+    {
+      "task_id": "031_STOCK_MIGRATION_BASIC_IMPLICIT",
+      "agent_name": "ag2",
+      "metrics": [
+        {
+          "name": "schema_accuracy",
+          "score": 0.0,
+          "details": {
+            "expected_columns": [
+              "WERKS",
+              "MATNR",
+              "LGORT",
+              "LFGJA",
+              "LFMON",
+              "LBKUM",
+              "MEINS",
+              "VERPR",
+              "PEINH",
+              "SALK3",
+              "VPRSV",
+              "BWTAR",
+              "BUKRS",
+              "WAERS"
+            ],
+            "actual_columns": [
+              "material no.",
+              "quantity",
+              "valuation price",
+              "stock value",
+              "plant code",
+              "company code",
+              "price control",
+              "valuation type",
+              "currency"
+            ]
+          }
+        },
+        {
+          "name": "row_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch",
+            "expected_columns": [
+              "WERKS",
+              "MATNR",
+              "LGORT",
+              "LFGJA",
+              "LFMON",
+              "LBKUM",
+              "MEINS",
+              "VERPR",
+              "PEINH",
+              "SALK3",
+              "VPRSV",
+              "BWTAR",
+              "BUKRS",
+              "WAERS"
+            ],
+            "actual_columns": [
+              "material no.",
+              "quantity",
+              "valuation price",
+              "stock value",
+              "plant code",
+              "company code",
+              "price control",
+              "valuation type",
+              "currency"
+            ]
+          }
+        },
+        {
+          "name": "filtering_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_rows": 100,
+            "actual_rows": 100
+          }
+        },
+        {
+          "name": "field_mapping_accuracy",
+          "score": 0.0,
+          "details": {
+            "populated_fraction_by_column": {
+              "WERKS": 0.0,
+              "MATNR": 0.0,
+              "LGORT": 0.0,
+              "LFGJA": 0.0,
+              "LFMON": 0.0,
+              "LBKUM": 0.0,
+              "MEINS": 0.0,
+              "VERPR": 0.0,
+              "PEINH": 0.0,
+              "SALK3": 0.0,
+              "VPRSV": 0.0,
+              "BWTAR": 0.0,
+              "BUKRS": 0.0,
+              "WAERS": 0.0
+            },
+            "expected_fraction_by_column": {
+              "WERKS": 1.0,
+              "MATNR": 1.0,
+              "LGORT": 1.0,
+              "LFGJA": 1.0,
+              "LFMON": 1.0,
+              "LBKUM": 1.0,
+              "MEINS": 1.0,
+              "VERPR": 1.0,
+              "PEINH": 1.0,
+              "SALK3": 1.0,
+              "VPRSV": 1.0,
+              "BWTAR": 1.0,
+              "BUKRS": 1.0,
+              "WAERS": 1.0
+            },
+            "score_by_column": {
+              "WERKS": 0.0,
+              "MATNR": 0.0,
+              "LGORT": 0.0,
+              "LFGJA": 0.0,
+              "LFMON": 0.0,
+              "LBKUM": 0.0,
+              "MEINS": 0.0,
+              "VERPR": 0.0,
+              "PEINH": 0.0,
+              "SALK3": 0.0,
+              "VPRSV": 0.0,
+              "BWTAR": 0.0,
+              "BUKRS": 0.0,
+              "WAERS": 0.0
+            }
+          }
+        },
+        {
+          "name": "transformation_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch"
+          }
+        },
+        {
+          "name": "record_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch"
+          }
+        },
+        {
+          "name": "error_correction_accuracy",
+          "score": 1.0,
+          "details": {
+            "applicable": false,
+            "reason": "no noise_configuration.yaml"
+          }
+        }
+      ],
+      "passed": false,
+      "timestamp": "2026-10-12T17:38:24.374444Z",
+      "error": null,
+      "reproducibility": {
+        "name": "reproducibility",
+        "score": 1.0,
+        "details": {
+          "matched_rows": 100,
+          "total_rows": 100
+        }
+      },
+      "duration_seconds": 104.13885312799994,
+      "metadata": {
+        "steps": 22,
+        "llm_calls": 11,
+        "total_cost": 0.020691599999999994,
+        "prompt_tokens": 99060,
+        "completion_tokens": 9721,
+        "total_tokens": 108781,
+        "model": "gpt-4o-mini"
+      }
+    },
+    {
+      "task_id": "032_INVOICE_MIGRATION_BASIC_IMPLICIT",
+      "agent_name": "ag2",
+      "metrics": [
+        {
+          "name": "schema_accuracy",
+          "score": 0.0,
+          "details": {
+            "expected_columns": [
+              "ANWID",
+              "VORG1",
+              "VORG2",
+              "SHKZG",
+              "BUKRS",
+              "BLDAT",
+              "BUDAT",
+              "BSCHL",
+              "BKTXT",
+              "KONTO",
+              "WAERS",
+              "WRBTR",
+              "DMBTR",
+              "DMBE2",
+              "ZFBDT",
+              "XBLNR",
+              "SGTXT",
+              "ZLSCH",
+              "ZTERM"
+            ],
+            "actual_columns": [
+              "Account Number",
+              "Document Date",
+              "Posting Date",
+              "Document Type",
+              "Company Code",
+              "Currency",
+              "Amount",
+              "Payment Term",
+              "Payment Method",
+              "Item Text",
+              "Header Text",
+              "Application",
+              "Transaction",
+              "Activity"
+            ]
+          }
+        },
+        {
+          "name": "row_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch",
+            "expected_columns": [
+              "ANWID",
+              "VORG1",
+              "VORG2",
+              "SHKZG",
+              "BUKRS",
+              "BLDAT",
+              "BUDAT",
+              "BSCHL",
+              "BKTXT",
+              "KONTO",
+              "WAERS",
+              "WRBTR",
+              "DMBTR",
+              "DMBE2",
+              "ZFBDT",
+              "XBLNR",
+              "SGTXT",
+              "ZLSCH",
+              "ZTERM"
+            ],
+            "actual_columns": [
+              "Account Number",
+              "Document Date",
+              "Posting Date",
+              "Document Type",
+              "Company Code",
+              "Currency",
+              "Amount",
+              "Payment Term",
+              "Payment Method",
+              "Item Text",
+              "Header Text",
+              "Application",
+              "Transaction",
+              "Activity"
+            ]
+          }
+        },
+        {
+          "name": "filtering_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_rows": 100,
+            "actual_rows": 100
+          }
+        },
+        {
+          "name": "field_mapping_accuracy",
+          "score": 0.0,
+          "details": {
+            "populated_fraction_by_column": {
+              "ANWID": 0.0,
+              "VORG1": 0.0,
+              "VORG2": 0.0,
+              "SHKZG": 0.0,
+              "BUKRS": 0.0,
+              "BLDAT": 0.0,
+              "BUDAT": 0.0,
+              "BSCHL": 0.0,
+              "BKTXT": 0.0,
+              "KONTO": 0.0,
+              "WAERS": 0.0,
+              "WRBTR": 0.0,
+              "DMBTR": 0.0,
+              "DMBE2": 0.0,
+              "ZFBDT": 0.0,
+              "XBLNR": 0.0,
+              "SGTXT": 0.0,
+              "ZLSCH": 0.0,
+              "ZTERM": 0.0
+            },
+            "expected_fraction_by_column": {
+              "ANWID": 1.0,
+              "VORG1": 1.0,
+              "VORG2": 1.0,
+              "SHKZG": 1.0,
+              "BUKRS": 1.0,
+              "BLDAT": 1.0,
+              "BUDAT": 1.0,
+              "BSCHL": 1.0,
+              "BKTXT": 1.0,
+              "KONTO": 1.0,
+              "WAERS": 1.0,
+              "WRBTR": 1.0,
+              "DMBTR": 1.0,
+              "DMBE2": 1.0,
+              "ZFBDT": 1.0,
+              "XBLNR": 1.0,
+              "SGTXT": 1.0,
+              "ZLSCH": 1.0,
+              "ZTERM": 1.0
+            },
+            "score_by_column": {
+              "ANWID": 0.0,
+              "VORG1": 0.0,
+              "VORG2": 0.0,
+              "SHKZG": 0.0,
+              "BUKRS": 0.0,
+              "BLDAT": 0.0,
+              "BUDAT": 0.0,
+              "BSCHL": 0.0,
+              "BKTXT": 0.0,
+              "KONTO": 0.0,
+              "WAERS": 0.0,
+              "WRBTR": 0.0,
+              "DMBTR": 0.0,
+              "DMBE2": 0.0,
+              "ZFBDT": 0.0,
+              "XBLNR": 0.0,
+              "SGTXT": 0.0,
+              "ZLSCH": 0.0,
+              "ZTERM": 0.0
+            }
+          }
+        },
+        {
+          "name": "transformation_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch"
+          }
+        },
+        {
+          "name": "record_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch"
+          }
+        },
+        {
+          "name": "error_correction_accuracy",
+          "score": 1.0,
+          "details": {
+            "applicable": false,
+            "reason": "no noise_configuration.yaml"
+          }
+        }
+      ],
+      "passed": false,
+      "timestamp": "2026-10-12T17:39:05.050561Z",
+      "error": null,
+      "reproducibility": {
+        "name": "reproducibility",
+        "score": 1.0,
+        "details": {
+          "matched_rows": 100,
+          "total_rows": 100
+        }
+      },
+      "duration_seconds": 40.419623651000165,
+      "metadata": {
+        "steps": 18,
+        "llm_calls": 9,
+        "total_cost": 0.01108605,
+        "prompt_tokens": 56087,
+        "completion_tokens": 4455,
+        "total_tokens": 60542,
+        "model": "gpt-4o-mini"
+      }
+    },
+    {
+      "task_id": "033_CREDIT_LIMIT_MIGRATION_BASIC_IMPLICIT",
+      "agent_name": "ag2",
+      "metrics": [],
+      "passed": false,
+      "timestamp": "2026-10-12T17:41:18.950652Z",
+      "error": "Agent did not produce solution.csv in the workspace",
+      "reproducibility": null,
+      "duration_seconds": 133.89745679299995,
+      "metadata": {
+        "steps": 22,
+        "llm_calls": 11,
+        "total_cost": 0.022872299999999998,
+        "prompt_tokens": 94906,
+        "completion_tokens": 14394,
+        "total_tokens": 109300,
+        "model": "gpt-4o-mini"
+      }
+    },
+    {
+      "task_id": "034_WIP_MIGRATION_BASIC_IMPLICIT",
+      "agent_name": "ag2",
+      "metrics": [
+        {
+          "name": "schema_accuracy",
+          "score": 0.2222222222222222,
+          "details": {
+            "expected_columns": [
+              "project no. legacy",
+              "WBS element",
+              "description",
+              "posting period",
+              "currency",
+              "actual costs",
+              "planned revenue",
+              "WIP",
+              "expected loss"
+            ],
+            "actual_columns": [
+              "legacy_project_number",
+              "WBS element",
+              "description",
+              "actual_costs",
+              "planned_revenue",
+              "work_in_progress",
+              "expected_loss"
+            ]
+          }
+        },
+        {
+          "name": "row_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch",
+            "expected_columns": [
+              "project no. legacy",
+              "WBS element",
+              "description",
+              "posting period",
+              "currency",
+              "actual costs",
+              "planned revenue",
+              "WIP",
+              "expected loss"
+            ],
+            "actual_columns": [
+              "legacy_project_number",
+              "WBS element",
+              "description",
+              "actual_costs",
+              "planned_revenue",
+              "work_in_progress",
+              "expected_loss"
+            ]
+          }
+        },
+        {
+          "name": "filtering_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_rows": 17,
+            "actual_rows": 17
+          }
+        },
+        {
+          "name": "field_mapping_accuracy",
+          "score": 0.2222222222222222,
+          "details": {
+            "populated_fraction_by_column": {
+              "project no. legacy": 0.0,
+              "WBS element": 1.0,
+              "description": 1.0,
+              "posting period": 0.0,
+              "currency": 0.0,
+              "actual costs": 0.0,
+              "planned revenue": 0.0,
+              "WIP": 0.0,
+              "expected loss": 0.0
+            },
+            "expected_fraction_by_column": {
+              "project no. legacy": 1.0,
+              "WBS element": 1.0,
+              "description": 1.0,
+              "posting period": 1.0,
+              "currency": 1.0,
+              "actual costs": 1.0,
+              "planned revenue": 1.0,
+              "WIP": 1.0,
+              "expected loss": 1.0
+            },
+            "score_by_column": {
+              "project no. legacy": 0.0,
+              "WBS element": 1.0,
+              "description": 1.0,
+              "posting period": 0.0,
+              "currency": 0.0,
+              "actual costs": 0.0,
+              "planned revenue": 0.0,
+              "WIP": 0.0,
+              "expected loss": 0.0
+            }
+          }
+        },
+        {
+          "name": "transformation_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch"
+          }
+        },
+        {
+          "name": "record_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch"
+          }
+        },
+        {
+          "name": "error_correction_accuracy",
+          "score": 1.0,
+          "details": {
+            "applicable": false,
+            "reason": "no noise_configuration.yaml"
+          }
+        }
+      ],
+      "passed": false,
+      "timestamp": "2026-10-12T17:42:57.067355Z",
+      "error": null,
+      "reproducibility": {
+        "name": "reproducibility",
+        "score": 1.0,
+        "details": {
+          "matched_rows": 17,
+          "total_rows": 17
+        }
+      },
+      "duration_seconds": 97.89973154100016,
+      "metadata": {
+        "steps": 22,
+        "llm_calls": 11,
+        "total_cost": 0.017789849999999996,
+        "prompt_tokens": 81743,
+        "completion_tokens": 9214,
+        "total_tokens": 90957,
+        "model": "gpt-4o-mini"
+      }
+    },
+    {
+      "task_id": "035_COST_CENTER_MIGRATION_BASIC_IMPLICIT",
+      "agent_name": "ag2",
+      "metrics": [
+        {
+          "name": "schema_accuracy",
+          "score": 0.0,
+          "details": {
+            "expected_columns": [
+              "KOKRS",
+              "COSTCENTER",
+              "VALID_FROM",
+              "VALID_TO",
+              "DEPARTMENT",
+              "COSTCENTER_TYPE",
+              "COSTCTR_HIER_GRP",
+              "COMP_CODE",
+              "CURRENCY",
+              "PROFIT_CTR",
+              "RECORD_QUANTITY",
+              "LOCK_IND_ACTUAL_REVENUES",
+              "LOCK_IND_PLAN_REVENUES",
+              "APPLICATION",
+              "NAME",
+              "DESCRIPT",
+              "FUNC_AREA",
+              "PERSON_IN_CHARGE_USER"
+            ],
+            "actual_columns": [
+              "new_cost_center_number",
+              "name",
+              "short_name",
+              "department",
+              "person_in_charge",
+              "validity_start",
+              "validity_end",
+              "controlling_area",
+              "quantity_recording",
+              "application",
+              "cost_center_type",
+              "functional_area",
+              "revenue"
+            ]
+          }
+        },
+        {
+          "name": "row_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch",
+            "expected_columns": [
+              "KOKRS",
+              "COSTCENTER",
+              "VALID_FROM",
+              "VALID_TO",
+              "DEPARTMENT",
+              "COSTCENTER_TYPE",
+              "COSTCTR_HIER_GRP",
+              "COMP_CODE",
+              "CURRENCY",
+              "PROFIT_CTR",
+              "RECORD_QUANTITY",
+              "LOCK_IND_ACTUAL_REVENUES",
+              "LOCK_IND_PLAN_REVENUES",
+              "APPLICATION",
+              "NAME",
+              "DESCRIPT",
+              "FUNC_AREA",
+              "PERSON_IN_CHARGE_USER"
+            ],
+            "actual_columns": [
+              "new_cost_center_number",
+              "name",
+              "short_name",
+              "department",
+              "person_in_charge",
+              "validity_start",
+              "validity_end",
+              "controlling_area",
+              "quantity_recording",
+              "application",
+              "cost_center_type",
+              "functional_area",
+              "revenue"
+            ]
+          }
+        },
+        {
+          "name": "filtering_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_rows": 87,
+            "actual_rows": 87
+          }
+        },
+        {
+          "name": "field_mapping_accuracy",
+          "score": 0.0,
+          "details": {
+            "populated_fraction_by_column": {
+              "KOKRS": 0.0,
+              "COSTCENTER": 0.0,
+              "VALID_FROM": 0.0,
+              "VALID_TO": 0.0,
+              "DEPARTMENT": 0.0,
+              "COSTCENTER_TYPE": 0.0,
+              "COSTCTR_HIER_GRP": 0.0,
+              "COMP_CODE": 0.0,
+              "CURRENCY": 0.0,
+              "PROFIT_CTR": 0.0,
+              "RECORD_QUANTITY": 0.0,
+              "LOCK_IND_ACTUAL_REVENUES": 0.0,
+              "LOCK_IND_PLAN_REVENUES": 0.0,
+              "APPLICATION": 0.0,
+              "NAME": 0.0,
+              "DESCRIPT": 0.0,
+              "FUNC_AREA": 0.0,
+              "PERSON_IN_CHARGE_USER": 0.0
+            },
+            "expected_fraction_by_column": {
+              "KOKRS": 1.0,
+              "COSTCENTER": 1.0,
+              "VALID_FROM": 1.0,
+              "VALID_TO": 1.0,
+              "DEPARTMENT": 1.0,
+              "COSTCENTER_TYPE": 1.0,
+              "COSTCTR_HIER_GRP": 1.0,
+              "COMP_CODE": 1.0,
+              "CURRENCY": 1.0,
+              "PROFIT_CTR": 1.0,
+              "RECORD_QUANTITY": 1.0,
+              "LOCK_IND_ACTUAL_REVENUES": 0.8735632183908046,
+              "LOCK_IND_PLAN_REVENUES": 0.8735632183908046,
+              "APPLICATION": 1.0,
+              "NAME": 1.0,
+              "DESCRIPT": 1.0,
+              "FUNC_AREA": 1.0,
+              "PERSON_IN_CHARGE_USER": 1.0
+            },
+            "score_by_column": {
+              "KOKRS": 0.0,
+              "COSTCENTER": 0.0,
+              "VALID_FROM": 0.0,
+              "VALID_TO": 0.0,
+              "DEPARTMENT": 0.0,
+              "COSTCENTER_TYPE": 0.0,
+              "COSTCTR_HIER_GRP": 0.0,
+              "COMP_CODE": 0.0,
+              "CURRENCY": 0.0,
+              "PROFIT_CTR": 0.0,
+              "RECORD_QUANTITY": 0.0,
+              "LOCK_IND_ACTUAL_REVENUES": 0.0,
+              "LOCK_IND_PLAN_REVENUES": 0.0,
+              "APPLICATION": 0.0,
+              "NAME": 0.0,
+              "DESCRIPT": 0.0,
+              "FUNC_AREA": 0.0,
+              "PERSON_IN_CHARGE_USER": 0.0
+            }
+          }
+        },
+        {
+          "name": "transformation_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch"
+          }
+        },
+        {
+          "name": "record_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch"
+          }
+        },
+        {
+          "name": "error_correction_accuracy",
+          "score": 1.0,
+          "details": {
+            "applicable": false,
+            "reason": "no noise_configuration.yaml"
+          }
+        }
+      ],
+      "passed": false,
+      "timestamp": "2026-10-12T17:43:55.747459Z",
+      "error": null,
+      "reproducibility": {
+        "name": "reproducibility",
+        "score": 1.0,
+        "details": {
+          "matched_rows": 87,
+          "total_rows": 87
+        }
+      },
+      "duration_seconds": 58.4411819879997,
+      "metadata": {
+        "steps": 16,
+        "llm_calls": 8,
+        "total_cost": 0.01054695,
+        "prompt_tokens": 46801,
+        "completion_tokens": 5878,
+        "total_tokens": 52679,
+        "model": "gpt-4o-mini"
+      }
+    },
+    {
+      "task_id": "036_EMPLOYEE_CREDITOR_MIGRATION_BASIC_IMPLICIT",
+      "agent_name": "ag2",
+      "metrics": [
+        {
+          "name": "schema_accuracy",
+          "score": 0.0,
+          "details": {
+            "expected_columns": [
+              "creditor no.",
+              "creditor name",
+              "creditor type",
+              "company designation",
+              "tax type",
+              "payment method",
+              "collective account 1",
+              "collective account 2"
+            ],
+            "actual_columns": [
+              "creditor_no",
+              "designation",
+              "creditor_name",
+              "tax_type",
+              "first_collective_account",
+              "personnel no."
+            ]
+          }
+        },
+        {
+          "name": "row_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch",
+            "expected_columns": [
+              "creditor no.",
+              "creditor name",
+              "creditor type",
+              "company designation",
+              "tax type",
+              "payment method",
+              "collective account 1",
+              "collective account 2"
+            ],
+            "actual_columns": [
+              "creditor_no",
+              "designation",
+              "creditor_name",
+              "tax_type",
+              "first_collective_account",
+              "personnel no."
+            ]
+          }
+        },
+        {
+          "name": "filtering_accuracy",
+          "score": 1.0,
+          "details": {
+            "expected_rows": 54,
+            "actual_rows": 54
+          }
+        },
+        {
+          "name": "field_mapping_accuracy",
+          "score": 0.0,
+          "details": {
+            "populated_fraction_by_column": {
+              "creditor no.": 0.0,
+              "creditor name": 0.0,
+              "creditor type": 0.0,
+              "company designation": 0.0,
+              "tax type": 0.0,
+              "payment method": 0.0,
+              "collective account 1": 0.0,
+              "collective account 2": 0.0
+            },
+            "expected_fraction_by_column": {
+              "creditor no.": 1.0,
+              "creditor name": 1.0,
+              "creditor type": 1.0,
+              "company designation": 1.0,
+              "tax type": 1.0,
+              "payment method": 0.8703703703703703,
+              "collective account 1": 1.0,
+              "collective account 2": 1.0
+            },
+            "score_by_column": {
+              "creditor no.": 0.0,
+              "creditor name": 0.0,
+              "creditor type": 0.0,
+              "company designation": 0.0,
+              "tax type": 0.0,
+              "payment method": 0.0,
+              "collective account 1": 0.0,
+              "collective account 2": 0.0
+            }
+          }
+        },
+        {
+          "name": "transformation_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch"
+          }
+        },
+        {
+          "name": "record_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch"
+          }
+        },
+        {
+          "name": "error_correction_accuracy",
+          "score": 1.0,
+          "details": {
+            "applicable": false,
+            "reason": "no noise_configuration.yaml"
+          }
+        }
+      ],
+      "passed": false,
+      "timestamp": "2026-10-12T17:46:11.504487Z",
+      "error": null,
+      "reproducibility": {
+        "name": "reproducibility",
+        "score": 1.0,
+        "details": {
+          "matched_rows": 54,
+          "total_rows": 54
+        }
+      },
+      "duration_seconds": 135.54456036400006,
+      "metadata": {
+        "steps": 22,
+        "llm_calls": 11,
+        "total_cost": 0.027320699999999996,
+        "prompt_tokens": 127946,
+        "completion_tokens": 13548,
+        "total_tokens": 141494,
+        "model": "gpt-4o-mini"
+      }
+    },
+    {
+      "task_id": "037_RESERVATION_UNIT_MIGRATION_BASIC_IMPLICIT",
+      "agent_name": "ag2",
+      "metrics": [
+        {
+          "name": "schema_accuracy",
+          "score": 0.1111111111111111,
+          "details": {
+            "expected_columns": [
+              "reservation unit no.",
+              "designation",
+              "unit type",
+              "bottleneck unit",
+              "capacity",
+              "time unit",
+              "capacity units",
+              "shift factor",
+              "rough planning factor",
+              "detailed planning factor",
+              "overload factor",
+              "scheduling key",
+              "validity indicator",
+              "cost center",
+              "cost element",
+              "confirmation indicator",
+              "unit identifier",
+              "period indicator"
+            ],
+            "actual_columns": [
+              "reservation unit no.",
+              "designation",
+              "capacity",
+              "planning_factor_rough",
+              "planning_factor_detailed",
+              "bottleneck flag"
+            ]
+          }
+        },
+        {
+          "name": "row_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch",
+            "expected_columns": [
+              "reservation unit no.",
+              "designation",
+              "unit type",
+              "bottleneck unit",
+              "capacity",
+              "time unit",
+              "capacity units",
+              "shift factor",
+              "rough planning factor",
+              "detailed planning factor",
+              "overload factor",
+              "scheduling key",
+              "validity indicator",
+              "cost center",
+              "cost element",
+              "confirmation indicator",
+              "unit identifier",
+              "period indicator"
+            ],
+            "actual_columns": [
+              "reservation unit no.",
+              "designation",
+              "capacity",
+              "planning_factor_rough",
+              "planning_factor_detailed",
+              "bottleneck flag"
+            ]
+          }
+        },
+        {
+          "name": "filtering_accuracy",
+          "score": 0.0,
+          "details": {
+            "expected_rows": 64,
+            "actual_rows": 0
+          }
+        },
+        {
+          "name": "field_mapping_accuracy",
+          "score": 0.0,
+          "details": {
+            "populated_fraction_by_column": {
+              "reservation unit no.": 0.0,
+              "designation": 0.0,
+              "unit type": 0.0,
+              "bottleneck unit": 0.0,
+              "capacity": 0.0,
+              "time unit": 0.0,
+              "capacity units": 0.0,
+              "shift factor": 0.0,
+              "rough planning factor": 0.0,
+              "detailed planning factor": 0.0,
+              "overload factor": 0.0,
+              "scheduling key": 0.0,
+              "validity indicator": 0.0,
+              "cost center": 0.0,
+              "cost element": 0.0,
+              "confirmation indicator": 0.0,
+              "unit identifier": 0.0,
+              "period indicator": 0.0
+            },
+            "expected_fraction_by_column": {
+              "reservation unit no.": 1.0,
+              "designation": 1.0,
+              "unit type": 1.0,
+              "bottleneck unit": 1.0,
+              "capacity": 1.0,
+              "time unit": 1.0,
+              "capacity units": 1.0,
+              "shift factor": 1.0,
+              "rough planning factor": 1.0,
+              "detailed planning factor": 1.0,
+              "overload factor": 1.0,
+              "scheduling key": 1.0,
+              "validity indicator": 1.0,
+              "cost center": 1.0,
+              "cost element": 1.0,
+              "confirmation indicator": 1.0,
+              "unit identifier": 0.609375,
+              "period indicator": 1.0
+            },
+            "score_by_column": {
+              "reservation unit no.": 0.0,
+              "designation": 0.0,
+              "unit type": 0.0,
+              "bottleneck unit": 0.0,
+              "capacity": 0.0,
+              "time unit": 0.0,
+              "capacity units": 0.0,
+              "shift factor": 0.0,
+              "rough planning factor": 0.0,
+              "detailed planning factor": 0.0,
+              "overload factor": 0.0,
+              "scheduling key": 0.0,
+              "validity indicator": 0.0,
+              "cost center": 0.0,
+              "cost element": 0.0,
+              "confirmation indicator": 0.0,
+              "unit identifier": 0.0,
+              "period indicator": 0.0
+            }
+          }
+        },
+        {
+          "name": "transformation_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch"
+          }
+        },
+        {
+          "name": "record_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch"
+          }
+        },
+        {
+          "name": "error_correction_accuracy",
+          "score": 1.0,
+          "details": {
+            "applicable": false,
+            "reason": "no noise_configuration.yaml"
+          }
+        }
+      ],
+      "passed": false,
+      "timestamp": "2026-10-12T17:47:37.212092Z",
+      "error": null,
+      "reproducibility": {
+        "name": "reproducibility",
+        "score": 1.0,
+        "details": {
+          "matched_rows": 0,
+          "total_rows": 0
+        }
+      },
+      "duration_seconds": 85.49636115600015,
+      "metadata": {
+        "steps": 22,
+        "llm_calls": 11,
+        "total_cost": 0.015910050000000002,
+        "prompt_tokens": 70351,
+        "completion_tokens": 8929,
+        "total_tokens": 79280,
+        "model": "gpt-4o-mini"
+      }
+    },
+    {
+      "task_id": "038_WORK_PLAN_MIGRATION_BASIC_IMPLICIT",
+      "agent_name": "ag2",
+      "metrics": [
+        {
+          "name": "schema_accuracy",
+          "score": 0.09523809523809523,
+          "details": {
+            "expected_columns": [
+              "routing no.",
+              "operation no.",
+              "operation text 1",
+              "operation text 2",
+              "reservation unit no.",
+              "reservation unit designation",
+              "reference type",
+              "setup time",
+              "time per unit",
+              "time unit",
+              "time base",
+              "wage time per unit",
+              "lead time",
+              "overlap type",
+              "validity indicator",
+              "confirmation indicator",
+              "scheduling key",
+              "cost center",
+              "material no.",
+              "material description",
+              "unit identifier"
+            ],
+            "actual_columns": [
+              "routing no.",
+              "operation no.",
+              "designation",
+              "cost center",
+              "setup time hours",
+              "wage time hours"
+            ]
+          }
+        },
+        {
+          "name": "row_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch",
+            "expected_columns": [
+              "routing no.",
+              "operation no.",
+              "operation text 1",
+              "operation text 2",
+              "reservation unit no.",
+              "reservation unit designation",
+              "reference type",
+              "setup time",
+              "time per unit",
+              "time unit",
+              "time base",
+              "wage time per unit",
+              "lead time",
+              "overlap type",
+              "validity indicator",
+              "confirmation indicator",
+              "scheduling key",
+              "cost center",
+              "material no.",
+              "material description",
+              "unit identifier"
+            ],
+            "actual_columns": [
+              "routing no.",
+              "operation no.",
+              "designation",
+              "cost center",
+              "setup time hours",
+              "wage time hours"
+            ]
+          }
+        },
+        {
+          "name": "filtering_accuracy",
+          "score": 0.0,
+          "details": {
+            "expected_rows": 73,
+            "actual_rows": 0
+          }
+        },
+        {
+          "name": "field_mapping_accuracy",
+          "score": 0.0,
+          "details": {
+            "populated_fraction_by_column": {
+              "routing no.": 0.0,
+              "operation no.": 0.0,
+              "operation text 1": 0.0,
+              "operation text 2": 0.0,
+              "reservation unit no.": 0.0,
+              "reservation unit designation": 0.0,
+              "reference type": 0.0,
+              "setup time": 0.0,
+              "time per unit": 0.0,
+              "time unit": 0.0,
+              "time base": 0.0,
+              "wage time per unit": 0.0,
+              "lead time": 0.0,
+              "overlap type": 0.0,
+              "validity indicator": 0.0,
+              "confirmation indicator": 0.0,
+              "scheduling key": 0.0,
+              "cost center": 0.0,
+              "material no.": 0.0,
+              "material description": 0.0,
+              "unit identifier": 0.0
+            },
+            "expected_fraction_by_column": {
+              "routing no.": 1.0,
+              "operation no.": 1.0,
+              "operation text 1": 1.0,
+              "operation text 2": 0.4794520547945205,
+              "reservation unit no.": 1.0,
+              "reservation unit designation": 1.0,
+              "reference type": 1.0,
+              "setup time": 1.0,
+              "time per unit": 1.0,
+              "time unit": 1.0,
+              "time base": 1.0,
+              "wage time per unit": 1.0,
+              "lead time": 1.0,
+              "overlap type": 0.0,
+              "validity indicator": 1.0,
+              "confirmation indicator": 1.0,
+              "scheduling key": 1.0,
+              "cost center": 1.0,
+              "material no.": 0.684931506849315,
+              "material description": 1.0,
+              "unit identifier": 0.3698630136986301
+            },
+            "score_by_column": {
+              "routing no.": 0.0,
+              "operation no.": 0.0,
+              "operation text 1": 0.0,
+              "operation text 2": 0.0,
+              "reservation unit no.": 0.0,
+              "reservation unit designation": 0.0,
+              "reference type": 0.0,
+              "setup time": 0.0,
+              "time per unit": 0.0,
+              "time unit": 0.0,
+              "time base": 0.0,
+              "wage time per unit": 0.0,
+              "lead time": 0.0,
+              "overlap type": 0.0,
+              "validity indicator": 0.0,
+              "confirmation indicator": 0.0,
+              "scheduling key": 0.0,
+              "cost center": 0.0,
+              "material no.": 0.0,
+              "material description": 0.0,
+              "unit identifier": 0.0
+            }
+          }
+        },
+        {
+          "name": "transformation_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch"
+          }
+        },
+        {
+          "name": "record_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch"
+          }
+        },
+        {
+          "name": "error_correction_accuracy",
+          "score": 1.0,
+          "details": {
+            "applicable": false,
+            "reason": "no noise_configuration.yaml"
+          }
+        }
+      ],
+      "passed": false,
+      "timestamp": "2026-10-12T17:48:05.270901Z",
+      "error": null,
+      "reproducibility": {
+        "name": "reproducibility",
+        "score": 1.0,
+        "details": {
+          "matched_rows": 0,
+          "total_rows": 0
+        }
+      },
+      "duration_seconds": 27.84583508200012,
+      "metadata": {
+        "steps": 10,
+        "llm_calls": 5,
+        "total_cost": 0.0042912,
+        "prompt_tokens": 17024,
+        "completion_tokens": 2896,
+        "total_tokens": 19920,
+        "model": "gpt-4o-mini"
+      }
+    },
+    {
+      "task_id": "039_PRODUCTION_ORDER_MIGRATION_BASIC_IMPLICIT",
+      "agent_name": "ag2",
+      "metrics": [],
+      "passed": false,
+      "timestamp": "2026-10-12T17:49:56.472690Z",
+      "error": "Agent did not produce solution.csv in the workspace",
+      "reproducibility": null,
+      "duration_seconds": 111.19911327499995,
+      "metadata": {
+        "steps": 22,
+        "llm_calls": 11,
+        "total_cost": 0.020501549999999997,
+        "prompt_tokens": 91561,
+        "completion_tokens": 11279,
+        "total_tokens": 102840,
+        "model": "gpt-4o-mini"
+      }
+    },
+    {
+      "task_id": "040_FIXED_ASSETS_MIGRATION_BASIC_IMPLICIT",
+      "agent_name": "ag2",
+      "metrics": [
+        {
+          "name": "schema_accuracy",
+          "score": 0.0,
+          "details": {
+            "expected_columns": [
+              "BUKRS",
+              "ANLKL",
+              "GD_MARK",
+              "AIBN1",
+              "MEINS",
+              "MENGE",
+              "AKTIV",
+              "TXT50",
+              "KOSTL",
+              "PRCTR",
+              "WERKS",
+              "STORT",
+              "AFASL01",
+              "AFABG01",
+              "NDJAR01",
+              "NDPER01",
+              "KANSW01",
+              "KNAFA01",
+              "net book value",
+              "ELBT"
+            ],
+            "actual_columns": [
+              "Company Code",
+              "Asset Number",
+              "Description",
+              "Book Value",
+              "Location",
+              "Asset Class",
+              "Cost Center",
+              "Profit Center",
+              "Plant",
+              "Depreciation Key",
+              "Useful Life Years",
+              "Useful Life Months",
+              "Deletion Flag"
+            ]
+          }
+        },
+        {
+          "name": "row_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch",
+            "expected_columns": [
+              "BUKRS",
+              "ANLKL",
+              "GD_MARK",
+              "AIBN1",
+              "MEINS",
+              "MENGE",
+              "AKTIV",
+              "TXT50",
+              "KOSTL",
+              "PRCTR",
+              "WERKS",
+              "STORT",
+              "AFASL01",
+              "AFABG01",
+              "NDJAR01",
+              "NDPER01",
+              "KANSW01",
+              "KNAFA01",
+              "net book value",
+              "ELBT"
+            ],
+            "actual_columns": [
+              "Company Code",
+              "Asset Number",
+              "Description",
+              "Book Value",
+              "Location",
+              "Asset Class",
+              "Cost Center",
+              "Profit Center",
+              "Plant",
+              "Depreciation Key",
+              "Useful Life Years",
+              "Useful Life Months",
+              "Deletion Flag"
+            ]
+          }
+        },
+        {
+          "name": "filtering_accuracy",
+          "score": 0.9333333333333333,
+          "details": {
+            "expected_rows": 75,
+            "actual_rows": 80
+          }
+        },
+        {
+          "name": "field_mapping_accuracy",
+          "score": 0.0,
+          "details": {
+            "populated_fraction_by_column": {
+              "BUKRS": 0.0,
+              "ANLKL": 0.0,
+              "GD_MARK": 0.0,
+              "AIBN1": 0.0,
+              "MEINS": 0.0,
+              "MENGE": 0.0,
+              "AKTIV": 0.0,
+              "TXT50": 0.0,
+              "KOSTL": 0.0,
+              "PRCTR": 0.0,
+              "WERKS": 0.0,
+              "STORT": 0.0,
+              "AFASL01": 0.0,
+              "AFABG01": 0.0,
+              "NDJAR01": 0.0,
+              "NDPER01": 0.0,
+              "KANSW01": 0.0,
+              "KNAFA01": 0.0,
+              "net book value": 0.0,
+              "ELBT": 0.0
+            },
+            "expected_fraction_by_column": {
+              "BUKRS": 1.0,
+              "ANLKL": 1.0,
+              "GD_MARK": 1.0,
+              "AIBN1": 1.0,
+              "MEINS": 1.0,
+              "MENGE": 1.0,
+              "AKTIV": 1.0,
+              "TXT50": 1.0,
+              "KOSTL": 1.0,
+              "PRCTR": 1.0,
+              "WERKS": 1.0,
+              "STORT": 1.0,
+              "AFASL01": 1.0,
+              "AFABG01": 1.0,
+              "NDJAR01": 1.0,
+              "NDPER01": 1.0,
+              "KANSW01": 1.0,
+              "KNAFA01": 1.0,
+              "net book value": 1.0,
+              "ELBT": 1.0
+            },
+            "score_by_column": {
+              "BUKRS": 0.0,
+              "ANLKL": 0.0,
+              "GD_MARK": 0.0,
+              "AIBN1": 0.0,
+              "MEINS": 0.0,
+              "MENGE": 0.0,
+              "AKTIV": 0.0,
+              "TXT50": 0.0,
+              "KOSTL": 0.0,
+              "PRCTR": 0.0,
+              "WERKS": 0.0,
+              "STORT": 0.0,
+              "AFASL01": 0.0,
+              "AFABG01": 0.0,
+              "NDJAR01": 0.0,
+              "NDPER01": 0.0,
+              "KANSW01": 0.0,
+              "KNAFA01": 0.0,
+              "net book value": 0.0,
+              "ELBT": 0.0
+            }
+          }
+        },
+        {
+          "name": "transformation_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch"
+          }
+        },
+        {
+          "name": "record_accuracy",
+          "score": 0.0,
+          "details": {
+            "reason": "column mismatch"
+          }
+        },
+        {
+          "name": "error_correction_accuracy",
+          "score": 1.0,
+          "details": {
+            "applicable": false,
+            "reason": "no noise_configuration.yaml"
+          }
+        }
+      ],
+      "passed": false,
+      "timestamp": "2026-10-12T17:51:21.492204Z",
+      "error": null,
+      "reproducibility": {
+        "name": "reproducibility",
+        "score": 1.0,
+        "details": {
+          "matched_rows": 80,
+          "total_rows": 80
+        }
+      },
+      "duration_seconds": 84.78445826799998,
+      "metadata": {
+        "steps": 18,
+        "llm_calls": 9,
+        "total_cost": 0.0244134,
+        "prompt_tokens": 126028,
+        "completion_tokens": 9182,
+        "total_tokens": 135210,
+        "model": "gpt-4o-mini"
+      }
+    }
+  ],
+  "summaries": [
+    {
+      "agent_name": "ag2",
+      "total_tasks": 20,
+      "passed_tasks": 0,
+      "failed_tasks": 20,
+      "pass_rate": 0.0,
+      "success_rate": 0.85,
+      "average_duration_seconds": 62.36667411015003,
+      "average_metric_scores": {
+        "schema_accuracy": 0.039915966386554626,
+        "row_accuracy": 0.0,
+        "filtering_accuracy": 0.8778371954842543,
+        "field_mapping_accuracy": 0.035130718954248366,
+        "transformation_accuracy": 0.0,
+        "record_accuracy": 0.0,
+        "error_correction_accuracy": 1.0,
+        "reproducibility": 1.0
+      },
+      "average_metadata": {
+        "steps": 16.7,
+        "llm_calls": 8.35,
+        "total_cost": 0.0122306325,
+        "prompt_tokens": 56686.15,
+        "completion_tokens": 6212.85,
+        "total_tokens": 62899.0
+      }
+    }
+  ]
+}
